@@ -18,8 +18,8 @@ public interface CandleRepository extends JpaRepository<Candle, Long> {
               and (:categoryId is null or c.category.id = :categoryId)
               and (:featured is null or c.featured = :featured)
               and (
-                    :scent is null
-                    or lower(c.scent) like lower(concat('%', :scent, '%'))
+                    cast(:scent as string) is null
+                    or lower(c.scent) like lower(concat('%', cast(:scent as string), '%'))
               )
               and (:minPrice is null or c.price >= :minPrice)
               and (:maxPrice is null or c.price <= :maxPrice)
