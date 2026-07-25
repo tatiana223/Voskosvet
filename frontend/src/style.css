@@ -85,7 +85,7 @@ main {
   inset: 0;
   width: 100%;
   content: "";
-  background: url("/images/hero-natural-candle.png") center / cover no-repeat;
+  background: url("/images/hero-natural-candle.webp") center / cover no-repeat;
   filter: saturate(1.18) contrast(1.08) brightness(1.02);
   animation: heroImageDrift 1200ms ease-out both;
 }
@@ -119,8 +119,8 @@ main {
   font-weight: 700;
   color: var(--brown);
 }
-.hero h1 { max-width: 650px; font-size: clamp(48px, 5.5vw, 78px); line-height: .98; letter-spacing: -.035em; }
-.hero-copy > p { max-width: 430px; margin: 20px 0 24px; color: #5d3827; font-size: 21px; line-height: 1.45; font-weight: 600; }
+.hero h1 { max-width: 650px; font-size: clamp(44px, 4.8vw, 68px); line-height: .98; letter-spacing: -.035em; }
+.hero-copy > p { max-width: 430px; margin: 20px 0 24px; color: #5d3827; font-size: 19px; line-height: 1.45; font-weight: 600; }
 .hero-points {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

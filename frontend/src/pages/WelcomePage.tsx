@@ -185,15 +185,15 @@ export function WelcomePage() {
 
         <div className="why-grid">
           <div>
-            <img src="/images/candle-size.png" alt="Размер восковой свечи" />
+            <img src="/images/candle-size.webp" alt="Размер восковой свечи" />
             <span>15 см<br />удобный формат</span>
           </div>
           <div>
-            <img src="/images/candle-detail.png" alt="Деталь восковой свечи" />
+            <img src="/images/candle-detail.webp" alt="Деталь восковой свечи" />
             <span>Медовый цвет<br />и гладкий воск</span>
           </div>
           <div>
-            <img src="/images/gift-box.png" alt="Коробка со свечами" />
+            <img src="/images/gift-box.webp" alt="Коробка со свечами" />
             <span>Красивая упаковка<br />для подарка</span>
           </div>
         </div>
@@ -231,9 +231,9 @@ export function WelcomePage() {
         </div>
 
         <div className="review-photo-strip">
-          <img src="/images/candle-detail.png" alt="Восковая свеча на льняной ткани" />
-          <img src="/images/gift-box.png" alt="Подарочная коробка свечей" />
-          <img src="/images/about-natural-candle.png" alt="Горящая свеча на деревянном столе" />
+          <img src="/images/candle-detail.webp" alt="Восковая свеча на льняной ткани" />
+          <img src="/images/gift-box.webp" alt="Подарочная коробка свечей" />
+          <img src="/images/about-natural-candle.webp" alt="Горящая свеча на деревянном столе" />
         </div>
 
         <a className="section-next section-next--up" href="#home">

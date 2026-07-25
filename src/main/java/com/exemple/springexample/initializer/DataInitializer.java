@@ -10,13 +10,14 @@ import com.exemple.springexample.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 import java.math.BigDecimal;
 
-@Profile("dev")
+@Profile({"dev", "prod"})
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
@@ -25,10 +26,13 @@ public class DataInitializer implements CommandLineRunner {
     private final CandleRepository candleRepository;
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Environment environment;
 
     @Override
     public void run(String... args) {
-        createAdminAccount();
+        if (environment.matchesProfiles("dev")) {
+            createAdminAccount();
+        }
 
         if (candleRepository.count() > 0) {
             return;
@@ -60,7 +64,7 @@ public class DataInitializer implements CommandLineRunner {
                 180,
                 35,
                 true,
-                "/images/candle-detail.png",
+                "/images/candle-detail.webp",
                 aroma
         );
 
@@ -75,7 +79,7 @@ public class DataInitializer implements CommandLineRunner {
                 200,
                 40,
                 true,
-                "/images/about-natural-candle.png",
+                "/images/about-natural-candle.webp",
                 aroma
         );
 
@@ -90,7 +94,7 @@ public class DataInitializer implements CommandLineRunner {
                 220,
                 45,
                 false,
-                "/images/hero-natural-candle.png",
+                "/images/hero-natural-candle.webp",
                 aroma
         );
 
@@ -105,7 +109,7 @@ public class DataInitializer implements CommandLineRunner {
                 300,
                 50,
                 false,
-                "/images/candle-size.png",
+                "/images/candle-size.webp",
                 interior
         );
 
@@ -120,7 +124,7 @@ public class DataInitializer implements CommandLineRunner {
                 360,
                 60,
                 false,
-                "/images/gift-box.png",
+                "/images/gift-box.webp",
                 gift
         );
     }

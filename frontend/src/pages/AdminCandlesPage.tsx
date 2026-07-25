@@ -26,7 +26,7 @@ const emptyForm: CandleFormData = {
   color: 'Медовый',
   weightGrams: 1,
   burnTimeHours: 1,
-  imageUrl: '/images/candle-detail.png',
+  imageUrl: '/images/candle-detail.webp',
   available: true,
   featured: false,
   categoryId: 0,
