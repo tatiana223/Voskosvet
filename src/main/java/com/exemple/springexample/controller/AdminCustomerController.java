@@ -1,0 +1,33 @@
+package com.exemple.springexample.controller;
+
+import com.exemple.springexample.dto.CustomerResponse;
+import com.exemple.springexample.dto.UpdateCustomerRoleRequest;
+import com.exemple.springexample.service.AdminCustomerService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/admin/customers")
+@RequiredArgsConstructor
+@SecurityRequirement(name = "basicAuth")
+public class AdminCustomerController {
+
+    private final AdminCustomerService adminCustomerService;
+
+    @GetMapping
+    public List<CustomerResponse> getCustomers() {
+        return adminCustomerService.getCustomers();
+    }
+
+    @PatchMapping("/{id}/role")
+    public CustomerResponse updateRole(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateCustomerRoleRequest request
+    ) {
+        return adminCustomerService.updateRole(id, request);
+    }
+}

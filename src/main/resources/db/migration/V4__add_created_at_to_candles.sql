@@ -1,0 +1,9 @@
+ALTER TABLE candles
+ADD COLUMN created_at TIMESTAMP;
+
+UPDATE candles
+SET created_at = CURRENT_TIMESTAMP
+WHERE created_at IS NULL;
+
+ALTER TABLE candles
+ALTER COLUMN created_at SET NOT NULL;
