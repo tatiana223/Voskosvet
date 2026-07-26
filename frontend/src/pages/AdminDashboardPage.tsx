@@ -7,6 +7,7 @@ export function AdminDashboardPage() {
   const credentials = getAdminCredentials();
   const [stats, setStats] = useState({ candles: 0, orders: 0, newOrders: 0, categories: 0 });
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!credentials) return;
@@ -18,7 +19,8 @@ export function AdminDashboardPage() {
         newOrders: orders.items.filter((order) => order.status === 'NEW').length,
         categories: categories.length,
       }))
-      .catch((requestError: Error) => setError(requestError.message));
+      .catch((requestError: Error) => setError(requestError.message))
+      .finally(() => setIsLoading(false));
   }, []);
 
   if (!credentials) return <Navigate to="/login" replace />;
@@ -28,6 +30,7 @@ export function AdminDashboardPage() {
       <div className="admin-heading"><div><p className="eyebrow">Управление магазином</p><h1>Обзор</h1></div></div>
       <div className="admin-shell">
         <AdminNav />
+        {isLoading ? <p className="state-message">Сервер запускается, загружаем данные магазина…</p> : null}
         {error ? <p className="state-message state-message-error">{error}</p> : null}
         <div className="admin-stats">
           <Link to="/admin/orders"><span>Новые заказы</span><strong>{stats.newOrders}</strong><small>Требуют внимания</small></Link>

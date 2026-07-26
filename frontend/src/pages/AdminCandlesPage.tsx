@@ -10,6 +10,7 @@ import {
   getAdminCredentials,
   hideAdminCandle,
   updateAdminCandle,
+  AdminApiError,
   type CandleFormData,
 } from '../api/adminApi';
 import { getCandleSizes, type CandleSizeOption } from '../api/candleSizesApi';
@@ -61,9 +62,17 @@ export function AdminCandlesPage() {
         ...current,
         categoryId: current.categoryId || categoryItems[0]?.id || 0,
       }));
-    } catch {
-      clearAdminCredentials();
-      navigate('/login');
+    } catch (requestError) {
+      if (requestError instanceof AdminApiError && requestError.status === 401) {
+        clearAdminCredentials();
+        navigate('/login');
+      } else {
+        setError(
+          requestError instanceof Error
+            ? requestError.message
+            : 'Не удалось загрузить данные магазина',
+        );
+      }
     } finally {
       setLoading(false);
     }

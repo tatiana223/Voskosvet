@@ -30,6 +30,51 @@ export function clearAdminCredentials() {
   clearStoredAuth();
 }
 
+export class AdminApiError extends Error {
+  readonly status?: number;
+
+  constructor(message: string, status?: number) {
+    super(message);
+    this.status = status;
+  }
+}
+
+function wait(delayMs: number) {
+  return new Promise((resolve) => window.setTimeout(resolve, delayMs));
+}
+
+async function fetchWithWakeRetry(url: string, options?: RequestInit) {
+  const isSafeRequest = !options?.method || options.method === 'GET';
+  const attempts = isSafeRequest ? 3 : 1;
+
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    try {
+      const response = await fetch(url, options);
+
+      if (
+        isSafeRequest
+        && attempt < attempts - 1
+        && [500, 502, 503, 504].includes(response.status)
+      ) {
+        await wait(1500 * (attempt + 1));
+        continue;
+      }
+
+      return response;
+    } catch {
+      if (!isSafeRequest || attempt === attempts - 1) {
+        break;
+      }
+
+      await wait(1500 * (attempt + 1));
+    }
+  }
+
+  throw new AdminApiError(
+    'Сервер магазина запускается. Подождите немного и попробуйте ещё раз.',
+  );
+}
+
 async function adminRequest<T>(path: string, options?: RequestInit): Promise<T> {
   const credentials = getAdminCredentials();
 
@@ -37,7 +82,7 @@ async function adminRequest<T>(path: string, options?: RequestInit): Promise<T> 
     throw new Error('Нужен вход администратора');
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetchWithWakeRetry(`${API_BASE_URL}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
@@ -47,7 +92,11 @@ async function adminRequest<T>(path: string, options?: RequestInit): Promise<T> 
   });
 
   if (!response.ok) {
-    let message = response.status === 401 ? 'Неверный логин или пароль' : 'Не удалось выполнить действие';
+    let message = response.status === 401
+      ? 'Сессия завершилась. Войдите снова.'
+      : response.status >= 500
+        ? 'Сервер магазина ещё запускается. Попробуйте снова через несколько секунд.'
+        : 'Не удалось выполнить действие';
 
     try {
       const body = await response.json();
@@ -56,7 +105,7 @@ async function adminRequest<T>(path: string, options?: RequestInit): Promise<T> 
       // Backend может вернуть ответ без JSON.
     }
 
-    throw new Error(message);
+    throw new AdminApiError(message, response.status);
   }
 
   if (response.status === 204) return undefined as T;
@@ -68,8 +117,17 @@ export function getAdminCategories() {
 }
 
 export async function getAdminCandles() {
-  const response = await fetch(`${API_BASE_URL}/api/candles?size=100&sort=createdAt,desc`);
-  if (!response.ok) throw new Error('Не удалось загрузить свечи');
+  const response = await fetchWithWakeRetry(
+    `${API_BASE_URL}/api/candles?size=100&sort=createdAt,desc`,
+  );
+  if (!response.ok) {
+    throw new AdminApiError(
+      response.status >= 500
+        ? 'Сервер магазина ещё запускается. Попробуйте снова через несколько секунд.'
+        : 'Не удалось загрузить свечи',
+      response.status,
+    );
+  }
   return response.json() as Promise<{ items: Candle[] }>;
 }
 
