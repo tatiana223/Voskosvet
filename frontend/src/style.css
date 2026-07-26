@@ -522,11 +522,12 @@ button.primary-link { min-width: unset; }
 }
 .checkout-layout--form { grid-template-columns: minmax(0, 820px); justify-content: center; }
 .checkout-layout--form > .cart-panel { display: none; }
-.checkout-summary { display: grid; grid-template-columns: 1fr 1fr auto; align-items: center; gap: 18px; padding: 16px; border-radius: 14px; background: #fff3dc; }
+.checkout-summary { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center; gap: 14px; padding: 16px; border-radius: 14px; background: #fff3dc; }
 .checkout-summary > div { display: grid; gap: 4px; }
+.checkout-summary > div:nth-child(2) { padding-right: 170px; }
 .checkout-summary span { color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; }
 .checkout-summary strong { color: var(--brown); }
-.checkout-summary a { color: var(--honey-dark); font-size: 13px; font-weight: 900; }
+.checkout-summary a { position: absolute; top: 50%; right: 16px; color: var(--honey-dark); font-size: 13px; font-weight: 900; transform: translateY(-50%); }
 .cart-page-layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; align-items: start; gap: 24px; }
 .cart-checkout-card { position: sticky; top: 118px; display: grid; gap: 14px; padding: 26px; border: 1px solid rgba(216, 138, 0, .2); border-radius: 20px; background: white; box-shadow: 0 16px 38px rgba(74, 33, 20, .09); }
 .cart-checkout-card > strong { font-family: "Cormorant Garamond", Georgia, serif; font-size: 48px; line-height: 1; }
@@ -2036,6 +2037,13 @@ button.primary-link { min-width: unset; }
   .cart-page-layout,
   .checkout-summary {
     grid-template-columns: 1fr;
+  }
+
+  .checkout-summary > div:nth-child(2) { padding-right: 0; }
+  .checkout-summary a {
+    position: static;
+    justify-self: start;
+    transform: none;
   }
 
   .cart-checkout-card {
