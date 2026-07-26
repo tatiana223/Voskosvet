@@ -854,9 +854,64 @@ button.primary-link { min-width: unset; }
   .brand-mark { width: 42px; height: 42px; font-size: 20px; }
   .cart-link span { display: none; }
   .nav { gap: 4px; font-size: 14px; }
-  .hero { padding-inline: 16px; }
-  .hero-copy { padding: 26px 0; }
-  .hero-points, .benefit-ribbon, .grid, .reviews-grid, .review-photo-strip, .why-section, .why-grid, .landing-footer, .image-story, .about-band, .filter-grid, .form-grid, .checkout-layout, .product-page, .tracking-layout, .tracking-steps { grid-template-columns: 1fr; }
+  .hero {
+    min-height: calc(100svh - 74px);
+    padding: 24px 16px 170px;
+  }
+  .hero::before {
+    background-position: 58% center;
+    opacity: .78;
+  }
+  .hero::after {
+    background:
+      linear-gradient(180deg, rgba(255,253,248,.9) 0%, rgba(255,253,248,.66) 48%, rgba(255,253,248,.22) 76%, rgba(74,33,20,.08) 100%),
+      radial-gradient(circle at 20% 22%, rgba(255,253,248,.7), transparent 52%);
+  }
+  .hero-copy {
+    align-content: center;
+    width: 100%;
+    min-height: calc(100svh - 268px);
+    padding: 0;
+  }
+  .hero h1 {
+    max-width: 350px;
+    font-size: clamp(34px, 10.5vw, 40px);
+    line-height: .96;
+  }
+  .hero-copy > p {
+    max-width: 320px;
+    margin: 13px 0 18px;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  .hero-points {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 7px;
+    width: 100%;
+    margin: 4px 0 20px;
+  }
+  .hero-points span {
+    gap: 6px;
+    min-height: 68px;
+  }
+  .hero-points .emblem {
+    width: 38px;
+    height: 38px;
+  }
+  .hero-points .emblem svg {
+    width: 22px;
+    height: 22px;
+  }
+  .hero-points b {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+  .hero-copy .primary-link {
+    min-width: 205px;
+    padding: 13px 20px;
+    border-radius: 14px;
+  }
+  .hero-points, .grid, .reviews-grid, .review-photo-strip, .why-section, .why-grid, .landing-footer, .image-story, .about-band, .filter-grid, .form-grid, .checkout-layout, .product-page, .tracking-layout, .tracking-steps { grid-template-columns: 1fr; }
   .why-grid div { min-height: 360px; }
   .specs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .product-assurance { grid-template-columns: 1fr; }
@@ -865,9 +920,52 @@ button.primary-link { min-width: unset; }
   .cart-item button { grid-column: 1 / -1; }
   .product-image,
   .product-image img { min-height: 340px; }
-  .benefit-ribbon { margin-inline: 16px; }
-  .benefit-ribbon div { border-right: 0; border-bottom: 1px solid rgba(136,88,36,.12); }
-  .hero h1 { font-size: 42px; }
+  .benefit-ribbon {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    padding: 8px;
+    border-radius: 16px;
+  }
+  .benefit-ribbon div {
+    justify-content: flex-start;
+    gap: 8px;
+    min-height: 62px;
+    padding: 7px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(136,88,36,.12);
+  }
+  .benefit-ribbon div:nth-child(odd) {
+    border-right: 1px solid rgba(136,88,36,.12);
+  }
+  .benefit-ribbon div:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+  .benefit-ribbon .emblem {
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+  }
+  .benefit-ribbon .emblem svg {
+    width: 20px;
+    height: 20px;
+  }
+  .benefit-ribbon span {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+  .home-section,
+  .why-section,
+  .review-section {
+    padding: 48px 16px;
+  }
+  .grid,
+  .reviews-grid {
+    gap: 16px;
+  }
   .why-grid div { min-height: 300px; }
 }
 
@@ -1016,6 +1114,18 @@ button.primary-link { min-width: unset; }
   background:
     radial-gradient(circle at 16% 10%, rgba(217, 164, 65, .18), transparent 28%),
     linear-gradient(135deg, #fffaf1 0%, #f7f3eb 48%, #f3e2c3 100%);
+}
+
+@media (min-width: 901px) {
+  .auth-page,
+  .account-page {
+    min-height: calc(133.333svh - 80px);
+  }
+
+  .auth-page {
+    display: grid;
+    place-items: center;
+  }
 }
 
 .auth-card {
