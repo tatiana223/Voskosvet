@@ -51,18 +51,20 @@ export function CartPage() {
                     <p>{item.candle.shortDescription || item.candle.categoryName}</p>
                     <strong>{item.candle.price.toLocaleString('ru-RU')} ₽</strong>
                   </div>
-                  <label>
-                    Кол-во
-                    <input
-                      min="1"
-                      type="number"
-                      value={item.quantity}
-                      onChange={(event) =>
-                        updateCartItemQuantity(item.candle.id, Math.max(1, Number(event.target.value)))
-                      }
-                    />
-                  </label>
-                  <button type="button" onClick={() => removeFromCart(item.candle.id)}>Удалить</button>
+                  <div className="cart-item-actions">
+                    <label>
+                      Кол-во
+                      <input
+                        min="1"
+                        type="number"
+                        value={item.quantity}
+                        onChange={(event) =>
+                          updateCartItemQuantity(item.candle.id, Math.max(1, Number(event.target.value)))
+                        }
+                      />
+                    </label>
+                    <button type="button" onClick={() => removeFromCart(item.candle.id)}>Удалить</button>
+                  </div>
                 </article>
               ))}
             </div>
