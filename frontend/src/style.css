@@ -747,7 +747,7 @@ button.primary-link { min-width: unset; }
   align-items: center;
 }
 
-.product-purchase { display: grid; gap: 12px; padding: 16px; border: 1px solid rgba(216, 138, 0, .18); border-radius: 18px; background: linear-gradient(135deg, #fffaf3, #fffdf8); }
+.product-purchase { display: grid; align-content: start; gap: 12px; padding: 16px; border: 1px solid rgba(216, 138, 0, .18); border-radius: 18px; background: linear-gradient(135deg, #fffaf3, #fffdf8); }
 .quantity-tier-picker { display: grid; gap: 10px; }
 .quantity-tier-picker > span { font-weight: 700; color: #482515; }
 .quantity-tier-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(112px, 1fr)); gap: 8px; }
