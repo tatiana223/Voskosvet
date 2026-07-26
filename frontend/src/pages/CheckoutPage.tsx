@@ -46,6 +46,7 @@ export function CheckoutPage() {
   const [items, setItems] = useState<CartItem[]>(() => getCartItems());
   const [form, setForm] = useState(initialForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [createdOrderId, setCreatedOrderId] = useState<number | null>(null);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
@@ -104,45 +105,17 @@ export function CheckoutPage() {
       .then((order) => {
         clearCart();
         setForm(initialForm);
-        setMessage(`Заказ №${order.id} отправлен. Его можно посмотреть в личном кабинете.`);
+        setCreatedOrderId(order.id);
+        setMessage(
+          auth
+            ? `Заказ №${order.id} отправлен. Он сохранён в вашем личном кабинете.`
+            : `Заказ №${order.id} отправлен. Сохраните номер заказа и телефон для отслеживания.`
+        );
       })
       .catch(() => {
         setError('Не получилось отправить заказ. Проверь, что backend запущен.');
       })
       .finally(() => setIsSubmitting(false));
-  }
-
-  if (!auth) {
-    return (
-      <section className="checkout-page">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Корзина</p>
-            <h1>Оформление заказа</h1>
-          </div>
-          <Link to="/catalog">Вернуться в каталог</Link>
-        </div>
-
-        <div className="auth-required">
-          <div>
-            <p className="eyebrow">Нужен аккаунт</p>
-            <h2>Войдите, чтобы оформить заказ</h2>
-            <p>
-              Корзина сохранится на этом устройстве. После входа заказ привяжется к вашему
-              личному кабинету.
-            </p>
-          </div>
-          <div className="auth-actions">
-            <Link className="primary-link" to="/login">
-              Войти
-            </Link>
-            <Link className="secondary-link" to="/register">
-              Создать аккаунт
-            </Link>
-          </div>
-        </div>
-      </section>
-    );
   }
 
   return (
@@ -154,6 +127,19 @@ export function CheckoutPage() {
         </div>
         <Link to="/catalog">Вернуться в каталог</Link>
       </div>
+
+      {!auth ? (
+        <aside className="guest-benefits">
+          <div>
+            <strong>Можно заказать без регистрации</strong>
+            <span>Войдите, чтобы данные заполнялись автоматически, все заказы были в одном месте и в будущем можно было получать персональные скидки.</span>
+          </div>
+          <div className="auth-actions">
+            <Link className="secondary-link" to="/login">Войти</Link>
+            <Link className="secondary-link" to="/register">Создать аккаунт</Link>
+          </div>
+        </aside>
+      ) : null}
 
       <div className="checkout-layout checkout-layout--form">
         <div className="cart-panel">
@@ -333,6 +319,11 @@ export function CheckoutPage() {
           </label>
 
           {message ? <p className="state-message">{message}</p> : null}
+          {createdOrderId && !auth ? (
+            <Link className="secondary-link checkout-tracking-link" to="/orders/track">
+              Отследить заказ №{createdOrderId}
+            </Link>
+          ) : null}
           {error ? <p className="state-message state-message-error">{error}</p> : null}
 
           <button className="primary-link" disabled={isSubmitting || items.length === 0} type="submit">

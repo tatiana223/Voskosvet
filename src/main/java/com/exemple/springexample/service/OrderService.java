@@ -29,6 +29,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +54,7 @@ public class OrderService {
         order.setCity(request.city());
         order.setDeliveryAddress(request.deliveryAddress());
         order.setDeliveryComment(request.deliveryComment());
+        order.setContactEmail(request.customerEmail());
         order.setPreferredContactMethod(
                 request.preferredContactMethod() == null
                         ? ContactMethod.PHONE
@@ -115,7 +117,7 @@ public class OrderService {
         Customer customer = new Customer();
         customer.setFullName(request.customerFullName());
         customer.setPhone(request.customerPhone());
-        customer.setEmail(request.customerEmail());
+        customer.setEmail("guest-" + UUID.randomUUID() + "@example.local");
 
         return customer;
     }

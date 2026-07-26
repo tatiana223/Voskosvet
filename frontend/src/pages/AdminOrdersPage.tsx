@@ -62,7 +62,7 @@ export function AdminOrdersPage() {
             <article className="admin-order-card" key={order.id}>
               <div className="admin-order-title"><div><strong>Заказ №{order.id}</strong><time>{new Date(order.createdAt).toLocaleString('ru-RU')}</time></div><b>{order.totalPrice.toLocaleString('ru-RU')} ₽</b></div>
               <div className="admin-order-grid">
-                <div><span>Покупатель</span><strong>{order.customer.fullName}</strong><a href={`tel:${order.customer.phone}`}>{order.customer.phone}</a><small>{order.customer.email}</small></div>
+                <div><span>Покупатель</span><strong>{order.customer.fullName}</strong><a href={`tel:${order.customer.phone}`}>{order.customer.phone}</a><small>{order.contactEmail || order.customer.email}</small></div>
                 <div><span>Доставка</span><strong>{deliveryLabels[order.deliveryMethod]}</strong><small>{order.city}{order.deliveryAddress ? `, ${order.deliveryAddress}` : ''}</small><small>{order.deliveryComment}</small></div>
                 <div><span>Состав</span>{order.items.map((item) => <small key={item.id}>{item.candleName} × {item.quantity}</small>)}</div>
                 <label><span>Статус</span><select value={order.status} onChange={(e) => void changeStatus(order, e.target.value as OrderStatus)}>{Object.entries(statusLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>

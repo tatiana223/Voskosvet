@@ -90,6 +90,7 @@ export function Header() {
           <NavLink to="/catalog">Каталог</NavLink>
           <a href="/#about">О нас</a>
           <NavLink to="/delivery-payment">Доставка и оплата</NavLink>
+          <NavLink to="/orders/track">Отследить заказ</NavLink>
           <NavLink to="/reviews">Отзывы</NavLink>
           {auth ? (
             <NavLink className="favorites-nav-link" to="/favorites">
@@ -99,17 +100,15 @@ export function Header() {
           {auth ? <NavLink to="/account">Кабинет</NavLink> : <NavLink to="/login">Войти</NavLink>}
         </nav>
 
-        {auth ? (
-          <Link
-            className={`cart-link${cartPulse ? ' cart-link--pulse' : ''}`}
-            to="/cart"
-            aria-label="Корзина"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            <span>Корзина</span>
-            <b>{cartCount}</b>
-          </Link>
-        ) : null}
+        <Link
+          className={`cart-link${cartPulse ? ' cart-link--pulse' : ''}`}
+          to="/cart"
+          aria-label="Корзина"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <span>Корзина</span>
+          <b>{cartCount}</b>
+        </Link>
       </header>
     </>
   );

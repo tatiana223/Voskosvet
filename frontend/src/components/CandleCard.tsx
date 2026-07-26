@@ -55,17 +55,13 @@ export function CandleCard({ candle }: CandleCardProps) {
           <strong>{candle.price.toLocaleString('ru-RU')} ₽</strong>
           <div className="card-actions">
             <Link className="card-details-link" to={`/catalog/${candle.slug}`}>Подробнее</Link>
-            {auth ? (
-              <button
-                className={isAdded ? 'add-to-cart-button--added' : ''}
-                type="button"
-                onClick={handleAddToCart}
-              >
-                {isAdded ? 'Добавлено ✓' : 'В корзину'}
-              </button>
-            ) : (
-              <Link to="/login">Войти для покупки</Link>
-            )}
+            <button
+              className={isAdded ? 'add-to-cart-button--added' : ''}
+              type="button"
+              onClick={handleAddToCart}
+            >
+              {isAdded ? 'Добавлено ✓' : 'В корзину'}
+            </button>
           </div>
         </div>
         <span className="cart-feedback" aria-live="polite">

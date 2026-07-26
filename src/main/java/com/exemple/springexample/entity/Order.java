@@ -49,6 +49,8 @@ public class Order {
 
     private String deliveryComment;
 
+    private String contactEmail;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ContactMethod preferredContactMethod = ContactMethod.PHONE;

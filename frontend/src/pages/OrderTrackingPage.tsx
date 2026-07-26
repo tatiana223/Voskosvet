@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { trackOrder } from '../api/ordersApi';
 import type { FormEvent } from 'react';
 import type { OrderResponse, OrderStatus } from '../types/order';
@@ -41,6 +42,12 @@ export function OrderTrackingPage() {
           Так мы покажем только ваш заказ.
         </p>
       </div>
+
+      <aside className="tracking-account-note">
+        <span>Оформляли заказ без регистрации? Введите его номер и телефон ниже.</span>
+        <span>После входа отслеживать проще: все заказы сохраняются в личном кабинете, а зарегистрированные покупатели смогут получать персональные скидки.</span>
+        <Link to="/login">Войти в аккаунт</Link>
+      </aside>
 
       <div className="tracking-layout">
         <form className="tracking-form" onSubmit={handleSubmit}>

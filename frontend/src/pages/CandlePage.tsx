@@ -113,25 +113,19 @@ export function CandlePage() {
           </div>
 
           <div className="product-actions">
-            {auth ? (
-              <>
-                <button
-                  className={`primary-link${isAdded ? ' product-add-button--added' : ''}`}
-                  type="button"
-                  disabled={!candle.available}
-                  onClick={() => {
-                    addToCart(candle, quantity);
-                    setIsAdded(true);
-                    window.setTimeout(() => setIsAdded(false), 1800);
-                  }}
-                >
-                  {isAdded ? 'Добавлено ✓' : 'Добавить в корзину'}
-                </button>
-                <Link className="secondary-link" to="/cart">Перейти в корзину</Link>
-              </>
-            ) : (
-              <Link className="primary-link" to="/login">Войти, чтобы купить</Link>
-            )}
+            <button
+              className={`primary-link${isAdded ? ' product-add-button--added' : ''}`}
+              type="button"
+              disabled={!candle.available}
+              onClick={() => {
+                addToCart(candle, quantity);
+                setIsAdded(true);
+                window.setTimeout(() => setIsAdded(false), 1800);
+              }}
+            >
+              {isAdded ? 'Добавлено ✓' : 'Добавить в корзину'}
+            </button>
+            <Link className="secondary-link" to="/cart">Перейти в корзину</Link>
             {auth ? (
               <button
                 className={`product-favorite-button${favorite ? ' product-favorite-button--active' : ''}`}

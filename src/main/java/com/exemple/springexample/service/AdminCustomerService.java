@@ -19,7 +19,7 @@ public class AdminCustomerService {
     private final OrderMapper orderMapper;
 
     public List<CustomerResponse> getCustomers() {
-        return customerRepository.findAll()
+        return customerRepository.findByPasswordIsNotNullOrderByIdDesc()
                 .stream()
                 .map(orderMapper::toCustomerResponse)
                 .toList();

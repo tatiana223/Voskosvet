@@ -50,6 +50,7 @@ export type OrderResponse = {
   city?: string;
   deliveryAddress?: string;
   deliveryComment?: string;
+  contactEmail?: string;
   preferredContactMethod?: ContactMethod;
   paymentMethod: PaymentMethod;
   comment?: string;

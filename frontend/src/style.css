@@ -739,6 +739,39 @@ button.primary-link { min-width: unset; }
   gap: 24px;
   align-items: start;
 }
+.tracking-account-note,
+.guest-benefits {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin: 0 auto 22px;
+  padding: 16px 18px;
+  border: 1px solid rgba(216, 138, 0, .24);
+  border-radius: 16px;
+  background: #fff8eb;
+  color: var(--brown);
+}
+.tracking-account-note {
+  width: min(1120px, calc(100% - 2 * clamp(18px, 6vw, 90px)));
+}
+.tracking-account-note span,
+.guest-benefits span {
+  color: var(--muted);
+  line-height: 1.45;
+}
+.tracking-account-note a {
+  flex: 0 0 auto;
+  color: var(--honey-dark);
+  font-weight: 900;
+}
+.guest-benefits > div:first-child {
+  display: grid;
+  gap: 4px;
+}
+.checkout-tracking-link {
+  width: fit-content;
+}
 
 .tracking-form,
 .tracking-result {
@@ -1811,6 +1844,8 @@ button.primary-link { min-width: unset; }
 
   .account-hero,
   .auth-required,
+  .guest-benefits,
+  .tracking-account-note,
   .account-order > div,
   .panel-title-row {
     align-items: flex-start;

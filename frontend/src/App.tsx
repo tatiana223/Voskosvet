@@ -1,4 +1,3 @@
-import { useEffect, useState, type ReactNode } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Header } from './components/Header';
 import { AccountPage } from './pages/AccountPage';
@@ -18,15 +17,6 @@ import { LoginPage } from './pages/LoginPage';
 import { OrderTrackingPage } from './pages/OrderTrackingPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { WelcomePage } from './pages/WelcomePage';
-import { getStoredAuth, subscribeToAuth } from './utils/auth';
-
-function CustomerRoute({ children }: { children: ReactNode }) {
-  const [auth, setAuth] = useState(() => getStoredAuth());
-
-  useEffect(() => subscribeToAuth(() => setAuth(getStoredAuth())), []);
-
-  return auth ? children : <Navigate to="/login" replace />;
-}
 
 export function App() {
   return (
@@ -37,8 +27,8 @@ export function App() {
           <Route path="/" element={<WelcomePage />} />
           <Route path="/catalog" element={<CatalogPage />} />
           <Route path="/catalog/:slug" element={<CandlePage />} />
-          <Route path="/cart" element={<CustomerRoute><CartPage /></CustomerRoute>} />
-          <Route path="/checkout" element={<CustomerRoute><CheckoutPage /></CustomerRoute>} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/delivery-payment" element={<DeliveryPaymentPage />} />
           <Route path="/reviews" element={<ReviewsPage />} />
           <Route path="/favorites" element={<FavoritesPage />} />

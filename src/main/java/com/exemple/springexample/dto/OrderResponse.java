@@ -20,6 +20,7 @@ public record OrderResponse(
         String city,
         String deliveryAddress,
         String deliveryComment,
+        String contactEmail,
         ContactMethod preferredContactMethod,
         PaymentMethod paymentMethod,
         String comment,
