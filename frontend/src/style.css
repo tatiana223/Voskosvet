@@ -2278,11 +2278,19 @@ button.primary-link { min-width: unset; }
   .quantity-tier-option span,
   .quantity-tier-option small { font-size: 11px; }
 
-  .product-price-row { align-items: center; gap: 10px; }
+  .product-price-row { align-items: flex-end; gap: 10px; }
   .selected-tier-price strong { font-size: 25px; }
   .selected-tier-price span,
   .selected-tier-price small { font-size: 11px; }
-  .quantity-control { gap: 4px; font-size: 11px; }
+  .quantity-control {
+    display: flex;
+    align-items: center;
+    width: auto;
+    gap: 7px;
+    padding-bottom: 1px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
   .quantity-control input { width: 78px; min-height: 42px; padding: 8px 10px; }
 
   .product-actions {
