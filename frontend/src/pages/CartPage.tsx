@@ -50,14 +50,18 @@ export function CartPage() {
                   <div>
                     <h3>{item.candle.name}</h3>
                     <p>{item.candle.shortDescription || item.candle.categoryName}</p>
-                    <p>{item.packageSize} свечей в коробке</p>
+                    <p>
+                      {(item.candle.priceTiers || []).length > 0
+                        ? `${item.packageSize} свечей в коробке`
+                        : 'Поштучная покупка'}
+                    </p>
                     <strong>{(
                       getCandleUnitPrice(item.candle, item.packageSize) * item.packageSize
-                    ).toLocaleString('ru-RU')} ₽ за коробку</strong>
+                    ).toLocaleString('ru-RU')} ₽ {(item.candle.priceTiers || []).length > 0 ? 'за коробку' : 'за штуку'}</strong>
                   </div>
                   <div className="cart-item-actions">
                     <label>
-                      <span>Коробок</span>
+                      <span>{(item.candle.priceTiers || []).length > 0 ? 'Коробок' : 'Количество'}</span>
                       <input
                         min="1"
                         type="number"
@@ -77,7 +81,7 @@ export function CartPage() {
           <aside className="cart-checkout-card">
             <p className="eyebrow">Итого</p>
             <strong>{total.toLocaleString('ru-RU')} ₽</strong>
-            <span>{items.reduce((sum, item) => sum + item.quantity, 0)} коробок</span>
+            <span>{items.reduce((sum, item) => sum + item.quantity, 0)} товаров</span>
             <p>Стоимость доставки будет рассчитана при оформлении заказа.</p>
             <Link className="primary-link" to="/checkout">Перейти к оформлению</Link>
             <Link className="secondary-link" to="/catalog">Вернуться в каталог</Link>

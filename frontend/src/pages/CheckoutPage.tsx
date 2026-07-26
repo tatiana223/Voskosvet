@@ -190,14 +190,18 @@ export function CheckoutPage() {
                     <div>
                       <h3>{item.candle.name}</h3>
                       <p>{item.candle.shortDescription || item.candle.categoryName}</p>
-                      <p>{item.packageSize} свечей в коробке</p>
+                      <p>
+                        {(item.candle.priceTiers || []).length > 0
+                          ? `${item.packageSize} свечей в коробке`
+                          : 'Поштучная покупка'}
+                      </p>
                       <strong>{(
                         getCandleUnitPrice(item.candle, item.packageSize) * item.packageSize
-                      ).toLocaleString('ru-RU')} ₽ за коробку</strong>
+                      ).toLocaleString('ru-RU')} ₽ {(item.candle.priceTiers || []).length > 0 ? 'за коробку' : 'за штуку'}</strong>
                     </div>
                     <div className="cart-item-actions">
                       <label>
-                        <span>Коробок</span>
+                        <span>{(item.candle.priceTiers || []).length > 0 ? 'Коробок' : 'Количество'}</span>
                         <input
                           min="1"
                           type="number"
@@ -229,7 +233,7 @@ export function CheckoutPage() {
           <div className="checkout-summary">
             <div>
               <span>В заказе</span>
-              <strong>{items.reduce((sum, item) => sum + item.quantity, 0)} коробок</strong>
+              <strong>{items.reduce((sum, item) => sum + item.quantity, 0)} товаров</strong>
             </div>
             <div>
               <span>Сумма</span>

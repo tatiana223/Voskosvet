@@ -270,7 +270,7 @@ main {
   gap: 12px;
 }
 .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
-.candle-card { position: relative; overflow: hidden; border: 1px solid rgba(101, 57, 22, .12); border-radius: 16px; background: white; box-shadow: 0 16px 38px rgba(69, 38, 16, .09); transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease; }
+.candle-card { position: relative; display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(101, 57, 22, .12); border-radius: 16px; background: white; box-shadow: 0 16px 38px rgba(69, 38, 16, .09); transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease; }
 .candle-card--added { border-color: rgba(216, 138, 0, .6); box-shadow: 0 20px 48px rgba(216, 138, 0, .2); transform: translateY(-3px); }
 .favorite-button { position: absolute; top: 12px; right: 12px; z-index: 4; display: grid; place-items: center; width: 42px; height: 42px; padding: 0; border: 1px solid rgba(74, 33, 20, .12); border-radius: 50%; background: rgba(255, 253, 248, .94); color: #7a5b47; font-size: 25px; line-height: 1; cursor: pointer; box-shadow: 0 8px 20px rgba(74, 33, 20, .12); transition: color .2s ease, background .2s ease, transform .2s ease; }
 .favorite-button:hover { transform: scale(1.08); }
@@ -287,7 +287,7 @@ main {
 .candle-image img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s ease; }
 .candle-card:hover img { transform: scale(1.04); }
 .featured-badge { position: absolute; top: 0; left: 0; padding: 8px 15px; border-radius: 15px 0 15px 0; background: #7b2f09; color: white; font-size: 13px; font-weight: 800; }
-.candle-card-body { padding: 17px 14px 14px; }
+.candle-card-body { display: flex; flex: 1; flex-direction: column; padding: 17px 14px 14px; }
 .candle-card h3 { margin: 0 0 5px; color: #2d211b; font-size: 17px; line-height: 1.25; }
 .candle-card p { margin: 0 0 12px; color: var(--muted); font-size: 14px; }
 .card-package-picker {
@@ -316,7 +316,19 @@ main {
   color: #7b4900;
   box-shadow: 0 0 0 1px #c67c00;
 }
-.card-footer { display: grid; gap: 10px; }
+.card-single-purchase {
+  display: grid;
+  align-content: center;
+  min-height: 42px;
+  margin-bottom: 12px;
+  padding: 6px 10px;
+  border: 1px solid #eadfd5;
+  border-radius: 10px;
+  background: #fffaf4;
+}
+.card-single-purchase span { color: #5a3421; font-size: 12px; font-weight: 800; }
+.card-single-purchase small { color: #8a776b; font-size: 10px; }
+.card-footer { display: grid; gap: 10px; margin-top: auto; }
 .card-footer strong { font-size: 24px; color: #15100d; }
 .card-package-price {
   display: flex;

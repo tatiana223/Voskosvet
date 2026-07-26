@@ -72,7 +72,12 @@ export function CandleCard({ candle }: CandleCardProps) {
               </button>
             ))}
           </div>
-        ) : null}
+        ) : (
+          <div className="card-single-purchase">
+            <span>Поштучно</span>
+            <small>Можно выбрать любое количество</small>
+          </div>
+        )}
         <div className="card-footer">
           <div className="card-package-price">
             <strong>{(unitPrice * packageSize).toLocaleString('ru-RU')} ₽</strong>
@@ -91,7 +96,11 @@ export function CandleCard({ candle }: CandleCardProps) {
           </div>
         </div>
         <span className="cart-feedback" aria-live="polite">
-          {isAdded ? `Коробка на ${packageSize} свечей добавлена` : ''}
+          {isAdded
+            ? (candle.priceTiers || []).length > 0
+              ? `Коробка на ${packageSize} свечей добавлена`
+              : 'Свеча добавлена в корзину'
+            : ''}
         </span>
       </div>
     </article>
