@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getCandleBySlug } from '../api/candlesApi';
 import type { Candle } from '../types/candle';
-import { addToCart, getCandleSavingPercent, getCandleUnitPrice } from '../utils/cart';
+import { addToCart, getCandleSavingPercent, getCandleUnitPrice, getDefaultPurchaseQuantity } from '../utils/cart';
 import { isFavorite, toggleFavorite } from '../utils/favorites';
 import { getStoredAuth, subscribeToAuth } from '../utils/auth';
 import { getCandleImage, useCandleImageFallback } from '../utils/images';
@@ -29,6 +29,7 @@ export function CandlePage() {
   useEffect(() => {
     if (candle) {
       setFavorite(isFavorite(candle.id));
+      setQuantity(getDefaultPurchaseQuantity(candle));
     }
   }, [candle]);
 
@@ -106,7 +107,7 @@ export function CandlePage() {
             <div className="quantity-tier-picker">
               <span>Выберите количество</span>
               <div className="quantity-tier-options">
-                {[{ quantity: 1, unitPrice: candle.price }, ...candle.priceTiers].map((tier) => {
+                {candle.priceTiers.map((tier, tierIndex) => {
                   const saving = getCandleSavingPercent(candle, tier.unitPrice);
                   return (
                     <button
@@ -117,7 +118,7 @@ export function CandlePage() {
                     >
                       <strong>{tier.quantity} шт.</strong>
                       <span>{tier.unitPrice.toLocaleString('ru-RU')} ₽/шт.</span>
-                      {saving > 0 ? <small>Выгода {saving}%</small> : <small>Базовая цена</small>}
+                      {saving > 0 ? <small>Выгода {saving}%</small> : <small>{tierIndex === 0 ? 'Стандартная коробка' : '\u00a0'}</small>}
                     </button>
                   );
                 })}
@@ -130,15 +131,17 @@ export function CandlePage() {
               <span>{unitPrice.toLocaleString('ru-RU')} ₽ за штуку</span>
               {savingPercent > 0 ? <small>Экономия {savingPercent}%</small> : null}
             </div>
-            <label className="quantity-control">
-              Количество
-              <input
-                min="1"
-                type="number"
-                value={quantity}
-                onChange={(event) => setQuantity(Math.max(1, Number(event.target.value)))}
-              />
-            </label>
+            {(candle.priceTiers || []).length === 0 ? (
+              <label className="quantity-control">
+                Количество
+                <input
+                  min="1"
+                  type="number"
+                  value={quantity}
+                  onChange={(event) => setQuantity(Math.max(1, Number(event.target.value)))}
+                />
+              </label>
+            ) : null}
           </div>
 
           <div className="product-actions">

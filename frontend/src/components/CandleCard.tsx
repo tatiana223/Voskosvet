@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Candle } from '../types/candle';
-import { addToCart } from '../utils/cart';
+import { addToCart, getDefaultPurchaseQuantity } from '../utils/cart';
 import { isFavorite, toggleFavorite } from '../utils/favorites';
 import { getStoredAuth, subscribeToAuth } from '../utils/auth';
 import { getCandleImage, useCandleImageFallback } from '../utils/images';
@@ -25,7 +25,7 @@ export function CandleCard({ candle }: CandleCardProps) {
   }, [candle.id]);
 
   function handleAddToCart() {
-    addToCart(candle);
+    addToCart(candle, getDefaultPurchaseQuantity(candle));
     setIsAdded(true);
     window.setTimeout(() => setIsAdded(false), 1400);
   }

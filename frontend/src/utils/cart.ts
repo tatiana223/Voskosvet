@@ -8,13 +8,17 @@ export type CartItem = {
 
 export function getCandleUnitPrice(candle: Candle, quantity: number) {
   return (candle.priceTiers || [])
-    .filter((tier) => tier.quantity <= quantity)
-    .sort((a, b) => b.quantity - a.quantity)[0]?.unitPrice ?? candle.price;
+    .find((tier) => tier.quantity === quantity)?.unitPrice ?? candle.price;
 }
 
 export function getCandleSavingPercent(candle: Candle, unitPrice: number) {
-  if (candle.price <= 0 || unitPrice >= candle.price) return 0;
-  return Math.round((1 - unitPrice / candle.price) * 100);
+  const referencePrice = candle.priceTiers?.[0]?.unitPrice ?? candle.price;
+  if (referencePrice <= 0 || unitPrice >= referencePrice) return 0;
+  return Math.round((1 - unitPrice / referencePrice) * 100);
+}
+
+export function getDefaultPurchaseQuantity(candle: Candle) {
+  return candle.priceTiers?.[0]?.quantity ?? 1;
 }
 
 const CART_KEY_PREFIX = 'voskosvet-cart';
@@ -105,7 +109,10 @@ export function addToCart(candle: Candle, quantity = 1) {
   const existingItem = items.find((item) => item.candle.id === candle.id);
 
   if (existingItem) {
-    existingItem.quantity += quantity;
+    existingItem.candle = candle;
+    existingItem.quantity = (candle.priceTiers || []).length > 0
+      ? quantity
+      : existingItem.quantity + quantity;
   } else {
     items.push({ candle, quantity });
   }

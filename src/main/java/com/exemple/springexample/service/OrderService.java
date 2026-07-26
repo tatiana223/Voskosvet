@@ -6,7 +6,6 @@ import com.exemple.springexample.dto.OrderResponse;
 import com.exemple.springexample.dto.PageResponse;
 import com.exemple.springexample.dto.UpdateOrderStatusRequest;
 import com.exemple.springexample.entity.Candle;
-import com.exemple.springexample.entity.CandlePriceTier;
 import com.exemple.springexample.entity.Customer;
 import com.exemple.springexample.entity.Order;
 import com.exemple.springexample.entity.OrderItem;
@@ -261,10 +260,17 @@ public class OrderService {
     }
 
     private BigDecimal resolveUnitPrice(Candle candle, int quantity) {
+        if (candle.getPriceTiers().isEmpty()) {
+            return candle.getPrice();
+        }
+
         return candle.getPriceTiers().stream()
-                .filter(tier -> tier.getQuantity() <= quantity)
-                .max(java.util.Comparator.comparingInt(CandlePriceTier::getQuantity))
-                .map(CandlePriceTier::getUnitPrice)
-                .orElse(candle.getPrice());
+                .filter(tier -> tier.getQuantity() == quantity)
+                .findFirst()
+                .map(tier -> tier.getUnitPrice())
+                .orElseThrow(() -> new BadRequestException(
+                        "Выберите один из доступных вариантов коробки для свечи «"
+                                + candle.getName() + "»"
+                ));
     }
 }

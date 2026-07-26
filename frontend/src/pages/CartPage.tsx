@@ -55,14 +55,25 @@ export function CartPage() {
                   <div className="cart-item-actions">
                     <label>
                       <span>Кол-во</span>
-                      <input
-                        min="1"
-                        type="number"
-                        value={item.quantity}
-                        onChange={(event) =>
-                          updateCartItemQuantity(item.candle.id, Math.max(1, Number(event.target.value)))
-                        }
-                      />
+                      {(item.candle.priceTiers || []).length > 0 ? (
+                        <select
+                          value={item.quantity}
+                          onChange={(event) => updateCartItemQuantity(item.candle.id, Number(event.target.value))}
+                        >
+                          {item.candle.priceTiers.map((tier) => (
+                            <option key={tier.quantity} value={tier.quantity}>{tier.quantity} шт. в коробке</option>
+                          ))}
+                        </select>
+                      ) : (
+                        <input
+                          min="1"
+                          type="number"
+                          value={item.quantity}
+                          onChange={(event) =>
+                            updateCartItemQuantity(item.candle.id, Math.max(1, Number(event.target.value)))
+                          }
+                        />
+                      )}
                     </label>
                     <button type="button" onClick={() => removeFromCart(item.candle.id)}>Удалить</button>
                   </div>
