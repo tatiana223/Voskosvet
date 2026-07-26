@@ -50,6 +50,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/candles", "/api/candles/**").permitAll()
                         .requestMatchers("/api/categories", "/api/categories/**").permitAll()
+                        .requestMatchers("/api/candle-sizes", "/api/candle-sizes/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/orders/*/tracking").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
 
@@ -58,6 +59,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/users/me/orders").authenticated()
 
                         .requestMatchers("/api/admin/candles/**").hasAnyRole("ADMIN", "MANAGER")
+                        .requestMatchers("/api/admin/candle-sizes/**").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers("/api/admin/categories/**").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers("/api/admin/orders/**").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers("/api/admin/customers/**").hasRole("ADMIN")

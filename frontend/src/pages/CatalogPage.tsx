@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
 import { getCandles } from '../api/candlesApi';
 import { getCategories } from '../api/categoriesApi';
+import { getCandleSizes } from '../api/candleSizesApi';
 import { CandleCard } from '../components/CandleCard';
 import type { Candle } from '../types/candle';
 import type { Category } from '../types/category';
 
-const candleSizes = ['15', '20', '25', '30'];
+const defaultCandleSizes = [15, 20, 30, 40, 45];
 
 export function CatalogPage() {
   const [candles, setCandles] = useState<Candle[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [candleSizes, setCandleSizes] = useState(defaultCandleSizes);
   const [candleSize, setCandleSize] = useState('');
   const [debouncedCandleSize, setDebouncedCandleSize] = useState('');
   const [categoryId, setCategoryId] = useState('');
@@ -21,6 +23,9 @@ export function CatalogPage() {
 
   useEffect(() => {
     getCategories().then(setCategories).catch(() => setCategories([]));
+    getCandleSizes()
+      .then((items) => setCandleSizes(items.map((item) => item.valueCm)))
+      .catch(() => setCandleSizes(defaultCandleSizes));
   }, []);
 
   useEffect(() => {
@@ -69,17 +74,20 @@ export function CatalogPage() {
           <fieldset className="size-filter">
             <legend>Размер свечи (см)</legend>
             <div className="size-filter-options">
-              {candleSizes.map((size) => (
+              {candleSizes.map((size) => {
+                const sizeValue = String(size);
+                return (
                 <button
-                  className={candleSize === size ? 'active' : ''}
+                  className={candleSize === sizeValue ? 'active' : ''}
                   type="button"
-                  aria-pressed={candleSize === size}
+                  aria-pressed={candleSize === sizeValue}
                   key={size}
-                  onClick={() => setCandleSize((current) => current === size ? '' : size)}
+                  onClick={() => setCandleSize((current) => current === sizeValue ? '' : sizeValue)}
                 >
                   {size}
                 </button>
-              ))}
+                );
+              })}
             </div>
           </fieldset>
 

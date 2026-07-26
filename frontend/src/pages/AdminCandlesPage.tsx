@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   clearAdminCredentials,
+  createAdminCandleSize,
   createAdminCandle,
   getAdminCandles,
   getAdminCategories,
@@ -11,6 +12,7 @@ import {
   updateAdminCandle,
   type CandleFormData,
 } from '../api/adminApi';
+import { getCandleSizes, type CandleSizeOption } from '../api/candleSizesApi';
 import type { Candle } from '../types/candle';
 import type { Category } from '../types/category';
 import { getCandleImage, useCandleImageFallback } from '../utils/images';
@@ -37,6 +39,8 @@ export function AdminCandlesPage() {
   const navigate = useNavigate();
   const [candles, setCandles] = useState<Candle[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [sizes, setSizes] = useState<CandleSizeOption[]>([]);
+  const [newSize, setNewSize] = useState('');
   const [form, setForm] = useState<CandleFormData>(emptyForm);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [message, setMessage] = useState('');
@@ -45,12 +49,14 @@ export function AdminCandlesPage() {
 
   async function loadData() {
     try {
-      const [candlePage, categoryItems] = await Promise.all([
+      const [candlePage, categoryItems, sizeItems] = await Promise.all([
         getAdminCandles(),
         getAdminCategories(),
+        getCandleSizes(),
       ]);
       setCandles(candlePage.items);
       setCategories(categoryItems);
+      setSizes(sizeItems);
       setForm((current) => ({
         ...current,
         categoryId: current.categoryId || categoryItems[0]?.id || 0,
@@ -118,6 +124,24 @@ export function AdminCandlesPage() {
     }
   }
 
+  async function handleAddSize() {
+    const valueCm = Number(newSize);
+    if (!Number.isInteger(valueCm) || valueCm <= 0) {
+      setError('Укажите размер целым числом больше нуля.');
+      return;
+    }
+
+    setError('');
+    try {
+      const created = await createAdminCandleSize(valueCm);
+      setSizes((current) => [...current, created].sort((a, b) => a.valueCm - b.valueCm));
+      setNewSize('');
+      setMessage(`Размер ${valueCm} см добавлен.`);
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'Не удалось добавить размер');
+    }
+  }
+
   async function handleHide(candle: Candle) {
     if (!window.confirm(`Скрыть «${candle.name}» из каталога?`)) return;
     await hideAdminCandle(candle.id);
@@ -144,6 +168,13 @@ export function AdminCandlesPage() {
         <form className="admin-form" onSubmit={handleSubmit}>
           <h2>{editingId ? 'Изменить свечу' : 'Добавить свечу'}</h2>
 
+          <div className="admin-size-manager">
+            <label>Новый размер, см
+              <input min="1" step="1" type="number" value={newSize} onChange={(e) => setNewSize(e.target.value)} placeholder="Например, 50" />
+            </label>
+            <button type="button" onClick={() => void handleAddSize()}>Добавить размер</button>
+          </div>
+
           <div className="admin-form-grid">
             <label>Название<input required value={form.name} onChange={(e) => updateField('name', e.target.value)} /></label>
             <label>Slug<input required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" value={form.slug} onChange={(e) => updateField('slug', e.target.value)} /></label>
@@ -154,10 +185,9 @@ export function AdminCandlesPage() {
             <label>Размер свечи
               <select required value={form.size} onChange={(e) => updateField('size', e.target.value)}>
                 <option value="" disabled>Выберите размер</option>
-                <option value="15 см">15 см</option>
-                <option value="20 см">20 см</option>
-                <option value="25 см">25 см</option>
-                <option value="30 см">30 см</option>
+                {sizes.map((size) => (
+                  <option key={size.id} value={`${size.valueCm} см`}>{size.valueCm} см</option>
+                ))}
               </select>
             </label>
             <label>Вес, г<input required min="1" type="number" value={form.weightGrams} onChange={(e) => updateField('weightGrams', Number(e.target.value))} /></label>

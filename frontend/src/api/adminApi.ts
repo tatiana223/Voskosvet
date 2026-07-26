@@ -81,6 +81,13 @@ export function createAdminCandle(data: CandleFormData) {
   });
 }
 
+export function createAdminCandleSize(valueCm: number) {
+  return adminRequest<{ id: number; valueCm: number }>('/api/admin/candle-sizes', {
+    method: 'POST',
+    body: JSON.stringify({ valueCm }),
+  });
+}
+
 export function updateAdminCandle(id: number, data: CandleFormData) {
   return adminRequest<Candle>(`/api/admin/candles/${id}`, {
     method: 'PUT',

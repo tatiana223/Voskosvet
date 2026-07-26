@@ -1610,6 +1610,8 @@ button.primary-link { min-width: unset; }
 .admin-form, .admin-products { padding: 28px; border: 1px solid rgba(74, 33, 20, .1); border-radius: 22px; background: white; box-shadow: 0 18px 44px rgba(74, 33, 20, .07); }
 .admin-form { display: grid; gap: 18px; }
 .admin-form h2, .admin-products h2 { margin: 0 0 6px; color: var(--brown); font-family: "Cormorant Garamond", Georgia, serif; font-size: 34px; }
+.admin-size-manager { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 10px; margin: 16px 0; padding: 14px; border-radius: 14px; background: #fff5e3; }
+.admin-size-manager button { min-height: 45px; padding: 0 16px; border: 1px solid rgba(216, 138, 0, .35); border-radius: 12px; background: white; color: var(--honey-dark); font-weight: 900; }
 .admin-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .admin-form label { display: grid; gap: 7px; color: var(--brown); font-size: 13px; font-weight: 800; }
 .admin-image-preview { position: relative; width: min(100%, 420px); height: 230px; overflow: hidden; border-radius: 16px; background: var(--sand); }
@@ -1817,6 +1819,7 @@ button.primary-link { min-width: unset; }
 
   .admin-heading { align-items: flex-start; flex-direction: column; }
   .admin-layout, .admin-form-grid { grid-template-columns: 1fr; }
+  .admin-size-manager { grid-template-columns: 1fr; }
   .admin-product { grid-template-columns: 64px 1fr; }
   .admin-product img { width: 64px; height: 64px; grid-row: span 2; }
   .admin-stats, .admin-order-grid, .admin-categories-layout { grid-template-columns: 1fr; }
