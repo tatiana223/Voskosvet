@@ -122,6 +122,7 @@ public class OrderService {
         return customer;
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<OrderResponse> getOrders(
             OrderStatus status,
             String search,
@@ -158,6 +159,7 @@ public class OrderService {
         );
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse getOrderById(Long id) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Заказ не найден"));
@@ -165,6 +167,7 @@ public class OrderService {
         return orderMapper.toOrderResponse(order);
     }
 
+    @Transactional(readOnly = true)
     public OrderResponse trackOrder(Long id, String phone) {
         if (phone == null || phone.isBlank()) {
             throw new BadRequestException("Укажите телефон для отслеживания заказа");
@@ -176,6 +179,7 @@ public class OrderService {
         return orderMapper.toOrderResponse(order);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> trackOrders(String phone, String surname) {
         if (phone == null || phone.isBlank() || surname == null || surname.isBlank()) {
             throw new BadRequestException("Укажите телефон и фамилию");
@@ -238,6 +242,7 @@ public class OrderService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<OrderResponse> getCurrentCustomerOrders(Customer customer) {
         return orderRepository.findByCustomerIdOrderByCreatedAtDesc(customer.getId())
                 .stream()
