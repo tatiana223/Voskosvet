@@ -849,6 +849,8 @@ button.primary-link { min-width: unset; }
 
 @media (max-width: 620px) {
   .site-header { padding: 14px 16px; }
+  .auth-page,
+  .account-page { min-height: calc(100svh - 74px); }
   .brand { font-size: 25px; }
   .brand small { display: none; }
   .brand-mark { width: 42px; height: 42px; font-size: 20px; }
