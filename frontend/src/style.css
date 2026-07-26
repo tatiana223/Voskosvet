@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap");
 
 :root {
+  color-scheme: light;
   --cream: #fff9f0;
   --milk: #fffdf8;
   --sand: #f4e2c8;
