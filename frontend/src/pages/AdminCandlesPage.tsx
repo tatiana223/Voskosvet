@@ -151,7 +151,15 @@ export function AdminCandlesPage() {
             <label>Категория<select value={form.categoryId} onChange={(e) => updateField('categoryId', Number(e.target.value))}>{categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></label>
             <label>Аромат<input required value={form.scent} onChange={(e) => updateField('scent', e.target.value)} /></label>
             <label>Цвет<input required value={form.color} onChange={(e) => updateField('color', e.target.value)} /></label>
-            <label>Размер свечи<input required value={form.size} onChange={(e) => updateField('size', e.target.value)} placeholder="Например, 15 × 2 см" /></label>
+            <label>Размер свечи
+              <select required value={form.size} onChange={(e) => updateField('size', e.target.value)}>
+                <option value="" disabled>Выберите размер</option>
+                <option value="15 см">15 см</option>
+                <option value="20 см">20 см</option>
+                <option value="25 см">25 см</option>
+                <option value="30 см">30 см</option>
+              </select>
+            </label>
             <label>Вес, г<input required min="1" type="number" value={form.weightGrams} onChange={(e) => updateField('weightGrams', Number(e.target.value))} /></label>
             <label>Горение, ч<input required min="1" type="number" value={form.burnTimeHours} onChange={(e) => updateField('burnTimeHours', Number(e.target.value))} /></label>
           </div>

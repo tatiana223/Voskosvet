@@ -5,6 +5,8 @@ import { CandleCard } from '../components/CandleCard';
 import type { Candle } from '../types/candle';
 import type { Category } from '../types/category';
 
+const candleSizes = ['15', '20', '25', '30'];
+
 export function CatalogPage() {
   const [candles, setCandles] = useState<Candle[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -64,15 +66,22 @@ export function CatalogPage() {
 
       <div className="filter-panel">
         <div className="filter-grid">
-          <label>
-            Размер свечи
-            <input
-              type="search"
-              value={candleSize}
-              onChange={(event) => setCandleSize(event.target.value)}
-              placeholder="Например, 15 см"
-            />
-          </label>
+          <fieldset className="size-filter">
+            <legend>Размер свечи (см)</legend>
+            <div className="size-filter-options">
+              {candleSizes.map((size) => (
+                <button
+                  className={candleSize === size ? 'active' : ''}
+                  type="button"
+                  aria-pressed={candleSize === size}
+                  key={size}
+                  onClick={() => setCandleSize((current) => current === size ? '' : size)}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+          </fieldset>
 
           <label>
             Категория
