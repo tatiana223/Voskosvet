@@ -30,6 +30,7 @@ public class CandleService {
     private final CandleMapper candleMapper;
 
     public PageResponse<CandleResponse> getCandles(
+            String name,
             Long categoryId,
             String scent,
             Boolean featured,
@@ -48,8 +49,12 @@ public class CandleService {
         String normalizedScent = scent == null || scent.isBlank()
                 ? null
                 : scent.trim();
+        String normalizedName = name == null || name.isBlank()
+                ? null
+                : name.trim();
 
         Page<Candle> candlesPage = candleRepository.searchCandles(
+                normalizedName,
                 categoryId,
                 featured,
                 normalizedScent,

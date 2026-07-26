@@ -85,6 +85,14 @@ main {
   background: #fffaf3;
 }
 
+@media (min-width: 901px) {
+  .landing-snap,
+  .screen-section,
+  .hero {
+    min-height: calc(125svh - 80px);
+  }
+}
+
 .hero::before {
   position: absolute;
   inset: 0;
@@ -164,33 +172,6 @@ main {
 .hero-points b { color: var(--brown); font-size: 15px; line-height: 1.25; }
 .primary-link { display: inline-flex; align-items: center; justify-content: center; min-width: 235px; padding: 16px 26px; border-radius: 16px; background: linear-gradient(135deg, #e49a00, #c87500); color: white; font-weight: 800; box-shadow: 0 14px 30px rgba(210, 124, 0, .25); }
 .hero-photo { display: none; }
-
-.section-next {
-  position: absolute;
-  bottom: 13px;
-  left: 50%;
-  z-index: 6;
-  display: grid;
-  justify-items: center;
-  gap: 1px;
-  color: rgba(74, 33, 20, .62);
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: .18em;
-  text-transform: uppercase;
-  transform: translateX(-50%);
-  transition: color .22s ease;
-}
-.section-next:hover { color: var(--honey-dark); }
-.section-next i {
-  font-size: 29px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: .9;
-  animation: nextArrowMove 1.7s ease-in-out infinite;
-}
-.section-next--hero { bottom: 121px; }
-.section-next--up i { animation-name: upArrowMove; }
 
 .benefit-ribbon {
   position: absolute;
@@ -397,7 +378,7 @@ main {
   margin-bottom: 24px;
 }
 .filter-grid {
-  grid-template-columns: minmax(180px, 1.2fr) repeat(2, minmax(120px, .7fr)) auto;
+  grid-template-columns: minmax(210px, 1.35fr) minmax(160px, 1fr) repeat(2, minmax(120px, .7fr)) auto;
   align-items: end;
 }
 .filter-grid button {
@@ -836,15 +817,6 @@ button.primary-link { min-width: unset; }
   .hero::after { background: linear-gradient(180deg, rgba(255,253,248,.78), rgba(255,253,248,.46)); }
   .hero-copy { width: min(100%, 640px); min-height: 560px; }
   .hero-photo { display: none; }
-  .section-next {
-    position: relative;
-    bottom: auto;
-    left: auto;
-    width: max-content;
-    margin: 24px auto 0;
-    transform: none;
-  }
-  .section-next--hero { margin-bottom: 26px; }
   .benefit-ribbon { position: relative; right: auto; bottom: auto; left: auto; margin: -18px clamp(18px, 5vw, 76px) 0; }
   .benefit-ribbon, .grid, .reviews-grid, .review-photo-strip, .why-section, .why-grid, .landing-footer, .filter-grid, .form-grid, .checkout-layout, .product-page, .tracking-layout { grid-template-columns: 1fr 1fr; }
   .reviews-grid,
@@ -998,18 +970,6 @@ button.primary-link { min-width: unset; }
     opacity: 1;
     transform: translateY(0) scale(1);
   }
-}
-
-@keyframes nextArrowMove {
-  0%,
-  100% { transform: translateY(0); }
-  50% { transform: translateY(6px); }
-}
-
-@keyframes upArrowMove {
-  0%,
-  100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
 }
 
 @keyframes photoSoftReveal {

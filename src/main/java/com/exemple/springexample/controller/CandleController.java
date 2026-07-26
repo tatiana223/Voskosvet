@@ -24,6 +24,7 @@ public class CandleController {
     @Operation(summary = "Получить страницу свечей")
     @GetMapping
     public PageResponse<CandleResponse> getCandles(
+            @RequestParam(required = false) String name,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String scent,
             @RequestParam(required = false) Boolean featured,
@@ -33,7 +34,7 @@ public class CandleController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "12") int size
     ) {
-        return candleService.getCandles(categoryId, scent, featured, minPrice,
+        return candleService.getCandles(name, categoryId, scent, featured, minPrice,
                 maxPrice, sort, page, size);
     }
 

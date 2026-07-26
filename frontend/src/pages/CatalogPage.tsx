@@ -8,6 +8,8 @@ import type { Category } from '../types/category';
 export function CatalogPage() {
   const [candles, setCandles] = useState<Candle[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [name, setName] = useState('');
+  const [debouncedName, setDebouncedName] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -20,9 +22,15 @@ export function CatalogPage() {
   }, []);
 
   useEffect(() => {
+    const timer = window.setTimeout(() => setDebouncedName(name.trim()), 300);
+    return () => window.clearTimeout(timer);
+  }, [name]);
+
+  useEffect(() => {
     setIsLoading(true);
     setError('');
     getCandles({
+      name: debouncedName || undefined,
       categoryId: categoryId ? Number(categoryId) : undefined,
       minPrice: minPrice ? Number(minPrice) : undefined,
       maxPrice: maxPrice ? Number(maxPrice) : undefined,
@@ -35,7 +43,7 @@ export function CatalogPage() {
         setError('Каталог не загрузился. Проверь, что backend запущен на http://localhost:8080.');
       })
       .finally(() => setIsLoading(false));
-  }, [categoryId, minPrice, maxPrice, sort]);
+  }, [debouncedName, categoryId, minPrice, maxPrice, sort]);
 
   return (
     <section className="section">
@@ -57,6 +65,16 @@ export function CatalogPage() {
 
       <div className="filter-panel">
         <div className="filter-grid">
+          <label>
+            Поиск по названию
+            <input
+              type="search"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder="Например, Медовая"
+            />
+          </label>
+
           <label>
             Категория
             <select value={categoryId} onChange={(event) => setCategoryId(event.target.value)}>
@@ -94,6 +112,7 @@ export function CatalogPage() {
           <button
             type="button"
             onClick={() => {
+              setName('');
               setCategoryId('');
               setMinPrice('');
               setMaxPrice('');

@@ -118,11 +118,6 @@ export function WelcomePage() {
 
         <div className="hero-photo" aria-hidden="true" />
 
-        <a className="section-next section-next--hero" href="#catalog-preview">
-          <span>Дальше</span>
-          <i aria-hidden="true">↓</i>
-        </a>
-
         <section className="benefit-ribbon" aria-label="Преимущества">
           <div>
             <Emblem name="honey" />
@@ -167,10 +162,6 @@ export function WelcomePage() {
           </div>
         )}
 
-        <a className="section-next" href="#about">
-          <span>Дальше</span>
-          <i aria-hidden="true">↓</i>
-        </a>
       </section>
 
       <section className="why-section screen-section" id="about">
@@ -198,10 +189,6 @@ export function WelcomePage() {
           </div>
         </div>
 
-        <a className="section-next" href="#reviews">
-          <span>Дальше</span>
-          <i aria-hidden="true">↓</i>
-        </a>
       </section>
 
       <section className="review-section screen-section" id="reviews">
@@ -236,10 +223,6 @@ export function WelcomePage() {
           <img src="/images/about-natural-candle.webp" alt="Горящая свеча на деревянном столе" />
         </div>
 
-        <a className="section-next section-next--up" href="#home">
-          <span>Наверх</span>
-          <i aria-hidden="true">↑</i>
-        </a>
       </section>
 
     </div>
