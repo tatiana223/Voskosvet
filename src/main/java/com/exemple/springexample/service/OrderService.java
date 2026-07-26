@@ -186,7 +186,7 @@ public class OrderService {
         }
 
         List<OrderResponse> orders = orderRepository
-                .findByCustomerPhoneOrderByCreatedAtDesc(phone.trim())
+                .findByCustomerNormalizedPhoneOrderByCreatedAtDesc(Customer.normalizePhone(phone))
                 .stream()
                 .filter(order -> hasExactNamePart(order.getCustomer().getFullName(), surname))
                 .map(orderMapper::toOrderResponse)
