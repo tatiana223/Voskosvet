@@ -438,29 +438,47 @@ main {
   padding: 0;
 }
 .size-filter-options {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(44px, 1fr));
+  display: flex;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid rgba(74,33,20,.18);
+  border-radius: 12px;
+  background: #fffaf3;
+  scrollbar-color: rgba(216, 138, 0, .62) rgba(216, 138, 0, .1);
+  scrollbar-width: thin;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+.size-filter-options::-webkit-scrollbar {
+  height: 5px;
+}
+.size-filter-options::-webkit-scrollbar-track {
+  background: rgba(216, 138, 0, .1);
+}
+.size-filter-options::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(216, 138, 0, .62);
 }
 .filter-grid .size-filter-options button {
-  min-width: 0;
+  flex: 0 0 72px;
+  min-width: 72px;
   padding: 0 10px;
-  border-color: rgba(74,33,20,.18);
+  border: 0;
+  border-right: 1px solid rgba(74,33,20,.14);
   border-radius: 0;
   background: #fffaf3;
   color: var(--brown);
+  scroll-snap-align: start;
 }
 .filter-grid .size-filter-options button + button {
   border-left: 0;
 }
-.filter-grid .size-filter-options button:first-child {
-  border-radius: 12px 0 0 12px;
-}
 .filter-grid .size-filter-options button:last-child {
-  border-radius: 0 12px 12px 0;
+  border-right: 0;
 }
 .filter-grid .size-filter-options button.active {
   position: relative;
-  border-color: var(--honey);
   background: #fff0d4;
   color: var(--honey-dark);
   box-shadow: inset 0 0 0 1px var(--honey);
