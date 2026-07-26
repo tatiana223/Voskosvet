@@ -53,7 +53,7 @@ export function CartPage() {
                   </div>
                   <div className="cart-item-actions">
                     <label>
-                      Кол-во
+                      <span>Кол-во</span>
                       <input
                         min="1"
                         type="number"
