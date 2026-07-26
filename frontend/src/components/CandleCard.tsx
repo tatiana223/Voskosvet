@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Candle } from '../types/candle';
+import {
+  addToCart,
+  getCandleSavingPercent,
+  getCandleUnitPrice,
+  getDefaultPackageSize,
+} from '../utils/cart';
 import { isFavorite, toggleFavorite } from '../utils/favorites';
 import { getStoredAuth, subscribeToAuth } from '../utils/auth';
 import { getCandleImage, useCandleImageFallback } from '../utils/images';
@@ -14,6 +20,10 @@ export function CandleCard({ candle }: CandleCardProps) {
   const image = getCandleImage(candle.imageUrl);
   const [favorite, setFavorite] = useState(() => isFavorite(candle.id));
   const [auth, setAuth] = useState(() => getStoredAuth());
+  const [packageSize, setPackageSize] = useState(() => getDefaultPackageSize(candle));
+  const [isAdded, setIsAdded] = useState(false);
+  const unitPrice = getCandleUnitPrice(candle, packageSize);
+  const saving = getCandleSavingPercent(candle, unitPrice);
 
   useEffect(() => {
     return subscribeToAuth(() => {
@@ -22,8 +32,14 @@ export function CandleCard({ candle }: CandleCardProps) {
     });
   }, [candle.id]);
 
+  function handleAddToCart() {
+    addToCart(candle, packageSize, 1);
+    setIsAdded(true);
+    window.setTimeout(() => setIsAdded(false), 1400);
+  }
+
   return (
-    <article className="candle-card">
+    <article className={`candle-card${isAdded ? ' candle-card--added' : ''}`}>
       {auth ? (
         <button
           className={`favorite-button${favorite ? ' favorite-button--active' : ''}`}
@@ -43,12 +59,40 @@ export function CandleCard({ candle }: CandleCardProps) {
       <div className="candle-card-body">
         <h3>{candle.name}</h3>
         <p>{candle.shortDescription || '100% пчелиный воск'}</p>
+        {(candle.priceTiers || []).length > 0 ? (
+          <div className="card-package-picker" aria-label="Размер коробки">
+            {candle.priceTiers.map((tier) => (
+              <button
+                className={packageSize === tier.quantity ? 'card-package-option card-package-option--active' : 'card-package-option'}
+                key={tier.quantity}
+                type="button"
+                onClick={() => setPackageSize(tier.quantity)}
+              >
+                {tier.quantity} шт.
+              </button>
+            ))}
+          </div>
+        ) : null}
         <div className="card-footer">
-          <strong>{candle.price.toLocaleString('ru-RU')} ₽</strong>
+          <div className="card-package-price">
+            <strong>{(unitPrice * packageSize).toLocaleString('ru-RU')} ₽</strong>
+            <span>{unitPrice.toLocaleString('ru-RU')} ₽/шт.</span>
+            {saving > 0 ? <small>Выгода {saving}%</small> : null}
+          </div>
           <div className="card-actions">
             <Link className="card-details-link" to={`/catalog/${candle.slug}`}>Подробнее</Link>
+            <button
+              className={isAdded ? 'add-to-cart-button--added' : ''}
+              type="button"
+              onClick={handleAddToCart}
+            >
+              {isAdded ? 'Добавлено ✓' : 'В корзину'}
+            </button>
           </div>
         </div>
+        <span className="cart-feedback" aria-live="polite">
+          {isAdded ? `Коробка на ${packageSize} свечей добавлена` : ''}
+        </span>
       </div>
     </article>
   );

@@ -290,8 +290,42 @@ main {
 .candle-card-body { padding: 17px 14px 14px; }
 .candle-card h3 { margin: 0 0 5px; color: #2d211b; font-size: 17px; line-height: 1.25; }
 .candle-card p { margin: 0 0 12px; color: var(--muted); font-size: 14px; }
+.card-package-picker {
+  display: flex;
+  gap: 6px;
+  margin: 0 -2px 12px;
+  padding: 2px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.card-package-option {
+  flex: 0 0 auto;
+  min-width: 58px;
+  padding: 8px 9px;
+  border: 1px solid #e3d3c5;
+  border-radius: 10px;
+  background: #fffaf4;
+  color: #5a3421;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.card-package-option--active {
+  border-color: #c67c00;
+  background: #fff0cf;
+  color: #7b4900;
+  box-shadow: 0 0 0 1px #c67c00;
+}
 .card-footer { display: grid; gap: 10px; }
 .card-footer strong { font-size: 24px; color: #15100d; }
+.card-package-price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 9px;
+}
+.card-package-price span { color: #75645a; font-size: 12px; font-weight: 700; }
+.card-package-price small { color: #9a5d00; font-size: 12px; font-weight: 800; }
 .card-actions {
   display: grid;
   grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
