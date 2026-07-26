@@ -219,7 +219,7 @@ export function CheckoutPage() {
         </div>
 
         <form className="checkout-form" onSubmit={handleSubmit}>
-          <h2>Контакты и доставка</h2>
+          <h2>{auth ? 'Доставка и оплата' : 'Контакты и доставка'}</h2>
 
           <div className="checkout-summary">
             <div>
@@ -234,50 +234,54 @@ export function CheckoutPage() {
           </div>
 
           <div className="form-grid">
-            <label>
-              Имя и фамилия
-              <input
-                required
-                value={form.customerFullName}
-                onChange={(event) => updateField('customerFullName', event.target.value)}
-                placeholder="Татьяна Иванова"
-              />
-            </label>
+            {!auth ? (
+              <>
+                <label>
+                  Имя и фамилия
+                  <input
+                    required
+                    value={form.customerFullName}
+                    onChange={(event) => updateField('customerFullName', event.target.value)}
+                    placeholder="Татьяна Иванова"
+                  />
+                </label>
 
-            <label>
-              Телефон
-              <input
-                required
-                value={form.customerPhone}
-                onChange={(event) => updateField('customerPhone', event.target.value)}
-                placeholder="+7 999 123-45-67"
-              />
-            </label>
+                <label>
+                  Телефон
+                  <input
+                    required
+                    value={form.customerPhone}
+                    onChange={(event) => updateField('customerPhone', event.target.value)}
+                    placeholder="+7 999 123-45-67"
+                  />
+                </label>
 
-            <label>
-              Email
-              <input
-                type="email"
-                value={form.customerEmail}
-                onChange={(event) => updateField('customerEmail', event.target.value)}
-                placeholder="mail@example.ru"
-              />
-            </label>
+                <label>
+                  Email
+                  <input
+                    type="email"
+                    value={form.customerEmail}
+                    onChange={(event) => updateField('customerEmail', event.target.value)}
+                    placeholder="mail@example.ru"
+                  />
+                </label>
 
-            <label>
-              Как связаться
-              <select
-                value={form.preferredContactMethod}
-                onChange={(event) =>
-                  updateField('preferredContactMethod', event.target.value as ContactMethod)
-                }
-              >
-                <option value="WHATSAPP">WhatsApp</option>
-                <option value="TELEGRAM">Telegram</option>
-                <option value="PHONE">Звонок</option>
-                <option value="EMAIL">Email</option>
-              </select>
-            </label>
+                <label>
+                  Как связаться
+                  <select
+                    value={form.preferredContactMethod}
+                    onChange={(event) =>
+                      updateField('preferredContactMethod', event.target.value as ContactMethod)
+                    }
+                  >
+                    <option value="WHATSAPP">WhatsApp</option>
+                    <option value="TELEGRAM">Telegram</option>
+                    <option value="PHONE">Звонок</option>
+                    <option value="EMAIL">Email</option>
+                  </select>
+                </label>
+              </>
+            ) : null}
 
             <label>
               Способ доставки
@@ -305,15 +309,6 @@ export function CheckoutPage() {
             </label>
 
             <label>
-              Город
-              <input
-                value={form.city}
-                onChange={(event) => updateField('city', event.target.value)}
-                placeholder="Москва"
-              />
-            </label>
-
-            <label>
               Адрес доставки
               <input
                 value={form.deliveryAddress}
@@ -321,27 +316,42 @@ export function CheckoutPage() {
                 placeholder="Улица, дом, квартира"
               />
             </label>
+
+            {!auth ? (
+              <label>
+                Город
+                <input
+                  value={form.city}
+                  onChange={(event) => updateField('city', event.target.value)}
+                  placeholder="Москва"
+                />
+              </label>
+            ) : null}
           </div>
 
-          <label>
-            Комментарий к доставке
-            <textarea
-              value={form.deliveryComment}
-              onChange={(event) => updateField('deliveryComment', event.target.value)}
-              rows={3}
-              placeholder="Например: удобное время, пункт выдачи, детали адреса"
-            />
-          </label>
+          {!auth ? (
+            <>
+              <label>
+                Комментарий к доставке
+                <textarea
+                  value={form.deliveryComment}
+                  onChange={(event) => updateField('deliveryComment', event.target.value)}
+                  rows={3}
+                  placeholder="Например: удобное время, пункт выдачи, детали адреса"
+                />
+              </label>
 
-          <label>
-            Комментарий к заказу
-            <textarea
-              value={form.comment}
-              onChange={(event) => updateField('comment', event.target.value)}
-              rows={3}
-              placeholder="Пожелания по упаковке или набору"
-            />
-          </label>
+              <label>
+                Комментарий к заказу
+                <textarea
+                  value={form.comment}
+                  onChange={(event) => updateField('comment', event.target.value)}
+                  rows={3}
+                  placeholder="Пожелания по упаковке или набору"
+                />
+              </label>
+            </>
+          ) : null}
 
           {message ? <p className="state-message">{message}</p> : null}
           {createdOrderId && !auth ? (

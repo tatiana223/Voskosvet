@@ -96,7 +96,7 @@ export function Header() {
           <NavLink to="/catalog">Каталог</NavLink>
           <a href="/#about">О нас</a>
           <NavLink to="/delivery-payment">Доставка и оплата</NavLink>
-          <NavLink to="/orders/track">Отследить заказ</NavLink>
+          {!auth ? <NavLink to="/orders/track">Отследить заказ</NavLink> : null}
           <NavLink to="/reviews">Отзывы</NavLink>
           {auth ? (
             <NavLink className="favorites-nav-link" to="/favorites">
