@@ -51,22 +51,22 @@ export function CandleCard({ candle }: CandleCardProps) {
       <div className="candle-card-body">
         <h3>{candle.name}</h3>
         <p>{candle.shortDescription || '100% пчелиный воск'}</p>
-        <Link className="card-details-link" to={`/catalog/${candle.slug}`}>
-          Подробнее о свече
-        </Link>
         <div className="card-footer">
           <strong>{candle.price.toLocaleString('ru-RU')} ₽</strong>
-          {auth ? (
-            <button
-              className={isAdded ? 'add-to-cart-button--added' : ''}
-              type="button"
-              onClick={handleAddToCart}
-            >
-              {isAdded ? 'Добавлено ✓' : 'В корзину'}
-            </button>
-          ) : (
-            <Link to="/login">Войти для покупки</Link>
-          )}
+          <div className="card-actions">
+            <Link className="card-details-link" to={`/catalog/${candle.slug}`}>Подробнее</Link>
+            {auth ? (
+              <button
+                className={isAdded ? 'add-to-cart-button--added' : ''}
+                type="button"
+                onClick={handleAddToCart}
+              >
+                {isAdded ? 'Добавлено ✓' : 'В корзину'}
+              </button>
+            ) : (
+              <Link to="/login">Войти для покупки</Link>
+            )}
+          </div>
         </div>
         <span className="cart-feedback" aria-live="polite">
           {isAdded ? 'Свеча уже в корзине' : ''}

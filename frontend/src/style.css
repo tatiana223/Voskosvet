@@ -290,29 +290,19 @@ main {
 .candle-card-body { padding: 17px 14px 14px; }
 .candle-card h3 { margin: 0 0 5px; color: #2d211b; font-size: 17px; line-height: 1.25; }
 .candle-card p { margin: 0 0 12px; color: var(--muted); font-size: 14px; }
-.card-details-link {
+.card-footer { display: grid; gap: 10px; }
+.card-footer strong { font-size: 24px; color: #15100d; }
+.card-actions {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  gap: 8px;
+}
+.card-actions a,
+.card-actions button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  margin-bottom: 12px;
-  padding: 10px 14px;
-  border: 1px solid rgba(216, 138, 0, .34);
-  border-radius: 12px;
-  background: #fff8eb;
-  color: var(--honey-dark);
-  font-size: 13px;
-  font-weight: 900;
-  transition: border-color .2s ease, background .2s ease;
-}
-.card-details-link:hover {
-  border-color: var(--honey);
-  background: #fff0d4;
-}
-.card-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.card-footer strong { font-size: 24px; color: #15100d; }
-.card-footer a,
-.card-footer button {
+  min-width: 0;
   padding: 9px 18px;
   border: 1px solid var(--honey);
   border-radius: 999px;
@@ -320,9 +310,11 @@ main {
   color: var(--honey-dark);
   font-weight: 800;
   font-size: 13px;
+  text-align: center;
 }
-.card-footer button { min-width: 106px; cursor: pointer; transition: color .2s ease, background .2s ease, transform .2s ease; }
-.card-footer button.add-to-cart-button--added { border-color: #67933c; background: #67933c; color: white; transform: scale(1.03); }
+.card-actions .card-details-link { background: #fff8eb; }
+.card-actions button { cursor: pointer; transition: color .2s ease, background .2s ease, transform .2s ease; }
+.card-actions button.add-to-cart-button--added { border-color: #67933c; background: #67933c; color: white; transform: scale(1.03); }
 .cart-feedback { display: block; min-height: 18px; margin-top: 7px; color: #52702f; font-size: 12px; font-weight: 800; text-align: right; }
 
 .review-section {
