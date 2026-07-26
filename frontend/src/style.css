@@ -122,7 +122,7 @@ main {
   justify-items: start;
   width: min(48vw, 640px);
   min-height: 100%;
-  padding: 72px 0 44px;
+  padding: 102px 0 14px;
   animation: heroCopyEnter 900ms cubic-bezier(.2, .8, .2, 1) both;
 }
 
