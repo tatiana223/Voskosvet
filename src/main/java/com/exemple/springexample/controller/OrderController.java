@@ -36,4 +36,13 @@ public class OrderController {
     ) {
         return orderService.trackOrder(id, phone);
     }
+
+    @Operation(summary = "Найти заказы по телефону и фамилии")
+    @GetMapping("/tracking")
+    public java.util.List<OrderResponse> trackOrders(
+            @RequestParam String phone,
+            @RequestParam String surname
+    ) {
+        return orderService.trackOrders(phone, surname);
+    }
 }

@@ -176,6 +176,35 @@ public class OrderService {
         return orderMapper.toOrderResponse(order);
     }
 
+    public List<OrderResponse> trackOrders(String phone, String surname) {
+        if (phone == null || phone.isBlank() || surname == null || surname.isBlank()) {
+            throw new BadRequestException("Укажите телефон и фамилию");
+        }
+
+        List<OrderResponse> orders = orderRepository
+                .findByCustomerPhoneOrderByCreatedAtDesc(phone.trim())
+                .stream()
+                .filter(order -> hasExactNamePart(order.getCustomer().getFullName(), surname))
+                .map(orderMapper::toOrderResponse)
+                .toList();
+
+        if (orders.isEmpty()) {
+            throw new NotFoundException("Заказы не найдены");
+        }
+
+        return orders;
+    }
+
+    private boolean hasExactNamePart(String fullName, String surname) {
+        if (fullName == null) {
+            return false;
+        }
+
+        String expectedSurname = surname.trim();
+        return java.util.Arrays.stream(fullName.trim().split("\\s+"))
+                .anyMatch(namePart -> namePart.equalsIgnoreCase(expectedSurname));
+    }
+
     public OrderResponse updateOrderStatus(Long id, UpdateOrderStatusRequest request) {
         Order order = orderRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Заказ не найден"));

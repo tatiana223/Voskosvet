@@ -51,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/candles", "/api/candles/**").permitAll()
                         .requestMatchers("/api/categories", "/api/categories/**").permitAll()
                         .requestMatchers("/api/candle-sizes", "/api/candle-sizes/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/orders/tracking").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/orders/*/tracking").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
 

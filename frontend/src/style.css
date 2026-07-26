@@ -813,6 +813,12 @@ button.primary-link { min-width: unset; }
   box-shadow: 0 14px 36px rgba(74,33,20,.08);
 }
 
+.tracking-results {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
 .tracking-status {
   display: flex;
   align-items: center;

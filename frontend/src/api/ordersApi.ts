@@ -8,10 +8,10 @@ export function createOrder(order: CreateOrderRequest) {
   });
 }
 
-export function trackOrder(id: string, phone: string) {
-  const params = new URLSearchParams({ phone });
+export function trackOrders(phone: string, surname: string) {
+  const params = new URLSearchParams({ phone, surname });
 
-  return apiRequest<OrderResponse>(`/api/orders/${id}/tracking?${params.toString()}`);
+  return apiRequest<OrderResponse[]>(`/api/orders/tracking?${params.toString()}`);
 }
 
 export function getMyOrders() {
