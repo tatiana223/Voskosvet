@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createOrder } from '../api/ordersApi';
+import { getCurrentUser } from '../api/authApi';
 import type { FormEvent } from 'react';
 import type { ContactMethod, DeliveryMethod, PaymentMethod } from '../types/order';
 import {
@@ -61,11 +62,29 @@ export function CheckoutPage() {
       return;
     }
 
-    setForm((currentForm) => ({
-      ...currentForm,
-      customerFullName: currentForm.customerFullName || auth.fullName,
-      customerEmail: currentForm.customerEmail || auth.email,
-    }));
+    getCurrentUser()
+      .then((profile) => {
+        setForm((currentForm) => ({
+          ...currentForm,
+          customerFullName: profile.fullName || currentForm.customerFullName,
+          customerPhone: profile.phone || currentForm.customerPhone,
+          customerEmail: profile.email || currentForm.customerEmail,
+          city: profile.city || currentForm.city,
+          deliveryAddress: profile.deliveryAddress || currentForm.deliveryAddress,
+          preferredContactMethod:
+            profile.preferredContactMethod || currentForm.preferredContactMethod,
+          deliveryMethod: profile.defaultDeliveryMethod || currentForm.deliveryMethod,
+          paymentMethod: profile.defaultPaymentMethod || currentForm.paymentMethod,
+        }));
+      })
+      .catch(() => {
+        setForm((currentForm) => ({
+          ...currentForm,
+          customerFullName: currentForm.customerFullName || auth.fullName,
+          customerPhone: currentForm.customerPhone || auth.phone || '',
+          customerEmail: currentForm.customerEmail || auth.email,
+        }));
+      });
   }, []);
 
   const total = getCartTotal(items);
@@ -104,7 +123,11 @@ export function CheckoutPage() {
     })
       .then((order) => {
         clearCart();
-        setForm(initialForm);
+        setForm((currentForm) => ({
+          ...currentForm,
+          deliveryComment: '',
+          comment: '',
+        }));
         setCreatedOrderId(order.id);
         setMessage(
           auth

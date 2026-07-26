@@ -1,0 +1,5 @@
+ALTER TABLE customers ADD COLUMN city VARCHAR(255);
+ALTER TABLE customers ADD COLUMN delivery_address VARCHAR(500);
+ALTER TABLE customers ADD COLUMN preferred_contact_method VARCHAR(32) NOT NULL DEFAULT 'WHATSAPP';
+ALTER TABLE customers ADD COLUMN default_delivery_method VARCHAR(32) NOT NULL DEFAULT 'CDEK';
+ALTER TABLE customers ADD COLUMN default_payment_method VARCHAR(32) NOT NULL DEFAULT 'TRANSFER';

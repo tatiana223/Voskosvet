@@ -1,4 +1,7 @@
 package com.exemple.springexample.entity;
+import com.exemple.springexample.model.ContactMethod;
+import com.exemple.springexample.model.DeliveryMethod;
+import com.exemple.springexample.model.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +27,22 @@ public class Customer {
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    private String city;
+
+    private String deliveryAddress;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ContactMethod preferredContactMethod = ContactMethod.WHATSAPP;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private DeliveryMethod defaultDeliveryMethod = DeliveryMethod.CDEK;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentMethod defaultPaymentMethod = PaymentMethod.TRANSFER;
 
     private String password;
 
