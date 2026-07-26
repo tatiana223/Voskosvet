@@ -461,7 +461,7 @@ main {
   background: rgba(216, 138, 0, .62);
 }
 .filter-grid .size-filter-options button {
-  flex: 0 0 72px;
+  flex: 1 0 72px;
   min-width: 72px;
   padding: 0 10px;
   border: 0;
