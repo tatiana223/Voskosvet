@@ -139,11 +139,19 @@ public class OrderService {
                 ? null
                 : search.trim();
 
-        Page<Order> ordersPage = orderRepository.searchOrders(
-                status,
-                normalizedSearch,
-                pageable
-        );
+        Page<Order> ordersPage;
+
+        if (normalizedSearch == null) {
+            ordersPage = status == null
+                    ? orderRepository.findAll(pageable)
+                    : orderRepository.findByStatus(status, pageable);
+        } else {
+            ordersPage = orderRepository.searchOrders(
+                    status,
+                    normalizedSearch,
+                    pageable
+            );
+        }
 
         List<OrderResponse> items = ordersPage.getContent()
                 .stream()

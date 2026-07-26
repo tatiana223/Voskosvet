@@ -17,8 +17,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             select o from Order o
             where (:status is null or o.status = :status)
               and (
-                    :search is null
-                    or lower(o.customer.fullName) like lower(concat('%', :search, '%'))
+                    lower(o.customer.fullName) like lower(concat('%', :search, '%'))
                     or o.customer.phone like concat('%', :search, '%')
                     or lower(o.customer.email) like lower(concat('%', :search, '%'))
               )
@@ -28,6 +27,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             @Param("search") String search,
             Pageable pageable
     );
+
+    Page<Order> findByStatus(OrderStatus status, Pageable pageable);
 
     Optional<Order> findByIdAndCustomerPhone(Long id, String phone);
 
