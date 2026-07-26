@@ -51,6 +51,9 @@ export function CandleCard({ candle }: CandleCardProps) {
       <div className="candle-card-body">
         <h3>{candle.name}</h3>
         <p>{candle.shortDescription || '100% пчелиный воск'}</p>
+        <Link className="card-details-link" to={`/catalog/${candle.slug}`}>
+          Подробнее о свече
+        </Link>
         <div className="card-footer">
           <strong>{candle.price.toLocaleString('ru-RU')} ₽</strong>
           {auth ? (

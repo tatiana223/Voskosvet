@@ -46,7 +46,7 @@ export function CatalogPage() {
   }, [debouncedCandleSize, categoryId, minPrice, maxPrice, sort]);
 
   return (
-    <section className="section">
+    <section className="section catalog-page">
       <div className="section-heading">
         <div>
           <p className="eyebrow">Каталог</p>

@@ -290,6 +290,25 @@ main {
 .candle-card-body { padding: 17px 14px 14px; }
 .candle-card h3 { margin: 0 0 5px; color: #2d211b; font-size: 17px; line-height: 1.25; }
 .candle-card p { margin: 0 0 12px; color: var(--muted); font-size: 14px; }
+.card-details-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border: 1px solid rgba(216, 138, 0, .34);
+  border-radius: 12px;
+  background: #fff8eb;
+  color: var(--honey-dark);
+  font-size: 13px;
+  font-weight: 900;
+  transition: border-color .2s ease, background .2s ease;
+}
+.card-details-link:hover {
+  border-color: var(--honey);
+  background: #fff0d4;
+}
 .card-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .card-footer strong { font-size: 24px; color: #15100d; }
 .card-footer a,
@@ -857,6 +876,18 @@ button.primary-link { min-width: unset; }
   .brand-mark { width: 42px; height: 42px; font-size: 20px; }
   .cart-link span { display: none; }
   .nav { gap: 4px; font-size: 14px; }
+  .catalog-page .section-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .catalog-actions,
+  .catalog-actions select {
+    width: 100%;
+    min-width: 0;
+  }
+  .catalog-actions select {
+    min-height: 46px;
+  }
   .hero {
     min-height: calc(100svh - 74px);
     padding: 24px 16px 170px;
