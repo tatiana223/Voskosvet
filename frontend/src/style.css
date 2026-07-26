@@ -27,7 +27,7 @@ body { margin: 0; min-width: 320px; background: radial-gradient(circle at 50% 0,
 
 /* Keep the desktop storefront as compact as the original 75% browser view. */
 @media (min-width: 901px) {
-  body { zoom: .8; }
+  body { zoom: .75; }
 }
 a { color: inherit; text-decoration: none; }
 button, input, select, textarea { font: inherit; }
@@ -89,7 +89,7 @@ main {
   .landing-snap,
   .screen-section,
   .hero {
-    min-height: calc(125svh - 80px);
+    min-height: calc(133.333svh - 80px);
   }
 }
 
@@ -198,6 +198,19 @@ main {
 }
 .benefit-ribbon div:last-child { border-right: 0; }
 .benefit-ribbon span { color: var(--brown); font-size: 16px; font-weight: 700; line-height: 1.25; }
+
+@media (min-width: 901px) {
+  .site-header,
+  .hero {
+    padding-right: clamp(72px, 7vw, 112px);
+    padding-left: clamp(72px, 7vw, 112px);
+  }
+
+  .benefit-ribbon {
+    right: clamp(72px, 7vw, 112px);
+    left: clamp(72px, 7vw, 112px);
+  }
+}
 
 .home-section {
   display: grid;
