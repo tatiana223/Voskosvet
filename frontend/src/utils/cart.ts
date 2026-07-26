@@ -7,20 +7,16 @@ export type CartItem = {
 };
 
 const CART_KEY_PREFIX = 'voskosvet-cart';
+const GUEST_CART_KEY = `${CART_KEY_PREFIX}-guest`;
 const CART_EVENT = 'voskosvet-cart-change';
 
 function getCartKey() {
   const auth = getStoredAuth();
-  return auth ? `${CART_KEY_PREFIX}-${auth.id}` : null;
+  return auth ? `${CART_KEY_PREFIX}-${auth.id}` : GUEST_CART_KEY;
 }
 
 function readCart(): CartItem[] {
   const cartKey = getCartKey();
-
-  if (!cartKey) {
-    return [];
-  }
-
   const rawCart = localStorage.getItem(cartKey);
 
   if (!rawCart) {
@@ -36,13 +32,47 @@ function readCart(): CartItem[] {
 
 function writeCart(items: CartItem[]) {
   const cartKey = getCartKey();
+  localStorage.setItem(cartKey, JSON.stringify(items));
+  window.dispatchEvent(new Event(CART_EVENT));
+}
 
-  if (!cartKey) {
+export function mergeGuestCartIntoAccount() {
+  const auth = getStoredAuth();
+
+  if (!auth) {
     return;
   }
 
-  localStorage.setItem(cartKey, JSON.stringify(items));
-  window.dispatchEvent(new Event(CART_EVENT));
+  const rawGuestCart = localStorage.getItem(GUEST_CART_KEY);
+
+  if (!rawGuestCart) {
+    return;
+  }
+
+  try {
+    const guestItems = JSON.parse(rawGuestCart) as CartItem[];
+    const accountKey = `${CART_KEY_PREFIX}-${auth.id}`;
+    const rawAccountCart = localStorage.getItem(accountKey);
+    const accountItems = rawAccountCart ? JSON.parse(rawAccountCart) as CartItem[] : [];
+
+    guestItems.forEach((guestItem) => {
+      const existingItem = accountItems.find(
+        (item) => item.candle.id === guestItem.candle.id,
+      );
+
+      if (existingItem) {
+        existingItem.quantity += guestItem.quantity;
+      } else {
+        accountItems.push(guestItem);
+      }
+    });
+
+    localStorage.setItem(accountKey, JSON.stringify(accountItems));
+    localStorage.removeItem(GUEST_CART_KEY);
+    window.dispatchEvent(new Event(CART_EVENT));
+  } catch {
+    localStorage.removeItem(GUEST_CART_KEY);
+  }
 }
 
 export function getCartItems() {

@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { getStoredAuth, subscribeToAuth } from '../utils/auth';
-import { getCartItems, getCartItemsCount, subscribeToCart } from '../utils/cart';
+import {
+  getCartItems,
+  getCartItemsCount,
+  mergeGuestCartIntoAccount,
+  subscribeToCart,
+} from '../utils/cart';
 import { getFavorites, subscribeToFavorites } from '../utils/favorites';
 
 export function Header() {
@@ -32,6 +37,7 @@ export function Header() {
 
   useEffect(() => {
     return subscribeToAuth(() => {
+      mergeGuestCartIntoAccount();
       setAuth(getStoredAuth());
       setFavoritesCount(getFavorites().length);
       setCartCount(getCartItemsCount());
