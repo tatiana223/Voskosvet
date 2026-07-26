@@ -84,7 +84,8 @@ export function mergeGuestCartIntoAccount() {
 
     guestItems.forEach((guestItem) => {
       const existingItem = accountItems.find(
-        (item) => item.candle.id === guestItem.candle.id,
+        (item) => item.candle.id === guestItem.candle.id
+          && item.packageSize === guestItem.packageSize,
       );
 
       if (existingItem) {
@@ -118,16 +119,13 @@ export function subscribeToCart(listener: () => void) {
 
 export function addToCart(candle: Candle, packageSize = 1, boxQuantity = 1) {
   const items = readCart();
-  const existingItem = items.find((item) => item.candle.id === candle.id);
+  const existingItem = items.find(
+    (item) => item.candle.id === candle.id && item.packageSize === packageSize,
+  );
 
   if (existingItem) {
     existingItem.candle = candle;
-    if (existingItem.packageSize === packageSize) {
-      existingItem.quantity += boxQuantity;
-    } else {
-      existingItem.packageSize = packageSize;
-      existingItem.quantity = boxQuantity;
-    }
+    existingItem.quantity += boxQuantity;
   } else {
     items.push({ candle, packageSize, quantity: boxQuantity });
   }
@@ -135,16 +133,22 @@ export function addToCart(candle: Candle, packageSize = 1, boxQuantity = 1) {
   writeCart(items);
 }
 
-export function updateCartItemQuantity(candleId: number, quantity: number) {
+export function updateCartItemQuantity(candleId: number, packageSize: number, quantity: number) {
   const items = readCart()
-    .map((item) => (item.candle.id === candleId ? { ...item, quantity } : item))
+    .map((item) => (
+      item.candle.id === candleId && item.packageSize === packageSize
+        ? { ...item, quantity }
+        : item
+    ))
     .filter((item) => item.quantity > 0);
 
   writeCart(items);
 }
 
-export function removeFromCart(candleId: number) {
-  writeCart(readCart().filter((item) => item.candle.id !== candleId));
+export function removeFromCart(candleId: number, packageSize: number) {
+  writeCart(readCart().filter(
+    (item) => item.candle.id !== candleId || item.packageSize !== packageSize,
+  ));
 }
 
 export function clearCart() {

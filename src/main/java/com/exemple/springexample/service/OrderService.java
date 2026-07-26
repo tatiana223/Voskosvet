@@ -245,11 +245,12 @@ public class OrderService {
     }
 
     private void validateNoDuplicateCandles(List<CreateOrderItemRequest> items) {
-        Set<Long> candleIds = new HashSet<>();
+        Set<String> candlePackages = new HashSet<>();
 
         for (CreateOrderItemRequest item : items) {
-            if (!candleIds.add(item.candleId())) {
-                throw new BadRequestException("В заказе не должно быть повторяющихся свечей");
+            String packageKey = item.candleId() + ":" + item.packageSize();
+            if (!candlePackages.add(packageKey)) {
+                throw new BadRequestException("Одинаковая коробка не должна повторяться в заказе");
             }
         }
     }

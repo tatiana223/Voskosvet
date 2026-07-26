@@ -41,7 +41,7 @@ export function CartPage() {
             <h2>Ваши свечи</h2>
             <div className="cart-list">
               {items.map((item) => (
-                <article className="cart-item" key={item.candle.id}>
+                <article className="cart-item" key={`${item.candle.id}-${item.packageSize}`}>
                   <img
                     src={getCandleImage(item.candle.imageUrl)}
                     alt={item.candle.name}
@@ -63,11 +63,11 @@ export function CartPage() {
                         type="number"
                         value={item.quantity}
                         onChange={(event) =>
-                          updateCartItemQuantity(item.candle.id, Math.max(1, Number(event.target.value)))
+                          updateCartItemQuantity(item.candle.id, item.packageSize, Math.max(1, Number(event.target.value)))
                         }
                       />
                     </label>
-                    <button type="button" onClick={() => removeFromCart(item.candle.id)}>Удалить</button>
+                    <button type="button" onClick={() => removeFromCart(item.candle.id, item.packageSize)}>Удалить</button>
                   </div>
                 </article>
               ))}
