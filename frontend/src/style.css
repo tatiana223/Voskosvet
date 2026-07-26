@@ -1052,6 +1052,13 @@ button.primary-link { min-width: unset; }
   .reviews-grid {
     gap: 16px;
   }
+  .why-grid div,
+  .review-photo-strip img {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    animation: none;
+  }
   .why-grid div { min-height: 300px; }
 }
 
