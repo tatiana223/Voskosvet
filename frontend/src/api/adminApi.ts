@@ -82,10 +82,11 @@ async function adminRequest<T>(path: string, options?: RequestInit): Promise<T> 
     throw new Error('Нужен вход администратора');
   }
 
+  const isFormData = options?.body instanceof FormData;
   const response = await fetchWithWakeRetry(`${API_BASE_URL}${path}`, {
     ...options,
     headers: {
-      'Content-Type': 'application/json',
+      ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
       Authorization: `Bearer ${credentials.token}`,
       ...options?.headers,
     },
@@ -144,6 +145,48 @@ export function createAdminCandleSize(valueCm: number) {
     method: 'POST',
     body: JSON.stringify({ valueCm }),
   });
+}
+
+export function uploadAdminImage(file: File) {
+  const body = new FormData();
+  body.append('file', file);
+  return adminRequest<{ url: string }>('/api/admin/media', {
+    method: 'POST',
+    body,
+  });
+}
+
+export type Review = {
+  id: number;
+  authorId?: number;
+  name: string;
+  text: string;
+  rating: number;
+  photoUrl?: string;
+  createdAt: string;
+};
+
+export function getReviews() {
+  return fetchWithWakeRetry(`${API_BASE_URL}/api/reviews`).then((response) => {
+    if (!response.ok) throw new AdminApiError('Не удалось загрузить отзывы', response.status);
+    return response.json() as Promise<Review[]>;
+  });
+}
+
+export function createAdminReview(data: {
+  displayName: string;
+  text: string;
+  rating: number;
+  imageUrl?: string;
+}) {
+  return adminRequest<Review>('/api/admin/reviews', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteAdminReview(id: number) {
+  return adminRequest<void>(`/api/admin/reviews/${id}`, { method: 'DELETE' });
 }
 
 export function updateAdminCandle(id: number, data: CandleFormData) {

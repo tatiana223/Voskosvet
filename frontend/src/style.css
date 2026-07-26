@@ -1918,6 +1918,49 @@ button.primary-link { min-width: unset; }
 .admin-category-card p { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
 .admin-category-card > span { color: #52702f; font-size: 12px; font-weight: 800; }
 
+.admin-reviews-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 430px) minmax(0, 1fr);
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.admin-review-preview {
+  width: 100%;
+  max-height: 300px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.admin-review-card {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid rgba(74, 33, 20, .1);
+  border-radius: 16px;
+  background: white;
+}
+
+.admin-review-card img {
+  width: 120px;
+  height: 100px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.admin-review-card div {
+  display: grid;
+  gap: 6px;
+}
+
+.admin-review-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 
 @media (max-width: 760px) {
   .checkout-page {
@@ -2084,6 +2127,10 @@ button.primary-link { min-width: unset; }
 
   .admin-heading { align-items: flex-start; flex-direction: column; }
   .admin-layout, .admin-form-grid { grid-template-columns: 1fr; }
+  .admin-reviews-layout { grid-template-columns: 1fr; }
+  .admin-review-card { grid-template-columns: 84px minmax(0, 1fr); }
+  .admin-review-card img { width: 84px; height: 84px; }
+  .admin-review-card > button { grid-column: 1 / -1; }
   .admin-size-manager { grid-template-columns: 1fr; }
   .admin-product { grid-template-columns: 64px 1fr; }
   .admin-product img { width: 64px; height: 64px; grid-row: span 2; }

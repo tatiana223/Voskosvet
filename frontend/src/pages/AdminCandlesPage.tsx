@@ -11,6 +11,7 @@ import {
   hideAdminCandle,
   updateAdminCandle,
   AdminApiError,
+  uploadAdminImage,
   type CandleFormData,
 } from '../api/adminApi';
 import { getCandleSizes, type CandleSizeOption } from '../api/candleSizesApi';
@@ -47,6 +48,7 @@ export function AdminCandlesPage() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [isImageUploading, setIsImageUploading] = useState(false);
 
   async function loadData() {
     try {
@@ -151,6 +153,23 @@ export function AdminCandlesPage() {
     }
   }
 
+  async function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setError('');
+    setIsImageUploading(true);
+    try {
+      const uploaded = await uploadAdminImage(file);
+      updateField('imageUrl', uploaded.url);
+      setMessage('Фотография загружена.');
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'Не удалось загрузить фотографию');
+    } finally {
+      setIsImageUploading(false);
+    }
+  }
+
   async function handleHide(candle: Candle) {
     if (!window.confirm(`Скрыть «${candle.name}» из каталога?`)) return;
     await hideAdminCandle(candle.id);
@@ -205,7 +224,14 @@ export function AdminCandlesPage() {
 
           <label>Короткое описание<textarea required rows={2} value={form.shortDescription} onChange={(e) => updateField('shortDescription', e.target.value)} /></label>
           <label>Полное описание<textarea required rows={4} value={form.description} onChange={(e) => updateField('description', e.target.value)} /></label>
-          <label>Ссылка или путь к изображению<input required value={form.imageUrl} onChange={(e) => updateField('imageUrl', e.target.value)} /></label>
+          <label>Фотография свечи
+            <input
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              onChange={(event) => void handleImageChange(event)}
+            />
+            <small>{isImageUploading ? 'Загружаем фотографию…' : 'Выберите JPG, PNG или WebP до 5 МБ'}</small>
+          </label>
 
           <div className="admin-image-preview">
             <img src={getCandleImage(form.imageUrl)} alt="Предпросмотр свечи" onError={useCandleImageFallback} />
