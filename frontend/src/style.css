@@ -24,6 +24,11 @@ body,
   overflow-x: clip;
 }
 body { margin: 0; min-width: 320px; background: radial-gradient(circle at 50% 0, #fffaf2 0, #fff7ec 38%, #fffaf5 100%); }
+
+/* Keep the desktop storefront as compact as the original 75% browser view. */
+@media (min-width: 901px) {
+  body { zoom: .8; }
+}
 a { color: inherit; text-decoration: none; }
 button, input, select, textarea { font: inherit; }
 
