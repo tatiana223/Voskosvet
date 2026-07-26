@@ -911,7 +911,7 @@ button.primary-link { min-width: unset; }
     padding: 13px 20px;
     border-radius: 14px;
   }
-  .hero-points, .grid, .reviews-grid, .review-photo-strip, .why-section, .why-grid, .landing-footer, .image-story, .about-band, .filter-grid, .form-grid, .checkout-layout, .product-page, .tracking-layout, .tracking-steps { grid-template-columns: 1fr; }
+  .grid, .reviews-grid, .review-photo-strip, .why-section, .why-grid, .landing-footer, .image-story, .about-band, .filter-grid, .form-grid, .checkout-layout, .product-page, .tracking-layout, .tracking-steps { grid-template-columns: 1fr; }
   .why-grid div { min-height: 360px; }
   .specs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .product-assurance { grid-template-columns: 1fr; }
