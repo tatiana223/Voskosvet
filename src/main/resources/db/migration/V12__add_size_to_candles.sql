@@ -1,0 +1,2 @@
+ALTER TABLE candles
+    ADD COLUMN size VARCHAR(100);

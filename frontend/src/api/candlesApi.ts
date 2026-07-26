@@ -3,7 +3,7 @@ import type { Candle } from '../types/candle';
 import type { PageResponse } from '../types/page';
 
 export type CandleQuery = {
-  name?: string;
+  candleSize?: string;
   categoryId?: number;
   featured?: boolean;
   scent?: string;

@@ -34,6 +34,9 @@ public record CreateCandleRequest(
         @NotBlank(message = "Цвет обязателен")
         String color,
 
+        @NotBlank(message = "Размер свечи обязателен")
+        String size,
+
         @NotNull(message = "Вес обязателен")
         @Positive(message = "Вес должен быть больше 0")
         Integer weightGrams,

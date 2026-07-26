@@ -14,6 +14,7 @@ public record CandleResponse(
         BigDecimal price,
         String scent,
         String color,
+        String size,
         Integer weightGrams,
         Integer burnTimeHours,
         String imageUrl,

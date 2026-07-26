@@ -16,8 +16,8 @@ public interface CandleRepository extends JpaRepository<Candle, Long> {
             select c from Candle c
             where c.available = true
               and (
-                    cast(:name as string) is null
-                    or lower(c.name) like lower(concat('%', cast(:name as string), '%'))
+                    cast(:candleSize as string) is null
+                    or lower(c.size) like lower(concat('%', cast(:candleSize as string), '%'))
               )
               and (:categoryId is null or c.category.id = :categoryId)
               and (:featured is null or c.featured = :featured)
@@ -29,7 +29,7 @@ public interface CandleRepository extends JpaRepository<Candle, Long> {
               and (:maxPrice is null or c.price <= :maxPrice)
             """)
     Page<Candle> searchCandles(
-            @Param("name") String name,
+            @Param("candleSize") String candleSize,
             @Param("categoryId") Long categoryId,
             @Param("featured") Boolean featured,
             @Param("scent") String scent,

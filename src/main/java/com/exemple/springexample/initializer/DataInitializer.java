@@ -174,6 +174,7 @@ public class DataInitializer implements CommandLineRunner {
         candle.setPrice(price);
         candle.setScent(scent);
         candle.setColor(color);
+        candle.setSize("Не указан");
         candle.setWeightGrams(weightGrams);
         candle.setBurnTimeHours(burnTimeHours);
         candle.setFeatured(featured);

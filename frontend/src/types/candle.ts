@@ -8,6 +8,7 @@ export type Candle = {
   price: number;
   scent: string;
   color: string;
+  size: string | null;
   weightGrams: number;
   burnTimeHours: number;
   imageUrl: string;

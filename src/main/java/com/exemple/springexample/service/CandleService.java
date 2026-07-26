@@ -30,7 +30,7 @@ public class CandleService {
     private final CandleMapper candleMapper;
 
     public PageResponse<CandleResponse> getCandles(
-            String name,
+            String candleSize,
             Long categoryId,
             String scent,
             Boolean featured,
@@ -49,12 +49,12 @@ public class CandleService {
         String normalizedScent = scent == null || scent.isBlank()
                 ? null
                 : scent.trim();
-        String normalizedName = name == null || name.isBlank()
+        String normalizedCandleSize = candleSize == null || candleSize.isBlank()
                 ? null
-                : name.trim();
+                : candleSize.trim();
 
         Page<Candle> candlesPage = candleRepository.searchCandles(
-                normalizedName,
+                normalizedCandleSize,
                 categoryId,
                 featured,
                 normalizedScent,
@@ -122,6 +122,7 @@ public class CandleService {
         candle.setPrice(request.price());
         candle.setScent(request.scent());
         candle.setColor(request.color());
+        candle.setSize(request.size());
         candle.setWeightGrams(request.weightGrams());
         candle.setBurnTimeHours(request.burnTimeHours());
         candle.setImageUrl(request.imageUrl());

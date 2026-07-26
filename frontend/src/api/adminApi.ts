@@ -12,6 +12,7 @@ export type CandleFormData = {
   price: number;
   scent: string;
   color: string;
+  size: string;
   weightGrams: number;
   burnTimeHours: number;
   imageUrl: string;

@@ -38,6 +38,8 @@ public class Candle {
 
     private String color;
 
+    private String size;
+
     private Integer weightGrams;
 
     private Integer burnTimeHours;

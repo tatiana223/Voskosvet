@@ -82,6 +82,12 @@ export function CandlePage() {
             <dt>Цвет</dt>
             <dd>{candle.color}</dd>
           </div>
+          {candle.size ? (
+            <div>
+              <dt>Размер</dt>
+              <dd>{candle.size}</dd>
+            </div>
+          ) : null}
           <div>
             <dt>Вес</dt>
             <dd>{candle.weightGrams} г</dd>

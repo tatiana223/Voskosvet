@@ -8,8 +8,8 @@ import type { Category } from '../types/category';
 export function CatalogPage() {
   const [candles, setCandles] = useState<Candle[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [name, setName] = useState('');
-  const [debouncedName, setDebouncedName] = useState('');
+  const [candleSize, setCandleSize] = useState('');
+  const [debouncedCandleSize, setDebouncedCandleSize] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
@@ -22,15 +22,15 @@ export function CatalogPage() {
   }, []);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setDebouncedName(name.trim()), 300);
+    const timer = window.setTimeout(() => setDebouncedCandleSize(candleSize.trim()), 300);
     return () => window.clearTimeout(timer);
-  }, [name]);
+  }, [candleSize]);
 
   useEffect(() => {
     setIsLoading(true);
     setError('');
     getCandles({
-      name: debouncedName || undefined,
+      candleSize: debouncedCandleSize || undefined,
       categoryId: categoryId ? Number(categoryId) : undefined,
       minPrice: minPrice ? Number(minPrice) : undefined,
       maxPrice: maxPrice ? Number(maxPrice) : undefined,
@@ -43,7 +43,7 @@ export function CatalogPage() {
         setError('Каталог не загрузился. Проверь, что backend запущен на http://localhost:8080.');
       })
       .finally(() => setIsLoading(false));
-  }, [debouncedName, categoryId, minPrice, maxPrice, sort]);
+  }, [debouncedCandleSize, categoryId, minPrice, maxPrice, sort]);
 
   return (
     <section className="section">
@@ -58,7 +58,6 @@ export function CatalogPage() {
             <option value="createdAt,desc">Сначала новые</option>
             <option value="price,asc">Сначала дешевле</option>
             <option value="price,desc">Сначала дороже</option>
-            <option value="name,asc">По названию</option>
           </select>
         </div>
       </div>
@@ -66,12 +65,12 @@ export function CatalogPage() {
       <div className="filter-panel">
         <div className="filter-grid">
           <label>
-            Поиск по названию
+            Размер свечи
             <input
               type="search"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              placeholder="Например, Медовая"
+              value={candleSize}
+              onChange={(event) => setCandleSize(event.target.value)}
+              placeholder="Например, 15 см"
             />
           </label>
 
@@ -112,7 +111,7 @@ export function CatalogPage() {
           <button
             type="button"
             onClick={() => {
-              setName('');
+              setCandleSize('');
               setCategoryId('');
               setMinPrice('');
               setMaxPrice('');

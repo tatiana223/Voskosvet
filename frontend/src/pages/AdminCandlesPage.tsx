@@ -24,6 +24,7 @@ const emptyForm: CandleFormData = {
   price: 0,
   scent: 'Медовый',
   color: 'Медовый',
+  size: '',
   weightGrams: 1,
   burnTimeHours: 1,
   imageUrl: '/images/candle-detail.webp',
@@ -80,6 +81,7 @@ export function AdminCandlesPage() {
       price: candle.price,
       scent: candle.scent,
       color: candle.color,
+      size: candle.size || '',
       weightGrams: candle.weightGrams,
       burnTimeHours: candle.burnTimeHours,
       imageUrl: candle.imageUrl,
@@ -149,6 +151,7 @@ export function AdminCandlesPage() {
             <label>Категория<select value={form.categoryId} onChange={(e) => updateField('categoryId', Number(e.target.value))}>{categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></label>
             <label>Аромат<input required value={form.scent} onChange={(e) => updateField('scent', e.target.value)} /></label>
             <label>Цвет<input required value={form.color} onChange={(e) => updateField('color', e.target.value)} /></label>
+            <label>Размер свечи<input required value={form.size} onChange={(e) => updateField('size', e.target.value)} placeholder="Например, 15 × 2 см" /></label>
             <label>Вес, г<input required min="1" type="number" value={form.weightGrams} onChange={(e) => updateField('weightGrams', Number(e.target.value))} /></label>
             <label>Горение, ч<input required min="1" type="number" value={form.burnTimeHours} onChange={(e) => updateField('burnTimeHours', Number(e.target.value))} /></label>
           </div>
@@ -184,7 +187,7 @@ export function AdminCandlesPage() {
           {candles.map((candle) => (
             <article className="admin-product" key={candle.id}>
               <img src={getCandleImage(candle.imageUrl)} alt={candle.name} onError={useCandleImageFallback} />
-              <div><strong>{candle.name}</strong><span>{candle.price.toLocaleString('ru-RU')} ₽ · {candle.categoryName}{candle.featured ? ' · Хит продаж' : ''}</span></div>
+              <div><strong>{candle.name}</strong><span>{candle.price.toLocaleString('ru-RU')} ₽ · {candle.categoryName}{candle.size ? ` · ${candle.size}` : ''}{candle.featured ? ' · Хит продаж' : ''}</span></div>
               <button type="button" onClick={() => editCandle(candle)}>Изменить</button>
               <button className="admin-hide-button" type="button" onClick={() => void handleHide(candle)}>Скрыть</button>
             </article>
