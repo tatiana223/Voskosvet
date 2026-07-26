@@ -22,6 +22,9 @@ const deliveryLabels: Record<string, string> = {
   POST: 'Почта России',
 };
 
+const trackingStatuses = (Object.entries(statusLabels) as [OrderStatus, string][])
+  .filter(([status]) => status !== 'CANCELLED');
+
 function profileFromUser(user: AuthResponse): UpdateProfileRequest {
   return {
     fullName: user.fullName,
@@ -211,16 +214,21 @@ export function AccountPage() {
             <div className="account-orders">
               {orders.map((order) => {
                 const isExpanded = expandedOrderId === order.id;
+                const currentStatusIndex = trackingStatuses.findIndex(
+                  ([status]) => status === order.status,
+                );
 
                 return (
                   <article key={order.id} className="account-order">
-                    <div>
-                      <strong>Заказ №{order.id}</strong>
-                      <span>{new Date(order.createdAt).toLocaleDateString('ru-RU')}</span>
-                    </div>
-                    <div>
-                      <span className="account-order-status">{statusLabels[order.status]}</span>
-                      <b>{order.totalPrice.toLocaleString('ru-RU')} ₽</b>
+                    <div className="account-order-heading">
+                      <div>
+                        <strong>Заказ №{order.id}</strong>
+                        <span>{new Date(order.createdAt).toLocaleDateString('ru-RU')}</span>
+                      </div>
+                      <div>
+                        <span className="account-order-status">{statusLabels[order.status]}</span>
+                        <b>{order.totalPrice.toLocaleString('ru-RU')} ₽</b>
+                      </div>
                     </div>
                     <small>{order.items.map((item) => `${item.candleName} × ${item.quantity}`).join(', ')}</small>
                     <button
@@ -234,10 +242,16 @@ export function AccountPage() {
                     {isExpanded ? (
                       <div className="account-order-details">
                         <div className="tracking-steps">
-                          {Object.entries(statusLabels)
-                            .filter(([status]) => status !== 'CANCELLED')
-                            .map(([status, label]) => (
-                              <div className={status === order.status ? 'active' : ''} key={status}>
+                          {trackingStatuses.map(([status, label], statusIndex) => (
+                              <div
+                                className={[
+                                  status === order.status ? 'active' : '',
+                                  currentStatusIndex >= 0 && statusIndex < currentStatusIndex
+                                    ? 'completed'
+                                    : '',
+                                ].filter(Boolean).join(' ')}
+                                key={status}
+                              >
                                 <i />
                                 <span>{label}</span>
                               </div>
