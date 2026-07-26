@@ -77,14 +77,17 @@ public class OrderService {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setCandle(candle);
-            orderItem.setQuantity(itemRequest.quantity());
-            BigDecimal unitPrice = resolveUnitPrice(candle, itemRequest.quantity());
+            BigDecimal unitPrice = resolveUnitPrice(candle, itemRequest.packageSize());
+            int totalCandles = Math.multiplyExact(itemRequest.packageSize(), itemRequest.quantity());
             orderItem.setPriceAtPurchase(unitPrice);
+            orderItem.setPackageSize(itemRequest.packageSize());
+            orderItem.setBoxQuantity(itemRequest.quantity());
+            orderItem.setQuantity(totalCandles);
 
             order.getItems().add(orderItem);
 
             BigDecimal subtotal = unitPrice
-                    .multiply(BigDecimal.valueOf(itemRequest.quantity()));
+                    .multiply(BigDecimal.valueOf(totalCandles));
             itemsPrice = itemsPrice.add(subtotal);
         }
 

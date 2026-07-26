@@ -102,7 +102,7 @@ export function OrderTrackingPage() {
                 {order.items.map((item) => (
                   <article key={item.id}>
                     <span>{item.candleName}</span>
-                    <small>{item.quantity} шт.</small>
+                    <small>{item.boxQuantity} кор. × {item.packageSize} шт.</small>
                     <strong>{item.subtotal.toLocaleString('ru-RU')} ₽</strong>
                   </article>
                 ))}

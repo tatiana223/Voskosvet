@@ -50,30 +50,22 @@ export function CartPage() {
                   <div>
                     <h3>{item.candle.name}</h3>
                     <p>{item.candle.shortDescription || item.candle.categoryName}</p>
-                    <strong>{getCandleUnitPrice(item.candle, item.quantity).toLocaleString('ru-RU')} ₽/шт.</strong>
+                    <p>{item.packageSize} свечей в коробке</p>
+                    <strong>{(
+                      getCandleUnitPrice(item.candle, item.packageSize) * item.packageSize
+                    ).toLocaleString('ru-RU')} ₽ за коробку</strong>
                   </div>
                   <div className="cart-item-actions">
                     <label>
-                      <span>Кол-во</span>
-                      {(item.candle.priceTiers || []).length > 0 ? (
-                        <select
-                          value={item.quantity}
-                          onChange={(event) => updateCartItemQuantity(item.candle.id, Number(event.target.value))}
-                        >
-                          {item.candle.priceTiers.map((tier) => (
-                            <option key={tier.quantity} value={tier.quantity}>{tier.quantity} шт. в коробке</option>
-                          ))}
-                        </select>
-                      ) : (
-                        <input
-                          min="1"
-                          type="number"
-                          value={item.quantity}
-                          onChange={(event) =>
-                            updateCartItemQuantity(item.candle.id, Math.max(1, Number(event.target.value)))
-                          }
-                        />
-                      )}
+                      <span>Коробок</span>
+                      <input
+                        min="1"
+                        type="number"
+                        value={item.quantity}
+                        onChange={(event) =>
+                          updateCartItemQuantity(item.candle.id, Math.max(1, Number(event.target.value)))
+                        }
+                      />
                     </label>
                     <button type="button" onClick={() => removeFromCart(item.candle.id)}>Удалить</button>
                   </div>
@@ -85,7 +77,7 @@ export function CartPage() {
           <aside className="cart-checkout-card">
             <p className="eyebrow">Итого</p>
             <strong>{total.toLocaleString('ru-RU')} ₽</strong>
-            <span>{items.reduce((sum, item) => sum + item.quantity, 0)} товаров</span>
+            <span>{items.reduce((sum, item) => sum + item.quantity, 0)} коробок</span>
             <p>Стоимость доставки будет рассчитана при оформлении заказа.</p>
             <Link className="primary-link" to="/checkout">Перейти к оформлению</Link>
             <Link className="secondary-link" to="/catalog">Вернуться в каталог</Link>

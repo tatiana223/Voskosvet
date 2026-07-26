@@ -3,6 +3,8 @@ import { getStoredAuth } from './auth';
 
 export type CartItem = {
   candle: Candle;
+  packageSize: number;
+  /** Количество коробок. */
   quantity: number;
 };
 
@@ -17,7 +19,7 @@ export function getCandleSavingPercent(candle: Candle, unitPrice: number) {
   return Math.round((1 - unitPrice / referencePrice) * 100);
 }
 
-export function getDefaultPurchaseQuantity(candle: Candle) {
+export function getDefaultPackageSize(candle: Candle) {
   return candle.priceTiers?.[0]?.quantity ?? 1;
 }
 
@@ -30,6 +32,14 @@ function getCartKey() {
   return auth ? `${CART_KEY_PREFIX}-${auth.id}` : GUEST_CART_KEY;
 }
 
+function normalizeCartItems(items: Array<CartItem & { packageSize?: number }>): CartItem[] {
+  return items.map((item) => ({
+    ...item,
+    packageSize: item.packageSize ?? getDefaultPackageSize(item.candle),
+    quantity: item.packageSize ? item.quantity : 1,
+  }));
+}
+
 function readCart(): CartItem[] {
   const cartKey = getCartKey();
   const rawCart = localStorage.getItem(cartKey);
@@ -39,7 +49,7 @@ function readCart(): CartItem[] {
   }
 
   try {
-    return JSON.parse(rawCart) as CartItem[];
+    return normalizeCartItems(JSON.parse(rawCart));
   } catch {
     return [];
   }
@@ -65,10 +75,12 @@ export function mergeGuestCartIntoAccount() {
   }
 
   try {
-    const guestItems = JSON.parse(rawGuestCart) as CartItem[];
+    const guestItems = normalizeCartItems(JSON.parse(rawGuestCart));
     const accountKey = `${CART_KEY_PREFIX}-${auth.id}`;
     const rawAccountCart = localStorage.getItem(accountKey);
-    const accountItems = rawAccountCart ? JSON.parse(rawAccountCart) as CartItem[] : [];
+    const accountItems = rawAccountCart
+      ? normalizeCartItems(JSON.parse(rawAccountCart))
+      : [];
 
     guestItems.forEach((guestItem) => {
       const existingItem = accountItems.find(
@@ -104,17 +116,20 @@ export function subscribeToCart(listener: () => void) {
   };
 }
 
-export function addToCart(candle: Candle, quantity = 1) {
+export function addToCart(candle: Candle, packageSize = 1, boxQuantity = 1) {
   const items = readCart();
   const existingItem = items.find((item) => item.candle.id === candle.id);
 
   if (existingItem) {
     existingItem.candle = candle;
-    existingItem.quantity = (candle.priceTiers || []).length > 0
-      ? quantity
-      : existingItem.quantity + quantity;
+    if (existingItem.packageSize === packageSize) {
+      existingItem.quantity += boxQuantity;
+    } else {
+      existingItem.packageSize = packageSize;
+      existingItem.quantity = boxQuantity;
+    }
   } else {
-    items.push({ candle, quantity });
+    items.push({ candle, packageSize, quantity: boxQuantity });
   }
 
   writeCart(items);
@@ -142,7 +157,10 @@ export function getCartItemsCount(items = readCart()) {
 
 export function getCartTotal(items = readCart()) {
   return items.reduce(
-    (sum, item) => sum + getCandleUnitPrice(item.candle, item.quantity) * item.quantity,
+    (sum, item) => sum
+      + getCandleUnitPrice(item.candle, item.packageSize)
+      * item.packageSize
+      * item.quantity,
     0,
   );
 }

@@ -7,6 +7,8 @@ public record OrderItemResponse(
         Long candleId,
         String candleName,
         Integer quantity,
+        Integer packageSize,
+        Integer boxQuantity,
         BigDecimal priceAtPurchase,
         BigDecimal subtotal
 ) {

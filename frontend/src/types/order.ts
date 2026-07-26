@@ -4,7 +4,9 @@ export type ContactMethod = 'PHONE' | 'WHATSAPP' | 'TELEGRAM' | 'EMAIL';
 
 export type CreateOrderItemRequest = {
   candleId: number;
+  /** Количество коробок. */
   quantity: number;
+  packageSize: number;
 };
 
 export type CreateOrderRequest = {
@@ -35,6 +37,8 @@ export type OrderItemResponse = {
   candleId: number;
   candleName: string;
   quantity: number;
+  packageSize: number;
+  boxQuantity: number;
   priceAtPurchase: number;
   subtotal: number;
 };

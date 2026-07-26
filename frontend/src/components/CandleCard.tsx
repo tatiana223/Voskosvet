@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Candle } from '../types/candle';
-import { addToCart, getDefaultPurchaseQuantity } from '../utils/cart';
 import { isFavorite, toggleFavorite } from '../utils/favorites';
 import { getStoredAuth, subscribeToAuth } from '../utils/auth';
 import { getCandleImage, useCandleImageFallback } from '../utils/images';
@@ -13,7 +12,6 @@ type CandleCardProps = {
 
 export function CandleCard({ candle }: CandleCardProps) {
   const image = getCandleImage(candle.imageUrl);
-  const [isAdded, setIsAdded] = useState(false);
   const [favorite, setFavorite] = useState(() => isFavorite(candle.id));
   const [auth, setAuth] = useState(() => getStoredAuth());
 
@@ -24,14 +22,8 @@ export function CandleCard({ candle }: CandleCardProps) {
     });
   }, [candle.id]);
 
-  function handleAddToCart() {
-    addToCart(candle, getDefaultPurchaseQuantity(candle));
-    setIsAdded(true);
-    window.setTimeout(() => setIsAdded(false), 1400);
-  }
-
   return (
-    <article className={`candle-card${isAdded ? ' candle-card--added' : ''}`}>
+    <article className="candle-card">
       {auth ? (
         <button
           className={`favorite-button${favorite ? ' favorite-button--active' : ''}`}
@@ -55,18 +47,8 @@ export function CandleCard({ candle }: CandleCardProps) {
           <strong>{candle.price.toLocaleString('ru-RU')} ₽</strong>
           <div className="card-actions">
             <Link className="card-details-link" to={`/catalog/${candle.slug}`}>Подробнее</Link>
-            <button
-              className={isAdded ? 'add-to-cart-button--added' : ''}
-              type="button"
-              onClick={handleAddToCart}
-            >
-              {isAdded ? 'Добавлено ✓' : 'В корзину'}
-            </button>
           </div>
         </div>
-        <span className="cart-feedback" aria-live="polite">
-          {isAdded ? 'Свеча уже в корзине' : ''}
-        </span>
       </div>
     </article>
   );

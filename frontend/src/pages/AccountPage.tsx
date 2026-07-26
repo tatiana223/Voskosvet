@@ -230,7 +230,7 @@ export function AccountPage() {
                         <b>{order.totalPrice.toLocaleString('ru-RU')} ₽</b>
                       </div>
                     </div>
-                    <small>{order.items.map((item) => `${item.candleName} × ${item.quantity}`).join(', ')}</small>
+                    <small>{order.items.map((item) => `${item.candleName}: ${item.boxQuantity} кор. × ${item.packageSize} шт.`).join(', ')}</small>
                     <button
                       className="account-order-toggle"
                       type="button"
@@ -266,7 +266,7 @@ export function AccountPage() {
                           {order.items.map((item) => (
                             <article key={item.id}>
                               <span>{item.candleName}</span>
-                              <small>{item.quantity} шт.</small>
+                              <small>{item.boxQuantity} кор. × {item.packageSize} шт.</small>
                               <strong>{item.subtotal.toLocaleString('ru-RU')} ₽</strong>
                             </article>
                           ))}

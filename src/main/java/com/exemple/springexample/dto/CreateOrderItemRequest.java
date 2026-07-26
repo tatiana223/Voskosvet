@@ -9,6 +9,10 @@ public record CreateOrderItemRequest(
 
         @NotNull(message = "Количество обязательно")
         @Positive(message = "Количество должно быть больше 0")
-        Integer quantity
+        Integer quantity,
+
+        @NotNull
+        @Positive
+        Integer packageSize
 ) {
 }

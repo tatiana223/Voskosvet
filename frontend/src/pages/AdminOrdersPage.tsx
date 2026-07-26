@@ -64,7 +64,7 @@ export function AdminOrdersPage() {
               <div className="admin-order-grid">
                 <div><span>Покупатель</span><strong>{order.customer.fullName}</strong><a href={`tel:${order.customer.phone}`}>{order.customer.phone}</a><small>{order.contactEmail || order.customer.email}</small></div>
                 <div><span>Доставка</span><strong>{deliveryLabels[order.deliveryMethod]}</strong><small>{order.city}{order.deliveryAddress ? `, ${order.deliveryAddress}` : ''}</small><small>{order.deliveryComment}</small></div>
-                <div><span>Состав</span>{order.items.map((item) => <small key={item.id}>{item.candleName} × {item.quantity}</small>)}</div>
+                <div><span>Состав</span>{order.items.map((item) => <small key={item.id}>{item.candleName}: {item.boxQuantity} кор. × {item.packageSize} шт.</small>)}</div>
                 <label><span>Статус</span><select value={order.status} onChange={(e) => void changeStatus(order, e.target.value as OrderStatus)}>{Object.entries(statusLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
               </div>
             </article>

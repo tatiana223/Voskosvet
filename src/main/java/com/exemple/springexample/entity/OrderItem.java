@@ -28,5 +28,11 @@ public class OrderItem {
     private Integer quantity;
 
     @Column(nullable = false)
+    private Integer packageSize = 1;
+
+    @Column(nullable = false)
+    private Integer boxQuantity = 1;
+
+    @Column(nullable = false)
     private BigDecimal priceAtPurchase;
 }

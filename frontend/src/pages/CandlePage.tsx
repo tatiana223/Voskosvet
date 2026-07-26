@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getCandleBySlug } from '../api/candlesApi';
 import type { Candle } from '../types/candle';
-import { addToCart, getCandleSavingPercent, getCandleUnitPrice, getDefaultPurchaseQuantity } from '../utils/cart';
+import { addToCart, getCandleSavingPercent, getCandleUnitPrice, getDefaultPackageSize } from '../utils/cart';
 import { isFavorite, toggleFavorite } from '../utils/favorites';
 import { getStoredAuth, subscribeToAuth } from '../utils/auth';
 import { getCandleImage, useCandleImageFallback } from '../utils/images';
@@ -11,7 +11,8 @@ export function CandlePage() {
   const { slug } = useParams();
   const [candle, setCandle] = useState<Candle | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [quantity, setQuantity] = useState(1);
+  const [packageSize, setPackageSize] = useState(1);
+  const [boxQuantity, setBoxQuantity] = useState(1);
   const [isAdded, setIsAdded] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [auth, setAuth] = useState(() => getStoredAuth());
@@ -29,7 +30,7 @@ export function CandlePage() {
   useEffect(() => {
     if (candle) {
       setFavorite(isFavorite(candle.id));
-      setQuantity(getDefaultPurchaseQuantity(candle));
+      setPackageSize(getDefaultPackageSize(candle));
     }
   }, [candle]);
 
@@ -48,7 +49,7 @@ export function CandlePage() {
     return <section className="section">Свеча не найдена</section>;
   }
 
-  const unitPrice = getCandleUnitPrice(candle, quantity);
+  const unitPrice = getCandleUnitPrice(candle, packageSize);
   const savingPercent = getCandleSavingPercent(candle, unitPrice);
 
   return (
@@ -105,18 +106,18 @@ export function CandlePage() {
         <div className="product-purchase">
           {(candle.priceTiers || []).length > 0 ? (
             <div className="quantity-tier-picker">
-              <span>Выберите количество</span>
+              <span>Выберите размер коробки</span>
               <div className="quantity-tier-options">
                 {candle.priceTiers.map((tier, tierIndex) => {
                   const saving = getCandleSavingPercent(candle, tier.unitPrice);
                   return (
                     <button
-                      className={quantity === tier.quantity ? 'quantity-tier-option quantity-tier-option--active' : 'quantity-tier-option'}
+                      className={packageSize === tier.quantity ? 'quantity-tier-option quantity-tier-option--active' : 'quantity-tier-option'}
                       type="button"
                       key={tier.quantity}
-                      onClick={() => setQuantity(tier.quantity)}
+                      onClick={() => setPackageSize(tier.quantity)}
                     >
-                      <strong>{tier.quantity} шт.</strong>
+                      <strong>{tier.quantity} шт. в коробке</strong>
                       <span>{tier.unitPrice.toLocaleString('ru-RU')} ₽/шт.</span>
                       {saving > 0 ? <small>Выгода {saving}%</small> : <small>{tierIndex === 0 ? 'Стандартная коробка' : '\u00a0'}</small>}
                     </button>
@@ -127,7 +128,7 @@ export function CandlePage() {
           ) : null}
           <div className="product-price-row">
             <div className="selected-tier-price">
-              <strong>{(unitPrice * quantity).toLocaleString('ru-RU')} ₽</strong>
+              <strong>{(unitPrice * packageSize * boxQuantity).toLocaleString('ru-RU')} ₽</strong>
               <span>{unitPrice.toLocaleString('ru-RU')} ₽ за штуку</span>
               {savingPercent > 0 ? <small>Экономия {savingPercent}%</small> : null}
             </div>
@@ -137,11 +138,21 @@ export function CandlePage() {
                 <input
                   min="1"
                   type="number"
-                  value={quantity}
-                  onChange={(event) => setQuantity(Math.max(1, Number(event.target.value)))}
+                  value={boxQuantity}
+                  onChange={(event) => setBoxQuantity(Math.max(1, Number(event.target.value)))}
                 />
               </label>
-            ) : null}
+            ) : (
+              <label className="quantity-control">
+                Коробок
+                <input
+                  min="1"
+                  type="number"
+                  value={boxQuantity}
+                  onChange={(event) => setBoxQuantity(Math.max(1, Number(event.target.value)))}
+                />
+              </label>
+            )}
           </div>
 
           <div className="product-actions">
@@ -150,7 +161,7 @@ export function CandlePage() {
               type="button"
               disabled={!candle.available}
               onClick={() => {
-                addToCart(candle, quantity);
+                addToCart(candle, packageSize, boxQuantity);
                 setIsAdded(true);
                 window.setTimeout(() => setIsAdded(false), 1800);
               }}
