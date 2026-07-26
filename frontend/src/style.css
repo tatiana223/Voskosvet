@@ -795,8 +795,13 @@ button.primary-link { min-width: unset; }
 .favorites-empty p { max-width: 480px; margin: 0 0 24px; color: var(--muted); line-height: 1.65; }
 
 .quantity-control {
-  width: 110px;
+  display: flex;
+  align-items: center;
+  width: auto;
+  gap: 10px;
+  white-space: nowrap;
 }
+.quantity-control input { width: 110px; }
 
 .tracking-page {
   padding: 46px clamp(18px, 5vw, 76px);
