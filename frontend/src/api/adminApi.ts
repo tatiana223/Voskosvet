@@ -19,6 +19,10 @@ export type CandleFormData = {
   available: boolean;
   featured: boolean;
   categoryId: number;
+  priceTiers: Array<{
+    quantity: number;
+    unitPrice: number;
+  }>;
 };
 
 export function getAdminCredentials() {

@@ -8,6 +8,7 @@ import {
   clearCart,
   getCartItems,
   getCartTotal,
+  getCandleUnitPrice,
   removeFromCart,
   subscribeToCart,
   updateCartItemQuantity,
@@ -188,7 +189,7 @@ export function CheckoutPage() {
                     <div>
                       <h3>{item.candle.name}</h3>
                       <p>{item.candle.shortDescription || item.candle.categoryName}</p>
-                      <strong>{item.candle.price.toLocaleString('ru-RU')} ₽</strong>
+                      <strong>{getCandleUnitPrice(item.candle, item.quantity).toLocaleString('ru-RU')} ₽/шт.</strong>
                     </div>
                     <div className="cart-item-actions">
                       <label>

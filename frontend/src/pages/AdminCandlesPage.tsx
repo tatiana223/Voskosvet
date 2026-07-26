@@ -35,6 +35,7 @@ const emptyForm: CandleFormData = {
   available: true,
   featured: false,
   categoryId: 0,
+  priceTiers: [],
 };
 
 export function AdminCandlesPage() {
@@ -105,6 +106,7 @@ export function AdminCandlesPage() {
       available: candle.available,
       featured: candle.featured,
       categoryId: candle.categoryId,
+      priceTiers: candle.priceTiers || [],
     });
     setMessage('');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -232,6 +234,50 @@ export function AdminCandlesPage() {
             />
             <small>{isImageUploading ? 'Загружаем фотографию…' : 'Выберите JPG, PNG или WebP до 5 МБ'}</small>
           </label>
+
+          <fieldset className="admin-price-tiers">
+            <legend>Цены при покупке нескольких свечей</legend>
+            <p>Укажите количество и цену за одну свечу. Выгода посчитается автоматически.</p>
+            {form.priceTiers.map((tier, index) => (
+              <div className="admin-price-tier-row" key={index}>
+                <label>Количество
+                  <input
+                    min="2"
+                    step="1"
+                    type="number"
+                    value={tier.quantity}
+                    onChange={(event) => updateField('priceTiers', form.priceTiers.map((item, itemIndex) => (
+                      itemIndex === index ? { ...item, quantity: Number(event.target.value) } : item
+                    )))}
+                  />
+                </label>
+                <label>Цена за 1 шт., ₽
+                  <input
+                    min="1"
+                    step="0.01"
+                    type="number"
+                    value={tier.unitPrice}
+                    onChange={(event) => updateField('priceTiers', form.priceTiers.map((item, itemIndex) => (
+                      itemIndex === index ? { ...item, unitPrice: Number(event.target.value) } : item
+                    )))}
+                  />
+                </label>
+                <button type="button" onClick={() => updateField(
+                  'priceTiers',
+                  form.priceTiers.filter((_, itemIndex) => itemIndex !== index),
+                )}>Удалить</button>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={() => updateField('priceTiers', [
+                ...form.priceTiers,
+                { quantity: 2, unitPrice: form.price || 1 },
+              ])}
+            >
+              + Добавить вариант количества
+            </button>
+          </fieldset>
 
           <div className="admin-image-preview">
             <img src={getCandleImage(form.imageUrl)} alt="Предпросмотр свечи" onError={useCandleImageFallback} />

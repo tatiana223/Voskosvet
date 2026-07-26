@@ -3,6 +3,7 @@ package com.exemple.springexample.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record CandleResponse(
         Long id,
@@ -21,6 +22,7 @@ public record CandleResponse(
         Boolean available,
         Boolean featured,
         Long categoryId,
-        String categoryName
+        String categoryName,
+        List<CandlePriceTierResponse> priceTiers
 ) {
 }

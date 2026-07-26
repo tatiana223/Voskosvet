@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -55,5 +57,11 @@ public class Candle {
     @JoinColumn(name = "category_id")
     private Category category;
 
-
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "candle_price_tiers",
+            joinColumns = @JoinColumn(name = "candle_id")
+    )
+    @OrderBy("quantity ASC")
+    private List<CandlePriceTier> priceTiers = new ArrayList<>();
 }

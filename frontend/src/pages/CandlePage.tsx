@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getCandleBySlug } from '../api/candlesApi';
 import type { Candle } from '../types/candle';
-import { addToCart } from '../utils/cart';
+import { addToCart, getCandleSavingPercent, getCandleUnitPrice } from '../utils/cart';
 import { isFavorite, toggleFavorite } from '../utils/favorites';
 import { getStoredAuth, subscribeToAuth } from '../utils/auth';
 import { getCandleImage, useCandleImageFallback } from '../utils/images';
@@ -46,6 +46,9 @@ export function CandlePage() {
   if (!candle) {
     return <section className="section">Свеча не найдена</section>;
   }
+
+  const unitPrice = getCandleUnitPrice(candle, quantity);
+  const savingPercent = getCandleSavingPercent(candle, unitPrice);
 
   return (
     <section className="product-page">
@@ -99,8 +102,34 @@ export function CandlePage() {
         </dl>
 
         <div className="product-purchase">
+          {(candle.priceTiers || []).length > 0 ? (
+            <div className="quantity-tier-picker">
+              <span>Выберите количество</span>
+              <div className="quantity-tier-options">
+                {[{ quantity: 1, unitPrice: candle.price }, ...candle.priceTiers].map((tier) => {
+                  const saving = getCandleSavingPercent(candle, tier.unitPrice);
+                  return (
+                    <button
+                      className={quantity === tier.quantity ? 'quantity-tier-option quantity-tier-option--active' : 'quantity-tier-option'}
+                      type="button"
+                      key={tier.quantity}
+                      onClick={() => setQuantity(tier.quantity)}
+                    >
+                      <strong>{tier.quantity} шт.</strong>
+                      <span>{tier.unitPrice.toLocaleString('ru-RU')} ₽/шт.</span>
+                      {saving > 0 ? <small>Выгода {saving}%</small> : <small>Базовая цена</small>}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ) : null}
           <div className="product-price-row">
-            <strong>{candle.price.toLocaleString('ru-RU')} ₽</strong>
+            <div className="selected-tier-price">
+              <strong>{(unitPrice * quantity).toLocaleString('ru-RU')} ₽</strong>
+              <span>{unitPrice.toLocaleString('ru-RU')} ₽ за штуку</span>
+              {savingPercent > 0 ? <small>Экономия {savingPercent}%</small> : null}
+            </div>
             <label className="quantity-control">
               Количество
               <input

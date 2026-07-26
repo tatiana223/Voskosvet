@@ -16,4 +16,8 @@ export type Candle = {
   featured: boolean;
   categoryId: number;
   categoryName: string;
+  priceTiers: Array<{
+    quantity: number;
+    unitPrice: number;
+  }>;
 };

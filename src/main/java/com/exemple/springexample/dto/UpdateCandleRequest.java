@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public record UpdateCandleRequest(
         @NotBlank(message = "Slug обязателен")
@@ -55,6 +56,8 @@ public record UpdateCandleRequest(
         Boolean featured,
 
         @NotNull(message = "Категория обязательна")
-        Long categoryId
+        Long categoryId,
+
+        List<@jakarta.validation.Valid CandlePriceTierRequest> priceTiers
 ) {
 }

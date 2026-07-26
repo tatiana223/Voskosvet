@@ -6,6 +6,17 @@ export type CartItem = {
   quantity: number;
 };
 
+export function getCandleUnitPrice(candle: Candle, quantity: number) {
+  return (candle.priceTiers || [])
+    .filter((tier) => tier.quantity <= quantity)
+    .sort((a, b) => b.quantity - a.quantity)[0]?.unitPrice ?? candle.price;
+}
+
+export function getCandleSavingPercent(candle: Candle, unitPrice: number) {
+  if (candle.price <= 0 || unitPrice >= candle.price) return 0;
+  return Math.round((1 - unitPrice / candle.price) * 100);
+}
+
 const CART_KEY_PREFIX = 'voskosvet-cart';
 const GUEST_CART_KEY = `${CART_KEY_PREFIX}-guest`;
 const CART_EVENT = 'voskosvet-cart-change';
@@ -123,5 +134,8 @@ export function getCartItemsCount(items = readCart()) {
 }
 
 export function getCartTotal(items = readCart()) {
-  return items.reduce((sum, item) => sum + item.candle.price * item.quantity, 0);
+  return items.reduce(
+    (sum, item) => sum + getCandleUnitPrice(item.candle, item.quantity) * item.quantity,
+    0,
+  );
 }

@@ -701,6 +701,17 @@ button.primary-link { min-width: unset; }
 }
 
 .product-purchase { display: grid; gap: 12px; padding: 16px; border: 1px solid rgba(216, 138, 0, .18); border-radius: 18px; background: linear-gradient(135deg, #fffaf3, #fffdf8); }
+.quantity-tier-picker { display: grid; gap: 10px; }
+.quantity-tier-picker > span { font-weight: 700; color: #482515; }
+.quantity-tier-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(112px, 1fr)); gap: 8px; }
+.quantity-tier-option { display: grid; gap: 3px; padding: 11px 9px; border: 1px solid #e5d3c3; border-radius: 14px; background: #fff; color: #482515; text-align: left; }
+.quantity-tier-option strong { font-size: 16px; }
+.quantity-tier-option span { font-size: 13px; }
+.quantity-tier-option small { color: #8b5b27; font-weight: 700; }
+.quantity-tier-option--active { border-color: #c67c00; background: #fff2d7; box-shadow: 0 0 0 1px #c67c00; }
+.selected-tier-price { display: grid; gap: 2px; }
+.selected-tier-price span { color: #69564b; font-size: 14px; }
+.selected-tier-price small { color: #9a5d00; font-weight: 700; }
 .product-price-row { display: flex; align-items: end; justify-content: space-between; gap: 18px; }
 .product-price-row > strong { font-family: "Cormorant Garamond", Georgia, serif; font-size: 42px; line-height: 1; }
 .product-actions .primary-link, .product-actions .secondary-link { min-width: 0; padding: 13px 18px; border-radius: 13px; }
@@ -1866,6 +1877,11 @@ button.primary-link { min-width: unset; }
 .admin-size-manager { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 10px; margin: 16px 0; padding: 14px; border-radius: 14px; background: #fff5e3; }
 .admin-size-manager button { min-height: 45px; padding: 0 16px; border: 1px solid rgba(216, 138, 0, .35); border-radius: 12px; background: white; color: var(--honey-dark); font-weight: 900; }
 .admin-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.admin-price-tiers { display: grid; gap: 12px; margin: 18px 0; padding: 16px; border: 1px solid #e6d8cc; border-radius: 16px; }
+.admin-price-tiers legend { padding: 0 7px; font-size: 18px; font-weight: 700; }
+.admin-price-tiers > p { margin: 0; color: #75645a; }
+.admin-price-tier-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
+.admin-price-tier-row button { min-height: 48px; }
 .admin-form label { display: grid; gap: 7px; color: var(--brown); font-size: 13px; font-weight: 800; }
 .admin-image-preview { position: relative; width: min(100%, 420px); height: 230px; overflow: hidden; border-radius: 16px; background: var(--sand); }
 .admin-image-preview img { display: block; width: 100%; height: 100%; object-fit: cover; }
@@ -2127,6 +2143,8 @@ button.primary-link { min-width: unset; }
 
   .admin-heading { align-items: flex-start; flex-direction: column; }
   .admin-layout, .admin-form-grid { grid-template-columns: 1fr; }
+  .admin-price-tier-row { grid-template-columns: 1fr 1fr; }
+  .admin-price-tier-row button { grid-column: 1 / -1; }
   .admin-reviews-layout { grid-template-columns: 1fr; }
   .admin-review-card { grid-template-columns: 84px minmax(0, 1fr); }
   .admin-review-card img { width: 84px; height: 84px; }

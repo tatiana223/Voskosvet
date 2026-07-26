@@ -17,5 +17,6 @@ public interface CandleMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "available", constant = "true")
     @Mapping(target = "category", ignore = true)
+    @Mapping(target = "priceTiers", ignore = true)
     Candle toEntity(CreateCandleRequest request);
 }

@@ -5,6 +5,7 @@ import com.exemple.springexample.dto.CreateCandleRequest;
 import com.exemple.springexample.dto.PageResponse;
 import com.exemple.springexample.dto.UpdateCandleRequest;
 import com.exemple.springexample.entity.Candle;
+import com.exemple.springexample.entity.CandlePriceTier;
 import com.exemple.springexample.entity.Category;
 import com.exemple.springexample.exception.BadRequestException;
 import com.exemple.springexample.exception.NotFoundException;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.HashSet;
 
 @Service
 @RequiredArgsConstructor
@@ -100,6 +102,7 @@ public class CandleService {
         Candle candle = candleMapper.toEntity(request);
         candle.setFeatured(Boolean.TRUE.equals(request.featured()));
         candle.setCategory(category);
+        candle.setPriceTiers(toPriceTiers(request.priceTiers(), request.price()));
 
         Candle savedCandle = candleRepository.save(candle);
 
@@ -129,6 +132,8 @@ public class CandleService {
         candle.setAvailable(request.available());
         candle.setFeatured(request.featured());
         candle.setCategory(category);
+        candle.getPriceTiers().clear();
+        candle.getPriceTiers().addAll(toPriceTiers(request.priceTiers(), request.price()));
 
         Candle savedCandle = candleRepository.save(candle);
 
@@ -201,5 +206,30 @@ public class CandleService {
         if (candleRepository.existsBySlugAndIdNot(slug, candleId)) {
             throw new BadRequestException("Свеча с таким slug уже существует");
         }
+    }
+
+    private List<CandlePriceTier> toPriceTiers(
+            List<com.exemple.springexample.dto.CandlePriceTierRequest> requestedTiers,
+            BigDecimal basePrice
+    ) {
+        if (requestedTiers == null) {
+            return List.of();
+        }
+
+        HashSet<Integer> quantities = new HashSet<>();
+        return requestedTiers.stream()
+                .peek(tier -> {
+                    if (!quantities.add(tier.quantity())) {
+                        throw new BadRequestException("Количество в вариантах покупки не должно повторяться");
+                    }
+                    if (tier.unitPrice().compareTo(basePrice) > 0) {
+                        throw new BadRequestException("Цена за штуку в наборе не может быть выше базовой цены");
+                    }
+                })
+                .sorted(java.util.Comparator.comparingInt(
+                        com.exemple.springexample.dto.CandlePriceTierRequest::quantity
+                ))
+                .map(tier -> new CandlePriceTier(tier.quantity(), tier.unitPrice()))
+                .toList();
     }
 }

@@ -6,6 +6,7 @@ import com.exemple.springexample.dto.OrderResponse;
 import com.exemple.springexample.dto.PageResponse;
 import com.exemple.springexample.dto.UpdateOrderStatusRequest;
 import com.exemple.springexample.entity.Candle;
+import com.exemple.springexample.entity.CandlePriceTier;
 import com.exemple.springexample.entity.Customer;
 import com.exemple.springexample.entity.Order;
 import com.exemple.springexample.entity.OrderItem;
@@ -78,11 +79,12 @@ public class OrderService {
             orderItem.setOrder(order);
             orderItem.setCandle(candle);
             orderItem.setQuantity(itemRequest.quantity());
-            orderItem.setPriceAtPurchase(candle.getPrice());
+            BigDecimal unitPrice = resolveUnitPrice(candle, itemRequest.quantity());
+            orderItem.setPriceAtPurchase(unitPrice);
 
             order.getItems().add(orderItem);
 
-            BigDecimal subtotal = candle.getPrice()
+            BigDecimal subtotal = unitPrice
                     .multiply(BigDecimal.valueOf(itemRequest.quantity()));
             itemsPrice = itemsPrice.add(subtotal);
         }
@@ -256,5 +258,13 @@ public class OrderService {
                 .stream()
                 .map(orderMapper::toOrderResponse)
                 .toList();
+    }
+
+    private BigDecimal resolveUnitPrice(Candle candle, int quantity) {
+        return candle.getPriceTiers().stream()
+                .filter(tier -> tier.getQuantity() <= quantity)
+                .max(java.util.Comparator.comparingInt(CandlePriceTier::getQuantity))
+                .map(CandlePriceTier::getUnitPrice)
+                .orElse(candle.getPrice());
     }
 }
