@@ -2333,6 +2333,7 @@ button.primary-link { min-width: unset; }
   border-radius: 12px;
   background: transparent;
   object-fit: contain;
+  cursor: zoom-in;
 }
 
 .review-media-item video {
@@ -2425,6 +2426,86 @@ button.primary-link { min-width: unset; }
 }
 
 .review-cover-button.active { background: #52702f; }
+
+body.media-lightbox-open {
+  overflow: hidden;
+}
+
+.media-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 70px 86px;
+  background: rgba(20, 13, 9, .9);
+  backdrop-filter: blur(8px);
+  cursor: zoom-out;
+}
+
+.media-lightbox-content {
+  display: grid;
+  width: min(1100px, 88vw);
+  height: min(780px, 82vh);
+  place-items: center;
+  cursor: default;
+}
+
+.media-lightbox-content img,
+.media-lightbox-content video {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+  border-radius: 12px;
+  object-fit: contain;
+  box-shadow: 0 24px 80px rgba(0,0,0,.45);
+}
+
+.media-lightbox-close,
+.media-lightbox-arrow {
+  position: fixed;
+  z-index: 1001;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  background: rgba(255,255,255,.12);
+  color: white;
+  cursor: pointer;
+}
+
+.media-lightbox-close {
+  top: 22px;
+  right: 25px;
+  width: 46px;
+  height: 46px;
+  font-size: 32px;
+}
+
+.media-lightbox-arrow {
+  top: 50%;
+  width: 52px;
+  height: 52px;
+  font-size: 42px;
+  transform: translateY(-50%);
+}
+
+.media-lightbox-arrow.previous { left: 24px; }
+.media-lightbox-arrow.next { right: 24px; }
+
+.media-lightbox-counter {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.13);
+  color: white;
+  font-size: 13px;
+  transform: translateX(-50%);
+}
 
 
 @media (max-width: 760px) {
@@ -2613,6 +2694,25 @@ button.primary-link { min-width: unset; }
     width: 150px;
     height: 150px;
   }
+
+  .media-lightbox {
+    padding: 62px 12px 70px;
+  }
+
+  .media-lightbox-content {
+    width: 96vw;
+    height: 78vh;
+  }
+
+  .media-lightbox-arrow {
+    top: auto;
+    bottom: 16px;
+    width: 44px;
+    height: 44px;
+  }
+
+  .media-lightbox-arrow.previous { left: 16px; }
+  .media-lightbox-arrow.next { right: 16px; }
 
   .review-form {
     position: static;
