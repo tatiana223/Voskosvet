@@ -8,7 +8,6 @@ import { defaultSiteContent, type SiteContent } from '../types/siteContent';
 import { updateAdminContent, uploadAdminImage } from '../api/adminApi';
 import { InlineImageEditor, InlineTextEditor } from '../components/InlineContentEditor';
 import { getReviews, type Review } from '../api/reviewsApi';
-import { getUploadedImage } from '../utils/images';
 import { ReviewMediaGallery } from '../components/ReviewMediaGallery';
 
 type EmblemName = 'leaf' | 'flame' | 'gift' | 'honey';
@@ -229,16 +228,6 @@ export function WelcomePage() {
             Смотреть все отзывы
           </Link>
         </div>
-
-        {featuredReviews.some((review) => review.media.some((item) => item.type === 'image')) ? (
-          <div className="review-photo-strip">
-            {featuredReviews.flatMap((review) => review.media
-              .filter((item) => item.type === 'image')
-              .map((item, index) => (
-                <img key={`${review.id}-${index}`} src={getUploadedImage(item.url)} alt={`Фотография от ${review.name}`} />
-              )))}
-          </div>
-        ) : null}
 
       </section>
 

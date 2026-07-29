@@ -262,6 +262,12 @@ export function updateAdminCategory(id: number, name: string, description: strin
   });
 }
 
+export function deleteAdminCategory(id: number) {
+  return adminRequest<void>(`/api/admin/categories/${id}`, {
+    method: 'DELETE',
+  });
+}
+
 export function getAdminContent() {
   return adminRequest<Partial<SiteContent>>('/api/admin/content');
 }
