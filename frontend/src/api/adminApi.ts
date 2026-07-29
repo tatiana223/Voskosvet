@@ -248,7 +248,7 @@ export function getAdminContent() {
   return adminRequest<Partial<SiteContent>>('/api/admin/content');
 }
 
-export function updateAdminContent(content: SiteContent) {
+export function updateAdminContent(content: Partial<SiteContent>) {
   return adminRequest<SiteContent>('/api/admin/content', {
     method: 'PUT',
     body: JSON.stringify(content),

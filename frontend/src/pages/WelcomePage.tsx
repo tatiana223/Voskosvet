@@ -5,7 +5,8 @@ import { CandleCard } from '../components/CandleCard';
 import type { Candle } from '../types/candle';
 import { getSiteContent } from '../api/contentApi';
 import { defaultSiteContent, type SiteContent } from '../types/siteContent';
-import { getUploadedImage } from '../utils/images';
+import { updateAdminContent, uploadAdminImage } from '../api/adminApi';
+import { InlineImageEditor, InlineTextEditor } from '../components/InlineContentEditor';
 
 const reviews = [
   {
@@ -84,6 +85,16 @@ export function WelcomePage() {
     getSiteContent().then(setContent).catch(() => undefined);
   }, []);
 
+  async function saveField(key: keyof SiteContent, value: string) {
+    const saved = await updateAdminContent({ [key]: value });
+    setContent((current) => ({ ...current, ...saved }));
+  }
+
+  async function uploadField(key: keyof SiteContent, file: File) {
+    const uploaded = await uploadAdminImage(file);
+    await saveField(key, uploaded.url);
+  }
+
   useEffect(() => {
     getCandles({
       featured: true,
@@ -99,21 +110,21 @@ export function WelcomePage() {
     <div className="landing-snap">
       <section className="hero screen-section hero-custom-background" id="home">
         <div className="hero-copy">
-          <h1>{content['home.heroTitle']}</h1>
-          <p>{content['home.heroSubtitle']}</p>
+          <InlineTextEditor as="h1" value={content['home.heroTitle']} label="Главный заголовок" onSave={(value) => saveField('home.heroTitle', value)} />
+          <InlineTextEditor as="p" value={content['home.heroSubtitle']} label="Описание под заголовком" multiline onSave={(value) => saveField('home.heroSubtitle', value)} />
 
           <div className="hero-points">
             <span>
               <Emblem name="leaf" />
-              <b>{content['home.point1']}</b>
+              <InlineTextEditor as="b" value={content['home.point1']} label="Первое преимущество" onSave={(value) => saveField('home.point1', value)} />
             </span>
             <span>
               <Emblem name="flame" />
-              <b>{content['home.point2']}</b>
+              <InlineTextEditor as="b" value={content['home.point2']} label="Второе преимущество" onSave={(value) => saveField('home.point2', value)} />
             </span>
             <span>
               <Emblem name="gift" />
-              <b>{content['home.point3']}</b>
+              <InlineTextEditor as="b" value={content['home.point3']} label="Третье преимущество" onSave={(value) => saveField('home.point3', value)} />
             </span>
           </div>
 
@@ -122,10 +133,12 @@ export function WelcomePage() {
           </Link>
         </div>
 
-        <div
+        <InlineImageEditor
           className="hero-photo hero-photo-custom"
-          style={{ backgroundImage: `url("${getUploadedImage(content['home.heroImage'])}")` }}
-          aria-hidden="true"
+          background
+          value={content['home.heroImage']}
+          label="Главное изображение"
+          onUpload={(file) => uploadField('home.heroImage', file)}
         />
 
         <section className="benefit-ribbon" aria-label="Преимущества">
@@ -176,23 +189,23 @@ export function WelcomePage() {
 
       <section className="why-section screen-section" id="about">
         <div className="why-copy">
-          <p className="eyebrow">{content['home.aboutEyebrow']}</p>
-          <h2>{content['home.aboutTitle']}</h2>
-          <p>{content['home.aboutText']}</p>
+          <InlineTextEditor as="p" className="eyebrow" value={content['home.aboutEyebrow']} label="Надпись над разделом" onSave={(value) => saveField('home.aboutEyebrow', value)} />
+          <InlineTextEditor as="h2" value={content['home.aboutTitle']} label="Заголовок раздела" onSave={(value) => saveField('home.aboutTitle', value)} />
+          <InlineTextEditor as="p" value={content['home.aboutText']} label="Текст раздела" multiline onSave={(value) => saveField('home.aboutText', value)} />
         </div>
 
         <div className="why-grid">
           <div>
-            <img src={getUploadedImage(content['home.aboutImage1'])} alt="" />
-            <span>{content['home.aboutCaption1']}</span>
+            <InlineImageEditor value={content['home.aboutImage1']} label="Первое изображение" onUpload={(file) => uploadField('home.aboutImage1', file)} />
+            <InlineTextEditor as="span" value={content['home.aboutCaption1']} label="Подпись первого изображения" onSave={(value) => saveField('home.aboutCaption1', value)} />
           </div>
           <div>
-            <img src={getUploadedImage(content['home.aboutImage2'])} alt="" />
-            <span>{content['home.aboutCaption2']}</span>
+            <InlineImageEditor value={content['home.aboutImage2']} label="Второе изображение" onUpload={(file) => uploadField('home.aboutImage2', file)} />
+            <InlineTextEditor as="span" value={content['home.aboutCaption2']} label="Подпись второго изображения" onSave={(value) => saveField('home.aboutCaption2', value)} />
           </div>
           <div>
-            <img src={getUploadedImage(content['home.aboutImage3'])} alt="" />
-            <span>{content['home.aboutCaption3']}</span>
+            <InlineImageEditor value={content['home.aboutImage3']} label="Третье изображение" onUpload={(file) => uploadField('home.aboutImage3', file)} />
+            <InlineTextEditor as="span" value={content['home.aboutCaption3']} label="Подпись третьего изображения" onSave={(value) => saveField('home.aboutCaption3', value)} />
           </div>
         </div>
 
