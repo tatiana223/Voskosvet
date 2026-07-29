@@ -2,6 +2,7 @@ package com.exemple.springexample.controller;
 
 import com.exemple.springexample.dto.ReviewRequest;
 import com.exemple.springexample.dto.ReviewResponse;
+import com.exemple.springexample.dto.ReviewMediaRequest;
 import com.exemple.springexample.entity.Customer;
 import com.exemple.springexample.service.ReviewService;
 import jakarta.validation.Valid;
@@ -11,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/reviews")
@@ -39,11 +41,11 @@ public class AdminReviewController {
         return reviewService.setFeatured(id, Boolean.TRUE.equals(body.get("featured")));
     }
 
-    @PatchMapping("/{id}/image")
-    public ReviewResponse setImage(
+    @PatchMapping("/{id}/media")
+    public ReviewResponse setMedia(
             @PathVariable Long id,
-            @RequestBody Map<String, String> body
+            @RequestBody List<ReviewMediaRequest> media
     ) {
-        return reviewService.setImage(id, body.get("imageUrl"));
+        return reviewService.setMedia(id, media);
     }
 }

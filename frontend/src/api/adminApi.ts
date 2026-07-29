@@ -2,6 +2,7 @@ import type { Candle } from '../types/candle';
 import type { Category } from '../types/category';
 import type { OrderResponse, OrderStatus } from '../types/order';
 import type { SiteContent } from '../types/siteContent';
+import type { ReviewMedia } from './reviewsApi';
 import { clearStoredAuth, getStoredAuth } from '../utils/auth';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080';
@@ -168,6 +169,7 @@ export type Review = {
   text: string;
   rating: number;
   photoUrl?: string;
+  media: ReviewMedia[];
   featured: boolean;
   createdAt: string;
 };
@@ -183,7 +185,7 @@ export function createAdminReview(data: {
   displayName: string;
   text: string;
   rating: number;
-  imageUrl?: string;
+  media?: ReviewMedia[];
   featured?: boolean;
 }) {
   return adminRequest<Review>('/api/admin/reviews', {
@@ -199,10 +201,10 @@ export function setAdminReviewFeatured(id: number, featured: boolean) {
   });
 }
 
-export function setAdminReviewImage(id: number, imageUrl: string) {
-  return adminRequest<Review>(`/api/admin/reviews/${id}/image`, {
+export function setAdminReviewMedia(id: number, media: ReviewMedia[]) {
+  return adminRequest<Review>(`/api/admin/reviews/${id}/media`, {
     method: 'PATCH',
-    body: JSON.stringify({ imageUrl }),
+    body: JSON.stringify(media),
   });
 }
 

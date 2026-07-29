@@ -23,7 +23,9 @@ public class MediaController {
     private static final Set<String> ALLOWED_TYPES = Set.of(
             MediaType.IMAGE_JPEG_VALUE,
             MediaType.IMAGE_PNG_VALUE,
-            "image/webp"
+            "image/webp",
+            "video/mp4",
+            "video/webm"
     );
 
     private final MediaFileRepository mediaFileRepository;
@@ -42,8 +44,12 @@ public class MediaController {
         if (file.isEmpty() || file.getContentType() == null || !ALLOWED_TYPES.contains(file.getContentType())) {
             throw new BadRequestException("Выберите изображение JPG, PNG или WebP");
         }
-        if (file.getSize() > 5 * 1024 * 1024) {
-            throw new BadRequestException("Изображение должно быть не больше 5 МБ");
+        boolean video = file.getContentType().startsWith("video/");
+        long maximumSize = video ? 30L * 1024 * 1024 : 5L * 1024 * 1024;
+        if (file.getSize() > maximumSize) {
+            throw new BadRequestException(video
+                    ? "Видео должно быть не больше 30 МБ"
+                    : "Изображение должно быть не больше 5 МБ");
         }
 
         MediaFile mediaFile = new MediaFile();
@@ -52,7 +58,10 @@ public class MediaController {
         mediaFile.setData(file.getBytes());
 
         MediaFile saved = mediaFileRepository.save(mediaFile);
-        return Map.of("url", "/api/media/" + saved.getId());
+        return Map.of(
+                "url", "/api/media/" + saved.getId(),
+                "type", video ? "video" : "image"
+        );
     }
 
     @GetMapping("/api/media/{id}")

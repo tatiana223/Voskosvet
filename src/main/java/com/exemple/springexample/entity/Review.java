@@ -28,6 +28,9 @@ public class Review {
     @Column(length = 500)
     private String imageUrl;
 
+    @Column(columnDefinition = "TEXT")
+    private String mediaData;
+
     @Column(nullable = false)
     private boolean featured;
 

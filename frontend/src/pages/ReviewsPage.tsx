@@ -5,18 +5,19 @@ import {
   createReview,
   deleteReview,
   getReviews,
-  uploadReviewImage,
+  uploadReviewMedia,
   type Review,
+  type ReviewMedia,
 } from '../api/reviewsApi';
 import { getStoredAuth } from '../utils/auth';
-import { getUploadedImage } from '../utils/images';
+import { ReviewMediaGallery } from '../components/ReviewMediaGallery';
 
 export function ReviewsPage() {
   const auth = getStoredAuth();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [text, setText] = useState('');
   const [rating, setRating] = useState(5);
-  const [imageUrl, setImageUrl] = useState('');
+  const [media, setMedia] = useState<ReviewMedia[]>([]);
   const [message, setMessage] = useState('');
   const [photoError, setPhotoError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -40,30 +41,35 @@ export function ReviewsPage() {
       const created = await createReview({
         text: text.trim(),
         rating,
-        imageUrl: imageUrl || undefined,
+        media,
       });
       setReviews((current) => [created, ...current]);
       setText('');
       setRating(5);
-      setImageUrl('');
+      setMedia([]);
       setMessage('Спасибо! Ваш отзыв опубликован.');
     } finally {
       setIsSubmitting(false);
     }
   }
 
-  async function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  async function handleMediaChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files || []);
+    if (files.length === 0) return;
+    if (media.length + files.length > 8) {
+      setPhotoError('К одному отзыву можно прикрепить не больше 8 файлов.');
+      return;
+    }
     setIsUploading(true);
     setPhotoError('');
     try {
-      const uploaded = await uploadReviewImage(file);
-      setImageUrl(uploaded.url);
+      const uploaded = await Promise.all(files.map(uploadReviewMedia));
+      setMedia((current) => [...current, ...uploaded]);
     } catch (requestError) {
-      setPhotoError(requestError instanceof Error ? requestError.message : 'Не удалось загрузить фотографию');
+      setPhotoError(requestError instanceof Error ? requestError.message : 'Не удалось загрузить файлы');
     } finally {
       setIsUploading(false);
+      event.target.value = '';
     }
   }
 
@@ -85,9 +91,7 @@ export function ReviewsPage() {
           {reviews.map((review) => (
             <article className="review-card" key={review.id}>
               <div className="stars" aria-label={`${review.rating} из 5`}>{'★'.repeat(review.rating)}</div>
-              {review.photoUrl ? (
-                <img className="review-photo" src={getUploadedImage(review.photoUrl)} alt={`Фотография от ${review.name}`} />
-              ) : null}
+              <ReviewMediaGallery media={review.media} />
               <p>“{review.text}”</p>
               <strong>{review.name}</strong>
               {auth && review.authorId === auth.id ? (
@@ -107,11 +111,11 @@ export function ReviewsPage() {
             </select></label>
             <label>Отзыв<textarea value={text} onChange={(event) => setText(event.target.value)} required minLength={10} maxLength={1000} rows={6} /></label>
             <label>
-              Фотография к отзыву
-              <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => void handleImageChange(event)} />
-              <small>{isUploading ? 'Загружаем фотографию…' : 'Необязательно. JPG, PNG или WebP до 5 МБ'}</small>
+              Фотографии или видео к отзыву
+              <input type="file" multiple accept="image/png,image/jpeg,image/webp,video/mp4,video/webm" onChange={(event) => void handleMediaChange(event)} />
+              <small>{isUploading ? 'Загружаем файлы…' : 'До 8 файлов: фото до 5 МБ, видео MP4/WebM до 30 МБ'}</small>
             </label>
-            {imageUrl ? <img className="review-photo-preview" src={getUploadedImage(imageUrl)} alt="Предпросмотр фотографии" /> : null}
+            <ReviewMediaGallery media={media} onRemove={(index) => setMedia((current) => current.filter((_, itemIndex) => itemIndex !== index))} />
             {photoError ? <p className="review-photo-error">{photoError}</p> : null}
             <button className="primary-link" disabled={isSubmitting || isUploading} type="submit">{isSubmitting ? 'Публикуем…' : 'Опубликовать отзыв'}</button>
             {message ? <p className="review-success">{message}</p> : null}

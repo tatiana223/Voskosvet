@@ -6,12 +6,12 @@ import {
   getAdminCredentials,
   getReviews,
   setAdminReviewFeatured,
-  setAdminReviewImage,
-  uploadAdminImage,
+  setAdminReviewMedia,
   type Review,
 } from '../api/adminApi';
 import { AdminNav } from '../components/AdminNav';
-import { getUploadedImage } from '../utils/images';
+import { ReviewMediaGallery } from '../components/ReviewMediaGallery';
+import { uploadReviewMedia, type ReviewMedia } from '../api/reviewsApi';
 
 export function AdminReviewsPage() {
   const credentials = getAdminCredentials();
@@ -19,7 +19,7 @@ export function AdminReviewsPage() {
   const [displayName, setDisplayName] = useState('');
   const [text, setText] = useState('');
   const [rating, setRating] = useState(5);
-  const [imageUrl, setImageUrl] = useState('');
+  const [media, setMedia] = useState<ReviewMedia[]>([]);
   const [featured, setFeatured] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -34,18 +34,23 @@ export function AdminReviewsPage() {
 
   if (!credentials) return <Navigate to="/login" replace />;
 
-  async function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  async function handleMediaChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files || []);
+    if (files.length === 0) return;
+    if (media.length + files.length > 8) {
+      setError('К одному отзыву можно прикрепить не больше 8 файлов.');
+      return;
+    }
     setIsUploading(true);
     setError('');
     try {
-      const uploaded = await uploadAdminImage(file);
-      setImageUrl(uploaded.url);
+      const uploaded = await Promise.all(files.map(uploadReviewMedia));
+      setMedia((current) => [...current, ...uploaded]);
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : 'Не удалось загрузить фотографию');
+      setError(requestError instanceof Error ? requestError.message : 'Не удалось загрузить файлы');
     } finally {
       setIsUploading(false);
+      event.target.value = '';
     }
   }
 
@@ -59,14 +64,14 @@ export function AdminReviewsPage() {
         displayName,
         text,
         rating,
-        imageUrl: imageUrl || undefined,
+        media,
         featured,
       });
       setReviews((current) => [created, ...current]);
       setDisplayName('');
       setText('');
       setRating(5);
-      setImageUrl('');
+      setMedia([]);
       setFeatured(false);
       setMessage('Отзыв опубликован на сайте.');
     } catch (requestError) {
@@ -86,15 +91,32 @@ export function AdminReviewsPage() {
     }
   }
 
-  async function handleReviewImage(review: Review, file: File | undefined) {
-    if (!file) return;
+  async function handleReviewMedia(review: Review, files: File[]) {
+    if (files.length === 0) return;
+    if (review.media.length + files.length > 8) {
+      setError('К одному отзыву можно прикрепить не больше 8 файлов.');
+      return;
+    }
     setError('');
     try {
-      const uploaded = await uploadAdminImage(file);
-      const updated = await setAdminReviewImage(review.id, uploaded.url);
+      const uploaded = await Promise.all(files.map(uploadReviewMedia));
+      const updated = await setAdminReviewMedia(review.id, [...review.media, ...uploaded]);
       setReviews((current) => current.map((item) => item.id === updated.id ? updated : item));
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : 'Не удалось заменить фотографию');
+      setError(requestError instanceof Error ? requestError.message : 'Не удалось добавить файлы');
+    }
+  }
+
+  async function removeReviewMedia(review: Review, index: number) {
+    setError('');
+    try {
+      const updated = await setAdminReviewMedia(
+        review.id,
+        review.media.filter((_, itemIndex) => itemIndex !== index),
+      );
+      setReviews((current) => current.map((item) => item.id === updated.id ? updated : item));
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'Не удалось удалить файл');
     }
   }
 
@@ -119,11 +141,11 @@ export function AdminReviewsPage() {
             <option value={5}>5 — отлично</option><option value={4}>4 — хорошо</option><option value={3}>3 — нормально</option><option value={2}>2 — есть замечания</option><option value={1}>1 — плохо</option>
           </select></label>
           <label>Текст отзыва<textarea required minLength={10} maxLength={1000} rows={6} value={text} onChange={(event) => setText(event.target.value)} /></label>
-          <label>Фотография из другой системы
-            <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => void handleImageChange(event)} />
-            <small>{isUploading ? 'Загружаем…' : 'JPG, PNG или WebP до 5 МБ'}</small>
+          <label>Фотографии или видео
+            <input type="file" multiple accept="image/png,image/jpeg,image/webp,video/mp4,video/webm" onChange={(event) => void handleMediaChange(event)} />
+            <small>{isUploading ? 'Загружаем…' : 'До 8 файлов: фото до 5 МБ, видео до 30 МБ'}</small>
           </label>
-          {imageUrl ? <img className="admin-review-preview" src={getUploadedImage(imageUrl)} alt="Предпросмотр отзыва" /> : null}
+          <ReviewMediaGallery media={media} onRemove={(index) => setMedia((current) => current.filter((_, itemIndex) => itemIndex !== index))} />
           <label className="admin-checkbox-row">
             <input type="checkbox" checked={featured} onChange={(event) => setFeatured(event.target.checked)} />
             Показывать этот отзыв на главной странице
@@ -137,20 +159,30 @@ export function AdminReviewsPage() {
           <h2>Отзывы на сайте</h2>
           {reviews.map((review) => (
             <article className="admin-review-card" key={review.id}>
-              {review.photoUrl ? <img src={getUploadedImage(review.photoUrl)} alt="" /> : null}
-              <div>
+              <div className="admin-review-content">
                 <span className="stars">{'★'.repeat(review.rating)}</span>
                 <strong>{review.name}</strong>
                 <p>{review.text}</p>
+                <ReviewMediaGallery media={review.media} compact onRemove={(index) => void removeReviewMedia(review, index)} />
                 <label className="admin-review-image-control">
-                  {review.photoUrl ? 'Заменить фотографию' : 'Добавить фотографию'}
-                  <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => void handleReviewImage(review, event.target.files?.[0])} />
+                  Добавить фото или видео
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/png,image/jpeg,image/webp,video/mp4,video/webm"
+                    onChange={(event) => {
+                      void handleReviewMedia(review, Array.from(event.target.files || []));
+                      event.target.value = '';
+                    }}
+                  />
                 </label>
               </div>
-              <button className={review.featured ? 'admin-featured-button active' : 'admin-featured-button'} type="button" onClick={() => void handleFeatured(review)}>
-                {review.featured ? '✓ На главной' : 'Показать на главной'}
-              </button>
-              <button className="admin-hide-button" type="button" onClick={() => void handleDelete(review.id)}>Удалить</button>
+              <div className="admin-review-actions">
+                <button className={review.featured ? 'admin-featured-button active' : 'admin-featured-button'} type="button" onClick={() => void handleFeatured(review)}>
+                  {review.featured ? '✓ На главной' : 'На главную'}
+                </button>
+                <button className="admin-hide-button" type="button" onClick={() => void handleDelete(review.id)}>Удалить отзыв</button>
+              </div>
             </article>
           ))}
         </div>
