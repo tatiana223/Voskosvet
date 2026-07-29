@@ -218,8 +218,7 @@ export function WelcomePage() {
               </div>
               {review.photoUrl ? (
                 <div className="review-home-cover">
-                  <img className="media-backdrop" src={getUploadedImage(review.photoUrl)} alt="" aria-hidden="true" />
-                  <img className="media-foreground" src={getUploadedImage(review.photoUrl)} alt={`Фотография к отзыву ${review.name}`} />
+                  <img src={getUploadedImage(review.photoUrl)} alt={`Фотография к отзыву ${review.name}`} />
                 </div>
               ) : null}
               <p>“{review.text}”</p>

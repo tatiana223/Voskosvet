@@ -52,8 +52,7 @@ export function CandleCard({ candle }: CandleCardProps) {
         </button>
       ) : null}
       <Link className="candle-image" to={`/catalog/${candle.slug}`}>
-        <img className="media-backdrop" src={image} alt="" aria-hidden="true" onError={useCandleImageFallback} />
-        <img className="media-foreground" src={image} alt={candle.name} onError={useCandleImageFallback} />
+        <img src={image} alt={candle.name} onError={useCandleImageFallback} />
         {candle.featured ? <span className="featured-badge">Хит продаж</span> : null}
       </Link>
 

@@ -56,14 +56,6 @@ export function CandlePage() {
     <section className="product-page">
       <div className="product-image">
         <img
-          className="media-backdrop"
-          src={getCandleImage(candle.imageUrl)}
-          alt=""
-          aria-hidden="true"
-          onError={useCandleImageFallback}
-        />
-        <img
-          className="media-foreground"
           src={getCandleImage(candle.imageUrl)}
           alt={candle.name}
           onError={useCandleImageFallback}
