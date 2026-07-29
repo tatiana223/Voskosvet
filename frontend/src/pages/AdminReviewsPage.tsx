@@ -34,6 +34,7 @@ export function AdminReviewsPage() {
   }, []);
 
   if (!credentials) return <Navigate to="/login" replace />;
+  if (credentials.role !== 'ADMIN') return <Navigate to="/admin" replace />;
 
   async function handleMediaChange(event: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(event.target.files || []);

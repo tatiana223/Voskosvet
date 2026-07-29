@@ -46,8 +46,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Отзыв не найден"));
 
-        boolean isAdmin = customer.getRole().name().equals("ADMIN")
-                || customer.getRole().name().equals("MANAGER");
+        boolean isAdmin = customer.getRole().name().equals("ADMIN");
         boolean isAuthor = review.getAuthor() != null
                 && review.getAuthor().getId().equals(customer.getId());
 

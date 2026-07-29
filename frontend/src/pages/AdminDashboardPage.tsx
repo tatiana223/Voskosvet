@@ -5,6 +5,7 @@ import { getAdminCandles, getAdminCategories, getAdminCredentials, getAdminOrder
 
 export function AdminDashboardPage() {
   const credentials = getAdminCredentials();
+  const isManager = credentials?.role === 'MANAGER';
   const [stats, setStats] = useState({ candles: 0, orders: 0, newOrders: 0, categories: 0 });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -27,7 +28,12 @@ export function AdminDashboardPage() {
 
   return (
     <section className="admin-page">
-      <div className="admin-heading"><div><p className="eyebrow">Управление магазином</p><h1>Обзор</h1></div></div>
+      <div className="admin-heading">
+        <div>
+          <p className="eyebrow">{isManager ? 'Рабочее место менеджера' : 'Управление магазином'}</p>
+          <h1>{isManager ? 'Панель менеджера' : 'Обзор'}</h1>
+        </div>
+      </div>
       <div className="admin-shell">
         <AdminNav />
         {isLoading ? <p className="state-message">Сервер запускается, загружаем данные магазина…</p> : null}

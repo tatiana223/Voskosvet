@@ -191,8 +191,10 @@ export function AccountPage() {
 
           {user.role === 'ADMIN' || user.role === 'MANAGER' ? (
             <div className="account-admin-actions">
-              <p className="eyebrow">Управление магазином</p>
-              <Link className="primary-link" to="/admin">Открыть панель управления</Link>
+              <p className="eyebrow">{user.role === 'MANAGER' ? 'Рабочее место менеджера' : 'Управление магазином'}</p>
+              <Link className="primary-link" to="/admin">
+                {user.role === 'MANAGER' ? 'Открыть панель менеджера' : 'Открыть панель управления'}
+              </Link>
             </div>
           ) : null}
         </form>

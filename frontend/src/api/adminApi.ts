@@ -255,6 +255,13 @@ export function getAdminCustomers() {
   return adminRequest<AdminCustomer[]>('/api/admin/customers');
 }
 
+export function updateAdminCustomerRole(id: number, role: AdminCustomer['role']) {
+  return adminRequest<AdminCustomer>(`/api/admin/customers/${id}/role`, {
+    method: 'PATCH',
+    body: JSON.stringify({ role }),
+  });
+}
+
 export function createAdminCategory(name: string, description: string) {
   return adminRequest<Category>('/api/admin/categories', {
     method: 'POST',
