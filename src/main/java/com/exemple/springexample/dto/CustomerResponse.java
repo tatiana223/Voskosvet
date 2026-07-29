@@ -7,6 +7,7 @@ public record CustomerResponse(
         String fullName,
         String phone,
         String email,
-        Role role
+        Role role,
+        boolean primaryAdmin
 ) {
 }

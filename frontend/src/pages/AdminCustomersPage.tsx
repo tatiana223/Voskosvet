@@ -63,16 +63,17 @@ export function AdminCustomersPage() {
             const isCurrentUser = customer.id === credentials.id;
 
             return (
-              <div className="admin-table-row" key={customer.id}>
+              <div className={`admin-table-row${customer.primaryAdmin ? ' admin-primary-row' : ''}`} key={customer.id}>
                 <strong>
                   {customer.fullName}
+                  {customer.primaryAdmin ? <small className="admin-primary-admin">★ Главный администратор</small> : null}
                   {isCurrentUser ? <small className="admin-current-user">Это вы</small> : null}
                 </strong>
                 <span>{customer.phone}</span>
                 <span>{customer.email || '—'}</span>
                 <select
                   aria-label={`Роль пользователя ${customer.fullName}`}
-                  disabled={isCurrentUser || updatingId === customer.id}
+                  disabled={customer.primaryAdmin || isCurrentUser || updatingId === customer.id}
                   value={customer.role}
                   onChange={(event) => handleRoleChange(
                     customer,

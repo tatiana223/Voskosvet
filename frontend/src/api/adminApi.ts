@@ -249,6 +249,7 @@ export type AdminCustomer = {
   phone: string;
   email?: string;
   role: 'USER' | 'MANAGER' | 'ADMIN';
+  primaryAdmin: boolean;
 };
 
 export function getAdminCustomers() {

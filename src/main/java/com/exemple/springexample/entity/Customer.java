@@ -53,6 +53,9 @@ public class Customer {
     @Column(nullable = false)
     private Role role = Role.USER;
 
+    @Column(nullable = false)
+    private boolean primaryAdmin = false;
+
     @PrePersist
     @PreUpdate
     private void updateNormalizedPhone() {
