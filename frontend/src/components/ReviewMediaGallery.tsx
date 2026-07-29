@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { ReviewMedia } from '../api/reviewsApi';
 import { getUploadedImage } from '../utils/images';
 
@@ -40,40 +41,42 @@ export function ReviewMediaGallery({ media = [], onRemove, compact, coverUrl, on
   const activeIndex = openedIndex ?? 0;
 
   return (
-    <div className={compact ? 'review-media-gallery compact' : 'review-media-gallery'}>
-      {media.map((item, index) => (
-        <div className="review-media-item" key={`${item.url}-${index}`}>
-          {item.type === 'video' ? (
-            <video
-              src={getUploadedImage(item.url)}
-              controls
-              preload="metadata"
-              onClick={() => setOpenedIndex(index)}
-            />
-          ) : (
-            <img
-              src={getUploadedImage(item.url)}
-              alt={`Вложение к отзыву ${index + 1}`}
-              onClick={() => setOpenedIndex(index)}
-            />
-          )}
-          {onRemove ? (
-            <button className="review-media-remove" type="button" onClick={() => onRemove(index)} aria-label={`Удалить вложение ${index + 1}`}>
-              ×
-            </button>
-          ) : null}
-          {onMakeCover && item.type === 'image' ? (
-            <button
-              className={coverUrl === item.url ? 'review-cover-button active' : 'review-cover-button'}
-              type="button"
-              onClick={() => onMakeCover(item.url)}
-            >
-              {coverUrl === item.url ? '✓ Обложка' : 'На главную'}
-            </button>
-          ) : null}
-        </div>
-      ))}
-      {openedMedia ? (
+    <>
+      <div className={compact ? 'review-media-gallery compact' : 'review-media-gallery'}>
+        {media.map((item, index) => (
+          <div className="review-media-item" key={`${item.url}-${index}`}>
+            {item.type === 'video' ? (
+              <video
+                src={getUploadedImage(item.url)}
+                controls
+                preload="metadata"
+                onClick={() => setOpenedIndex(index)}
+              />
+            ) : (
+              <img
+                src={getUploadedImage(item.url)}
+                alt={`Вложение к отзыву ${index + 1}`}
+                onClick={() => setOpenedIndex(index)}
+              />
+            )}
+            {onRemove ? (
+              <button className="review-media-remove" type="button" onClick={() => onRemove(index)} aria-label={`Удалить вложение ${index + 1}`}>
+                ×
+              </button>
+            ) : null}
+            {onMakeCover && item.type === 'image' ? (
+              <button
+                className={coverUrl === item.url ? 'review-cover-button active' : 'review-cover-button'}
+                type="button"
+                onClick={() => onMakeCover(item.url)}
+              >
+                {coverUrl === item.url ? '✓ Обложка' : 'На главную'}
+              </button>
+            ) : null}
+          </div>
+        ))}
+      </div>
+      {openedMedia ? createPortal(
         <div className="media-lightbox" role="dialog" aria-modal="true" aria-label="Просмотр вложения" onClick={() => setOpenedIndex(null)}>
           <button className="media-lightbox-close" type="button" aria-label="Закрыть" onClick={() => setOpenedIndex(null)}>×</button>
           {media.length > 1 ? (
@@ -110,8 +113,9 @@ export function ReviewMediaGallery({ media = [], onRemove, compact, coverUrl, on
             </button>
           ) : null}
           <span className="media-lightbox-counter">{activeIndex + 1} / {media.length}</span>
-        </div>
+        </div>,
+        document.body,
       ) : null}
-    </div>
+    </>
   );
 }
