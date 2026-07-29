@@ -9,6 +9,7 @@ export function AdminNav() {
       <NavLink to="/admin/categories">Категории</NavLink>
       <NavLink to="/admin/reviews">Отзывы</NavLink>
       <NavLink to="/admin/customers">Клиенты</NavLink>
+      <NavLink to="/admin/content">Контент сайта</NavLink>
     </nav>
   );
 }

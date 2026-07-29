@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { getCandles } from '../api/candlesApi';
 import { CandleCard } from '../components/CandleCard';
 import type { Candle } from '../types/candle';
+import { getSiteContent } from '../api/contentApi';
+import { defaultSiteContent, type SiteContent } from '../types/siteContent';
+import { getUploadedImage } from '../utils/images';
 
 const reviews = [
   {
@@ -75,6 +78,11 @@ function Emblem({ name }: { name: EmblemName }) {
 export function WelcomePage() {
   const [popularCandles, setPopularCandles] = useState<Candle[]>([]);
   const [popularLoading, setPopularLoading] = useState(true);
+  const [content, setContent] = useState<SiteContent>(defaultSiteContent);
+
+  useEffect(() => {
+    getSiteContent().then(setContent).catch(() => undefined);
+  }, []);
 
   useEffect(() => {
     getCandles({
@@ -89,34 +97,36 @@ export function WelcomePage() {
 
   return (
     <div className="landing-snap">
-      <section className="hero screen-section" id="home">
+      <section className="hero screen-section hero-custom-background" id="home">
         <div className="hero-copy">
-          <h1>Натуральные церковные свечи из пчелиного воска</h1>
-          <p>
-            Чистый воск. Медовый аромат. Ровное горение.
-          </p>
+          <h1>{content['home.heroTitle']}</h1>
+          <p>{content['home.heroSubtitle']}</p>
 
           <div className="hero-points">
             <span>
               <Emblem name="leaf" />
-              <b>100% пчелиный воск</b>
+              <b>{content['home.point1']}</b>
             </span>
             <span>
               <Emblem name="flame" />
-              <b>Не коптят и не текут</b>
+              <b>{content['home.point2']}</b>
             </span>
             <span>
               <Emblem name="gift" />
-              <b>Упаковано с любовью</b>
+              <b>{content['home.point3']}</b>
             </span>
           </div>
 
           <Link className="primary-link" to="/catalog">
-            Смотреть каталог
+            {content['home.heroButton']}
           </Link>
         </div>
 
-        <div className="hero-photo" aria-hidden="true" />
+        <div
+          className="hero-photo hero-photo-custom"
+          style={{ backgroundImage: `url("${getUploadedImage(content['home.heroImage'])}")` }}
+          aria-hidden="true"
+        />
 
         <section className="benefit-ribbon" aria-label="Преимущества">
           <div>
@@ -166,26 +176,23 @@ export function WelcomePage() {
 
       <section className="why-section screen-section" id="about">
         <div className="why-copy">
-          <p className="eyebrow">О мастерской</p>
-          <h2>Почему выбирают ВоскоСвет</h2>
-          <p>
-            Мы делаем свечи из натурального пчелиного воска, выбираем спокойную
-            упаковку и теплые материалы: дерево, лен, бумагу и медовые оттенки.
-          </p>
+          <p className="eyebrow">{content['home.aboutEyebrow']}</p>
+          <h2>{content['home.aboutTitle']}</h2>
+          <p>{content['home.aboutText']}</p>
         </div>
 
         <div className="why-grid">
           <div>
-            <img src="/images/candle-size.webp" alt="Размер восковой свечи" />
-            <span>15 см<br />удобный формат</span>
+            <img src={getUploadedImage(content['home.aboutImage1'])} alt="" />
+            <span>{content['home.aboutCaption1']}</span>
           </div>
           <div>
-            <img src="/images/candle-detail.webp" alt="Деталь восковой свечи" />
-            <span>Медовый цвет<br />и гладкий воск</span>
+            <img src={getUploadedImage(content['home.aboutImage2'])} alt="" />
+            <span>{content['home.aboutCaption2']}</span>
           </div>
           <div>
-            <img src="/images/gift-box.webp" alt="Коробка со свечами" />
-            <span>Красивая упаковка<br />для подарка</span>
+            <img src={getUploadedImage(content['home.aboutImage3'])} alt="" />
+            <span>{content['home.aboutCaption3']}</span>
           </div>
         </div>
 

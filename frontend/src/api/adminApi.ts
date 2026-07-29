@@ -1,6 +1,7 @@
 import type { Candle } from '../types/candle';
 import type { Category } from '../types/category';
 import type { OrderResponse, OrderStatus } from '../types/order';
+import type { SiteContent } from '../types/siteContent';
 import { clearStoredAuth, getStoredAuth } from '../utils/auth';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080';
@@ -240,5 +241,16 @@ export function updateAdminCategory(id: number, name: string, description: strin
   return adminRequest<Category>(`/api/admin/categories/${id}`, {
     method: 'PUT',
     body: JSON.stringify({ name, description, active }),
+  });
+}
+
+export function getAdminContent() {
+  return adminRequest<Partial<SiteContent>>('/api/admin/content');
+}
+
+export function updateAdminContent(content: SiteContent) {
+  return adminRequest<SiteContent>('/api/admin/content', {
+    method: 'PUT',
+    body: JSON.stringify(content),
   });
 }

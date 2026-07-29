@@ -51,6 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/candles", "/api/candles/**").permitAll()
                         .requestMatchers("/api/categories", "/api/categories/**").permitAll()
                         .requestMatchers("/api/candle-sizes", "/api/candle-sizes/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/content").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/media/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/reviews").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/reviews").authenticated()
@@ -72,6 +73,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/categories/**").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers("/api/admin/orders/**").hasAnyRole("ADMIN", "MANAGER")
                         .requestMatchers("/api/admin/customers/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/content/**").hasRole("ADMIN")
 
                         .anyRequest().denyAll()
                 )

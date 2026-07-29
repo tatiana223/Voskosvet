@@ -4,6 +4,7 @@ import { AccountPage } from './pages/AccountPage';
 import { AdminCandlesPage } from './pages/AdminCandlesPage';
 import { AdminCategoriesPage } from './pages/AdminCategoriesPage';
 import { AdminCustomersPage } from './pages/AdminCustomersPage';
+import { AdminContentPage } from './pages/AdminContentPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { AdminOrdersPage } from './pages/AdminOrdersPage';
 import { AdminReviewsPage } from './pages/AdminReviewsPage';
@@ -47,6 +48,7 @@ export function App() {
           <Route path="/admin/categories" element={<AdminCategoriesPage />} />
           <Route path="/admin/reviews" element={<AdminReviewsPage />} />
           <Route path="/admin/customers" element={<AdminCustomersPage />} />
+          <Route path="/admin/content" element={<AdminContentPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
