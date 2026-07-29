@@ -5,9 +5,11 @@ type Props = {
   media?: ReviewMedia[];
   onRemove?: (index: number) => void;
   compact?: boolean;
+  coverUrl?: string;
+  onMakeCover?: (url: string) => void;
 };
 
-export function ReviewMediaGallery({ media = [], onRemove, compact }: Props) {
+export function ReviewMediaGallery({ media = [], onRemove, compact, coverUrl, onMakeCover }: Props) {
   if (media.length === 0) return null;
 
   return (
@@ -20,8 +22,17 @@ export function ReviewMediaGallery({ media = [], onRemove, compact }: Props) {
             <img src={getUploadedImage(item.url)} alt={`Вложение к отзыву ${index + 1}`} />
           )}
           {onRemove ? (
-            <button type="button" onClick={() => onRemove(index)} aria-label={`Удалить вложение ${index + 1}`}>
+            <button className="review-media-remove" type="button" onClick={() => onRemove(index)} aria-label={`Удалить вложение ${index + 1}`}>
               ×
+            </button>
+          ) : null}
+          {onMakeCover && item.type === 'image' ? (
+            <button
+              className={coverUrl === item.url ? 'review-cover-button active' : 'review-cover-button'}
+              type="button"
+              onClick={() => onMakeCover(item.url)}
+            >
+              {coverUrl === item.url ? '✓ Обложка' : 'На главную'}
             </button>
           ) : null}
         </div>

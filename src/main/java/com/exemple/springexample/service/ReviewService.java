@@ -71,7 +71,28 @@ public class ReviewService {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Отзыв не найден"));
         review.setMediaData(serializeMedia(media));
-        review.setImageUrl(firstImage(media));
+        boolean coverStillExists = media != null && media.stream()
+                .anyMatch(item -> item != null
+                        && "image".equals(normalizeType(item.type()))
+                        && item.url() != null
+                        && item.url().equals(review.getImageUrl()));
+        if (!coverStillExists) {
+            review.setImageUrl(firstImage(media));
+        }
+        return toResponse(reviewRepository.save(review));
+    }
+
+    @Transactional
+    public ReviewResponse setCover(Long id, String imageUrl) {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Отзыв не найден"));
+        List<ReviewMediaResponse> media = deserializeMedia(review.getMediaData());
+        boolean isReviewImage = media.stream()
+                .anyMatch(item -> "image".equals(item.type()) && item.url().equals(imageUrl));
+        if (!isReviewImage) {
+            throw new BadRequestException("Обложкой можно выбрать только фотографию этого отзыва");
+        }
+        review.setImageUrl(imageUrl);
         return toResponse(reviewRepository.save(review));
     }
 

@@ -6,6 +6,7 @@ import {
   getAdminCredentials,
   getReviews,
   setAdminReviewFeatured,
+  setAdminReviewCover,
   setAdminReviewMedia,
   type Review,
 } from '../api/adminApi';
@@ -120,6 +121,16 @@ export function AdminReviewsPage() {
     }
   }
 
+  async function makeReviewCover(review: Review, imageUrl: string) {
+    setError('');
+    try {
+      const updated = await setAdminReviewCover(review.id, imageUrl);
+      setReviews((current) => current.map((item) => item.id === updated.id ? updated : item));
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'Не удалось выбрать обложку');
+    }
+  }
+
   async function handleDelete(id: number) {
     if (!window.confirm('Удалить этот отзыв с сайта?')) return;
     await deleteAdminReview(id);
@@ -163,7 +174,13 @@ export function AdminReviewsPage() {
                 <span className="stars">{'★'.repeat(review.rating)}</span>
                 <strong>{review.name}</strong>
                 <p>{review.text}</p>
-                <ReviewMediaGallery media={review.media} compact onRemove={(index) => void removeReviewMedia(review, index)} />
+                <ReviewMediaGallery
+                  media={review.media}
+                  compact
+                  coverUrl={review.photoUrl}
+                  onRemove={(index) => void removeReviewMedia(review, index)}
+                  onMakeCover={(url) => void makeReviewCover(review, url)}
+                />
                 <label className="admin-review-image-control">
                   Добавить фото или видео
                   <input

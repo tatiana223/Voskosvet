@@ -208,6 +208,13 @@ export function setAdminReviewMedia(id: number, media: ReviewMedia[]) {
   });
 }
 
+export function setAdminReviewCover(id: number, imageUrl: string) {
+  return adminRequest<Review>(`/api/admin/reviews/${id}/cover`, {
+    method: 'PATCH',
+    body: JSON.stringify({ imageUrl }),
+  });
+}
+
 export function deleteAdminReview(id: number) {
   return adminRequest<void>(`/api/admin/reviews/${id}`, { method: 'DELETE' });
 }

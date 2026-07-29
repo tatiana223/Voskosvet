@@ -8,7 +8,7 @@ import { defaultSiteContent, type SiteContent } from '../types/siteContent';
 import { updateAdminContent, uploadAdminImage } from '../api/adminApi';
 import { InlineImageEditor, InlineTextEditor } from '../components/InlineContentEditor';
 import { getReviews, type Review } from '../api/reviewsApi';
-import { ReviewMediaGallery } from '../components/ReviewMediaGallery';
+import { getUploadedImage } from '../utils/images';
 
 type EmblemName = 'leaf' | 'flame' | 'gift' | 'honey';
 
@@ -216,7 +216,12 @@ export function WelcomePage() {
               <div className="stars" aria-label={`${review.rating} из 5`}>
                 {'★'.repeat(review.rating)}
               </div>
-              <ReviewMediaGallery media={review.media} compact />
+              {review.photoUrl ? (
+                <div className="review-home-cover">
+                  <img className="media-backdrop" src={getUploadedImage(review.photoUrl)} alt="" aria-hidden="true" />
+                  <img className="media-foreground" src={getUploadedImage(review.photoUrl)} alt={`Фотография к отзыву ${review.name}`} />
+                </div>
+              ) : null}
               <p>“{review.text}”</p>
               <strong>{review.name}</strong>
             </article>

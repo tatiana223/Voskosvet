@@ -48,4 +48,12 @@ public class AdminReviewController {
     ) {
         return reviewService.setMedia(id, media);
     }
+
+    @PatchMapping("/{id}/cover")
+    public ReviewResponse setCover(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body
+    ) {
+        return reviewService.setCover(id, body.get("imageUrl"));
+    }
 }
