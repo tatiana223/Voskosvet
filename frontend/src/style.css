@@ -1091,6 +1091,26 @@ button.primary-link { min-width: unset; }
     width: 100%;
     min-width: 0;
   }
+  .delivery-page .section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .delivery-page .section-heading > div,
+  .delivery-page .section-heading h1 {
+    width: 100%;
+  }
+  .delivery-page .section-heading > a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0 18px;
+    border: 1px solid rgba(216, 138, 0, .35);
+    border-radius: 999px;
+    background: #fff8e9;
+    white-space: nowrap;
+  }
   .catalog-actions select {
     min-height: 46px;
   }
