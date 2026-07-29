@@ -50,6 +50,10 @@ public class AuthService {
             throw new BadRequestException("Неверный email или пароль");
         }
 
+        if (customer.isBlocked()) {
+            throw new BadRequestException("Аккаунт заблокирован. Обратитесь к администратору");
+        }
+
         if (!customer.isEmailVerified()) {
             throw new BadRequestException("Подтвердите email по ссылке из письма");
         }
@@ -60,6 +64,7 @@ public class AuthService {
     public void resendVerification(String email) {
         customerRepository.findByEmail(email.trim())
                 .filter(customer -> !customer.isEmailVerified())
+                .filter(customer -> !customer.isBlocked())
                 .ifPresent(emailVerificationService::sendVerificationEmail);
     }
 

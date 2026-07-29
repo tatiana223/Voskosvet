@@ -1,0 +1,4 @@
+ALTER TABLE customers
+    ADD COLUMN blocked BOOLEAN NOT NULL DEFAULT FALSE,
+    ADD COLUMN blocked_reason VARCHAR(500),
+    ADD COLUMN blocked_at TIMESTAMP;

@@ -1,6 +1,7 @@
 package com.exemple.springexample.service;
 
 import com.exemple.springexample.dto.CustomerResponse;
+import com.exemple.springexample.dto.UpdateCustomerBlockRequest;
 import com.exemple.springexample.dto.UpdateCustomerRoleRequest;
 import com.exemple.springexample.entity.Customer;
 import com.exemple.springexample.entity.Role;
@@ -11,6 +12,7 @@ import com.exemple.springexample.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -40,5 +42,24 @@ public class AdminCustomerService {
         customer.setRole(request.getRole());
 
         return orderMapper.toCustomerResponse(customerRepository.save(customer));
+    }
+
+    public CustomerResponse updateBlock(Long id, UpdateCustomerBlockRequest request) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Покупатель не найден"));
+
+        if (customer.isPrimaryAdmin()) {
+            throw new BadRequestException("Главного администратора нельзя заблокировать");
+        }
+
+        customer.setBlocked(request.blocked());
+        customer.setBlockedReason(request.blocked() ? normalizeReason(request.reason()) : null);
+        customer.setBlockedAt(request.blocked() ? LocalDateTime.now() : null);
+
+        return orderMapper.toCustomerResponse(customerRepository.save(customer));
+    }
+
+    private String normalizeReason(String reason) {
+        return reason == null || reason.isBlank() ? "Причина не указана" : reason.trim();
     }
 }

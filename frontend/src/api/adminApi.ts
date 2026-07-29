@@ -250,6 +250,9 @@ export type AdminCustomer = {
   email?: string;
   role: 'USER' | 'MANAGER' | 'ADMIN';
   primaryAdmin: boolean;
+  blocked: boolean;
+  blockedReason?: string;
+  blockedAt?: string;
 };
 
 export function getAdminCustomers() {
@@ -260,6 +263,13 @@ export function updateAdminCustomerRole(id: number, role: AdminCustomer['role'])
   return adminRequest<AdminCustomer>(`/api/admin/customers/${id}/role`, {
     method: 'PATCH',
     body: JSON.stringify({ role }),
+  });
+}
+
+export function updateAdminCustomerBlock(id: number, blocked: boolean, reason?: string) {
+  return adminRequest<AdminCustomer>(`/api/admin/customers/${id}/block`, {
+    method: 'PATCH',
+    body: JSON.stringify({ blocked, reason }),
   });
 }
 

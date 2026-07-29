@@ -50,6 +50,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             Customer customer = customerRepository.findByEmail(email).orElse(null);
 
+            if (customer != null && customer.isBlocked() && jwtService.isTokenValid(token, customer)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Аккаунт заблокирован");
+                return;
+            }
+
             if (customer != null && jwtService.isTokenValid(token, customer)) {
                 SimpleGrantedAuthority authority =
                         new SimpleGrantedAuthority("ROLE_" + customer.getRole().name());

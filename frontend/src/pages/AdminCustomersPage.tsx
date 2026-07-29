@@ -4,6 +4,7 @@ import { AdminNav } from '../components/AdminNav';
 import {
   getAdminCredentials,
   getAdminCustomers,
+  updateAdminCustomerBlock,
   updateAdminCustomerRole,
   type AdminCustomer,
 } from '../api/adminApi';
@@ -40,6 +41,38 @@ export function AdminCustomersPage() {
     }
   }
 
+  async function handleBlockChange(customer: AdminCustomer) {
+    let reason: string | undefined;
+
+    if (!customer.blocked) {
+      const enteredReason = window.prompt(
+        `Укажите причину блокировки пользователя «${customer.fullName}»:`,
+      );
+      if (enteredReason === null) return;
+      reason = enteredReason;
+    } else if (!window.confirm(`Разблокировать пользователя «${customer.fullName}»?`)) {
+      return;
+    }
+
+    setError('');
+    setSuccess('');
+    setUpdatingId(customer.id);
+
+    try {
+      const updated = await updateAdminCustomerBlock(customer.id, !customer.blocked, reason);
+      setCustomers((current) => current.map((item) => (item.id === updated.id ? updated : item)));
+      setSuccess(
+        updated.blocked
+          ? `Пользователь «${customer.fullName}» заблокирован.`
+          : `Пользователь «${customer.fullName}» разблокирован.`,
+      );
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'Не удалось изменить блокировку');
+    } finally {
+      setUpdatingId(null);
+    }
+  }
+
   return (
     <section className="admin-page">
       <div className="admin-heading">
@@ -57,7 +90,7 @@ export function AdminCustomersPage() {
         {success ? <p className="admin-success">{success}</p> : null}
         <div className="admin-table">
           <div className="admin-table-row admin-table-head">
-            <span>Имя</span><span>Телефон</span><span>Email</span><span>Роль</span>
+            <span>Имя</span><span>Телефон</span><span>Email</span><span>Роль</span><span>Статус</span>
           </div>
           {customers.map((customer) => {
             const isCurrentUser = customer.id === credentials.id;
@@ -84,6 +117,21 @@ export function AdminCustomersPage() {
                   <option value="MANAGER">Менеджер</option>
                   <option value="ADMIN">Администратор</option>
                 </select>
+                <div className="admin-user-status">
+                  <span className={customer.blocked ? 'admin-blocked-status' : 'admin-active-status'}>
+                    {customer.blocked ? 'Заблокирован' : 'Активен'}
+                  </span>
+                  {customer.blockedReason ? <small title={customer.blockedReason}>{customer.blockedReason}</small> : null}
+                  {customer.blockedAt ? <time>{new Date(customer.blockedAt).toLocaleDateString('ru-RU')}</time> : null}
+                  <button
+                    className={customer.blocked ? 'admin-unblock-button' : 'admin-block-button'}
+                    disabled={customer.primaryAdmin || isCurrentUser || updatingId === customer.id}
+                    type="button"
+                    onClick={() => void handleBlockChange(customer)}
+                  >
+                    {customer.blocked ? 'Разблокировать' : 'Заблокировать'}
+                  </button>
+                </div>
               </div>
             );
           })}

@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Entity
@@ -55,6 +57,14 @@ public class Customer {
 
     @Column(nullable = false)
     private boolean primaryAdmin = false;
+
+    @Column(nullable = false)
+    private boolean blocked = false;
+
+    @Column(length = 500)
+    private String blockedReason;
+
+    private LocalDateTime blockedAt;
 
     @PrePersist
     @PreUpdate
