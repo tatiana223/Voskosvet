@@ -9,6 +9,7 @@ public record ReviewResponse(
         String text,
         int rating,
         String photoUrl,
+        boolean featured,
         LocalDateTime createdAt
 ) {
 }

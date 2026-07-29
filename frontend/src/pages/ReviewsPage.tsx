@@ -5,6 +5,7 @@ import {
   createReview,
   deleteReview,
   getReviews,
+  uploadReviewImage,
   type Review,
 } from '../api/reviewsApi';
 import { getStoredAuth } from '../utils/auth';
@@ -15,10 +16,12 @@ export function ReviewsPage() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [text, setText] = useState('');
   const [rating, setRating] = useState(5);
+  const [imageUrl, setImageUrl] = useState('');
   const [message, setMessage] = useState('');
   const [photoError, setPhotoError] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     getReviews()
@@ -37,13 +40,30 @@ export function ReviewsPage() {
       const created = await createReview({
         text: text.trim(),
         rating,
+        imageUrl: imageUrl || undefined,
       });
       setReviews((current) => [created, ...current]);
       setText('');
       setRating(5);
+      setImageUrl('');
       setMessage('Спасибо! Ваш отзыв опубликован.');
     } finally {
       setIsSubmitting(false);
+    }
+  }
+
+  async function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    setIsUploading(true);
+    setPhotoError('');
+    try {
+      const uploaded = await uploadReviewImage(file);
+      setImageUrl(uploaded.url);
+    } catch (requestError) {
+      setPhotoError(requestError instanceof Error ? requestError.message : 'Не удалось загрузить фотографию');
+    } finally {
+      setIsUploading(false);
     }
   }
 
@@ -86,8 +106,14 @@ export function ReviewsPage() {
               <option value={5}>5 — отлично</option><option value={4}>4 — хорошо</option><option value={3}>3 — нормально</option><option value={2}>2 — есть замечания</option><option value={1}>1 — плохо</option>
             </select></label>
             <label>Отзыв<textarea value={text} onChange={(event) => setText(event.target.value)} required minLength={10} maxLength={1000} rows={6} /></label>
+            <label>
+              Фотография к отзыву
+              <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => void handleImageChange(event)} />
+              <small>{isUploading ? 'Загружаем фотографию…' : 'Необязательно. JPG, PNG или WebP до 5 МБ'}</small>
+            </label>
+            {imageUrl ? <img className="review-photo-preview" src={getUploadedImage(imageUrl)} alt="Предпросмотр фотографии" /> : null}
             {photoError ? <p className="review-photo-error">{photoError}</p> : null}
-            <button className="primary-link" disabled={isSubmitting} type="submit">{isSubmitting ? 'Публикуем…' : 'Опубликовать отзыв'}</button>
+            <button className="primary-link" disabled={isSubmitting || isUploading} type="submit">{isSubmitting ? 'Публикуем…' : 'Опубликовать отзыв'}</button>
             {message ? <p className="review-success">{message}</p> : null}
           </form>
         ) : (

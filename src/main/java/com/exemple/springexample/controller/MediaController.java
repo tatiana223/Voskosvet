@@ -30,6 +30,15 @@ public class MediaController {
 
     @PostMapping(value = "/api/admin/media", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Map<String, String> upload(@RequestPart("file") MultipartFile file) throws IOException {
+        return save(file);
+    }
+
+    @PostMapping(value = "/api/review-media", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Map<String, String> uploadReviewImage(@RequestPart("file") MultipartFile file) throws IOException {
+        return save(file);
+    }
+
+    private Map<String, String> save(MultipartFile file) throws IOException {
         if (file.isEmpty() || file.getContentType() == null || !ALLOWED_TYPES.contains(file.getContentType())) {
             throw new BadRequestException("Выберите изображение JPG, PNG или WebP");
         }

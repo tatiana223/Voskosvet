@@ -5,6 +5,8 @@ import {
   deleteAdminReview,
   getAdminCredentials,
   getReviews,
+  setAdminReviewFeatured,
+  setAdminReviewImage,
   uploadAdminImage,
   type Review,
 } from '../api/adminApi';
@@ -18,6 +20,7 @@ export function AdminReviewsPage() {
   const [text, setText] = useState('');
   const [rating, setRating] = useState(5);
   const [imageUrl, setImageUrl] = useState('');
+  const [featured, setFeatured] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState('');
@@ -57,17 +60,41 @@ export function AdminReviewsPage() {
         text,
         rating,
         imageUrl: imageUrl || undefined,
+        featured,
       });
       setReviews((current) => [created, ...current]);
       setDisplayName('');
       setText('');
       setRating(5);
       setImageUrl('');
+      setFeatured(false);
       setMessage('Отзыв опубликован на сайте.');
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : 'Не удалось добавить отзыв');
     } finally {
       setIsSaving(false);
+    }
+  }
+
+  async function handleFeatured(review: Review) {
+    setError('');
+    try {
+      const updated = await setAdminReviewFeatured(review.id, !review.featured);
+      setReviews((current) => current.map((item) => item.id === updated.id ? updated : item));
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'Не удалось изменить показ отзыва');
+    }
+  }
+
+  async function handleReviewImage(review: Review, file: File | undefined) {
+    if (!file) return;
+    setError('');
+    try {
+      const uploaded = await uploadAdminImage(file);
+      const updated = await setAdminReviewImage(review.id, uploaded.url);
+      setReviews((current) => current.map((item) => item.id === updated.id ? updated : item));
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'Не удалось заменить фотографию');
     }
   }
 
@@ -97,6 +124,10 @@ export function AdminReviewsPage() {
             <small>{isUploading ? 'Загружаем…' : 'JPG, PNG или WebP до 5 МБ'}</small>
           </label>
           {imageUrl ? <img className="admin-review-preview" src={getUploadedImage(imageUrl)} alt="Предпросмотр отзыва" /> : null}
+          <label className="admin-checkbox-row">
+            <input type="checkbox" checked={featured} onChange={(event) => setFeatured(event.target.checked)} />
+            Показывать этот отзыв на главной странице
+          </label>
           {error ? <p className="state-message state-message-error">{error}</p> : null}
           {message ? <p className="admin-success">{message}</p> : null}
           <button className="primary-link" disabled={isSaving || isUploading} type="submit">{isSaving ? 'Публикуем…' : 'Опубликовать отзыв'}</button>
@@ -111,7 +142,14 @@ export function AdminReviewsPage() {
                 <span className="stars">{'★'.repeat(review.rating)}</span>
                 <strong>{review.name}</strong>
                 <p>{review.text}</p>
+                <label className="admin-review-image-control">
+                  {review.photoUrl ? 'Заменить фотографию' : 'Добавить фотографию'}
+                  <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => void handleReviewImage(review, event.target.files?.[0])} />
+                </label>
               </div>
+              <button className={review.featured ? 'admin-featured-button active' : 'admin-featured-button'} type="button" onClick={() => void handleFeatured(review)}>
+                {review.featured ? '✓ На главной' : 'Показать на главной'}
+              </button>
               <button className="admin-hide-button" type="button" onClick={() => void handleDelete(review.id)}>Удалить</button>
             </article>
           ))}

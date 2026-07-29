@@ -168,6 +168,7 @@ export type Review = {
   text: string;
   rating: number;
   photoUrl?: string;
+  featured: boolean;
   createdAt: string;
 };
 
@@ -183,10 +184,25 @@ export function createAdminReview(data: {
   text: string;
   rating: number;
   imageUrl?: string;
+  featured?: boolean;
 }) {
   return adminRequest<Review>('/api/admin/reviews', {
     method: 'POST',
     body: JSON.stringify(data),
+  });
+}
+
+export function setAdminReviewFeatured(id: number, featured: boolean) {
+  return adminRequest<Review>(`/api/admin/reviews/${id}/featured`, {
+    method: 'PATCH',
+    body: JSON.stringify({ featured }),
+  });
+}
+
+export function setAdminReviewImage(id: number, imageUrl: string) {
+  return adminRequest<Review>(`/api/admin/reviews/${id}/image`, {
+    method: 'PATCH',
+    body: JSON.stringify({ imageUrl }),
   });
 }
 

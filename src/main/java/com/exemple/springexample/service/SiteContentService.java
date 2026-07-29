@@ -26,6 +26,7 @@ public class SiteContentService {
             "delivery.option1Title", "delivery.option1Text", "delivery.option1Term", "delivery.option1Note",
             "delivery.option2Title", "delivery.option2Text", "delivery.option2Term", "delivery.option2Note",
             "delivery.option3Title", "delivery.option3Text", "delivery.option3Term", "delivery.option3Note",
+            "delivery.options",
             "delivery.paymentEyebrow", "delivery.paymentTitle", "delivery.paymentText"
     );
 

@@ -29,6 +29,7 @@ export type SiteContent = {
   'delivery.option3Text': string;
   'delivery.option3Term': string;
   'delivery.option3Note': string;
+  'delivery.options': string;
   'delivery.paymentEyebrow': string;
   'delivery.paymentTitle': string;
   'delivery.paymentText': string;
@@ -65,6 +66,7 @@ export const defaultSiteContent: SiteContent = {
   'delivery.option3Text': 'Доставка в населённые пункты, где нет пунктов СДЭК.',
   'delivery.option3Term': 'Срок: 5–14 рабочих дней',
   'delivery.option3Note': 'Стоимость зависит от региона и веса заказа.',
+  'delivery.options': '',
   'delivery.paymentEyebrow': 'Оплата',
   'delivery.paymentTitle': 'Как можно оплатить заказ',
   'delivery.paymentText': 'Доступные способы оплаты показываются при оформлении заказа. Полную стоимость, включая доставку, вы увидите перед подтверждением.',

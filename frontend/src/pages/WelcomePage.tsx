@@ -7,21 +7,8 @@ import { getSiteContent } from '../api/contentApi';
 import { defaultSiteContent, type SiteContent } from '../types/siteContent';
 import { updateAdminContent, uploadAdminImage } from '../api/adminApi';
 import { InlineImageEditor, InlineTextEditor } from '../components/InlineContentEditor';
-
-const reviews = [
-  {
-    name: 'Полина Ш.',
-    text: 'Чистый пчелиный воск, без примесей. Горят ровно, не капают, копоти совсем нет. Запах приятный, медовый.',
-  },
-  {
-    name: 'Анастасия',
-    text: 'Свечи пришли аккуратно упакованные. Очень красивый теплый цвет, сразу видно ручную работу.',
-  },
-  {
-    name: 'Екатерина К.',
-    text: 'Понравилось качество: фитиль ровный, свеча не течет, горит спокойно и долго.',
-  },
-];
+import { getReviews, type Review } from '../api/reviewsApi';
+import { getUploadedImage } from '../utils/images';
 
 type EmblemName = 'leaf' | 'flame' | 'gift' | 'honey';
 
@@ -80,9 +67,13 @@ export function WelcomePage() {
   const [popularCandles, setPopularCandles] = useState<Candle[]>([]);
   const [popularLoading, setPopularLoading] = useState(true);
   const [content, setContent] = useState<SiteContent>(defaultSiteContent);
+  const [featuredReviews, setFeaturedReviews] = useState<Review[]>([]);
 
   useEffect(() => {
     getSiteContent().then(setContent).catch(() => undefined);
+    getReviews()
+      .then((items) => setFeaturedReviews(items.filter((review) => review.featured).slice(0, 3)))
+      .catch(() => setFeaturedReviews([]));
   }, []);
 
   async function saveField(key: keyof SiteContent, value: string) {
@@ -220,11 +211,12 @@ export function WelcomePage() {
         </div>
 
         <div className="reviews-grid">
-          {reviews.map((review) => (
-            <article className="review-card" key={review.name}>
-              <div className="stars" aria-label="5 из 5">
-                ★★★★★
+          {featuredReviews.map((review) => (
+            <article className="review-card" key={review.id}>
+              <div className="stars" aria-label={`${review.rating} из 5`}>
+                {'★'.repeat(review.rating)}
               </div>
+              {review.photoUrl ? <img className="review-photo" src={getUploadedImage(review.photoUrl)} alt={`Фотография от ${review.name}`} /> : null}
               <p>“{review.text}”</p>
               <strong>{review.name}</strong>
             </article>
@@ -237,11 +229,13 @@ export function WelcomePage() {
           </Link>
         </div>
 
-        <div className="review-photo-strip">
-          <img src="/images/candle-detail.webp" alt="Восковая свеча на льняной ткани" />
-          <img src="/images/gift-box.webp" alt="Подарочная коробка свечей" />
-          <img src="/images/about-natural-candle.webp" alt="Горящая свеча на деревянном столе" />
-        </div>
+        {featuredReviews.some((review) => review.photoUrl) ? (
+          <div className="review-photo-strip">
+            {featuredReviews.filter((review) => review.photoUrl).map((review) => (
+              <img key={review.id} src={getUploadedImage(review.photoUrl!)} alt={`Фотография от ${review.name}`} />
+            ))}
+          </div>
+        ) : null}
 
       </section>
 

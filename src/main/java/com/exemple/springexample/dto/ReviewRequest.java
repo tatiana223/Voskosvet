@@ -16,6 +16,8 @@ public record ReviewRequest(
         @Max(value = 5, message = "Максимальная оценка — 5")
         int rating,
 
-        String imageUrl
+        String imageUrl,
+
+        Boolean featured
 ) {
 }

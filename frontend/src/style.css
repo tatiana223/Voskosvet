@@ -2086,6 +2086,10 @@ button.primary-link { min-width: unset; }
 .inline-edit-actions button + button { background: white; color: #7b4e2d; }
 
 .inline-editable-image { position: relative; }
+.hero-photo-custom.inline-editable-image {
+  position: absolute;
+  inset: 0;
+}
 .inline-image-edit-button {
   position: absolute;
   top: 14px;
@@ -2158,7 +2162,7 @@ button.primary-link { min-width: unset; }
 
 .admin-review-card {
   display: grid;
-  grid-template-columns: 120px minmax(0, 1fr) auto;
+  grid-template-columns: 120px minmax(0, 1fr) auto auto;
   align-items: center;
   gap: 16px;
   padding: 16px;
@@ -2177,6 +2181,58 @@ button.primary-link { min-width: unset; }
 .admin-review-card div {
   display: grid;
   gap: 6px;
+}
+
+.admin-featured-button,
+.delivery-add-button,
+.delivery-remove-button {
+  padding: 10px 14px;
+  border: 1px solid rgba(123, 78, 45, .35);
+  border-radius: 10px;
+  background: white;
+  color: var(--brown);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.admin-featured-button.active {
+  border-color: #77944d;
+  background: #eff6e5;
+  color: #52702f;
+}
+
+.admin-review-image-control {
+  display: grid;
+  gap: 5px;
+  color: var(--honey-dark);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.admin-checkbox-row {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-checkbox-row input { width: auto; }
+
+.delivery-option { position: relative; }
+.delivery-remove-button {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 7px 10px;
+  border-color: rgba(163, 47, 37, .28);
+  color: #963223;
+  font-size: 11px;
+}
+.delivery-option:has(.delivery-remove-button) { padding-top: 58px; }
+.delivery-add-button {
+  display: block;
+  margin: 22px auto 34px;
+  border-color: var(--honey);
+  color: var(--honey-dark);
 }
 
 .admin-review-card p {

@@ -28,6 +28,9 @@ public class Review {
     @Column(length = 500)
     private String imageUrl;
 
+    @Column(nullable = false)
+    private boolean featured;
+
     @ManyToOne
     @JoinColumn(name = "author_id")
     private Customer author;

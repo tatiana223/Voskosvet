@@ -56,12 +56,29 @@ public class ReviewService {
         reviewRepository.delete(review);
     }
 
+    @Transactional
+    public ReviewResponse setFeatured(Long id, boolean featured) {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Отзыв не найден"));
+        review.setFeatured(featured);
+        return toResponse(reviewRepository.save(review));
+    }
+
+    @Transactional
+    public ReviewResponse setImage(Long id, String imageUrl) {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Отзыв не найден"));
+        review.setImageUrl(normalizeOptional(imageUrl));
+        return toResponse(reviewRepository.save(review));
+    }
+
     private ReviewResponse create(ReviewRequest request, Customer author, String displayName) {
         Review review = new Review();
         review.setDisplayName(displayName);
         review.setText(request.text().trim());
         review.setRating(request.rating());
         review.setImageUrl(normalizeOptional(request.imageUrl()));
+        review.setFeatured(Boolean.TRUE.equals(request.featured()));
         review.setAuthor(author);
         return toResponse(reviewRepository.save(review));
     }
@@ -74,6 +91,7 @@ public class ReviewService {
                 review.getText(),
                 review.getRating(),
                 review.getImageUrl(),
+                review.isFeatured(),
                 review.getCreatedAt()
         );
     }
