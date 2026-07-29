@@ -4,6 +4,7 @@ import com.exemple.springexample.model.ContactMethod;
 import com.exemple.springexample.model.DeliveryMethod;
 import com.exemple.springexample.model.OrderStatus;
 import com.exemple.springexample.model.PaymentMethod;
+import com.exemple.springexample.model.PaymentStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,6 +24,8 @@ public record OrderResponse(
         String contactEmail,
         ContactMethod preferredContactMethod,
         PaymentMethod paymentMethod,
+        PaymentStatus paymentStatus,
+        LocalDateTime paidAt,
         String comment,
         CustomerResponse customer,
         List<OrderItemResponse> items

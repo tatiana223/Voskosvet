@@ -36,3 +36,7 @@ export type LoginRequest = {
   email: string;
   password: string;
 };
+
+export type MessageResponse = {
+  message: string;
+};

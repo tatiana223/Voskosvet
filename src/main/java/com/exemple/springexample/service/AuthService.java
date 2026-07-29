@@ -21,8 +21,10 @@ public class AuthService {
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final EmailVerificationService emailVerificationService;
 
-    public AuthResponse register(RegisterRequest request) {
+    @Transactional
+    public void register(RegisterRequest request) {
         if (customerRepository.existsByEmail(request.getEmail())) {
             throw new BadRequestException("Пользователь с таким email уже существует");
         }
@@ -33,10 +35,10 @@ public class AuthService {
         customer.setEmail(request.getEmail());
         customer.setPassword(passwordEncoder.encode(request.getPassword()));
         customer.setRole(Role.USER);
+        customer.setEmailVerified(false);
 
         Customer savedCustomer = customerRepository.save(customer);
-
-        return toAuthResponse(savedCustomer);
+        emailVerificationService.sendVerificationEmail(savedCustomer);
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -48,7 +50,17 @@ public class AuthService {
             throw new BadRequestException("Неверный email или пароль");
         }
 
+        if (!customer.isEmailVerified()) {
+            throw new BadRequestException("Подтвердите email по ссылке из письма");
+        }
+
         return toAuthResponse(customer);
+    }
+
+    public void resendVerification(String email) {
+        customerRepository.findByEmail(email.trim())
+                .filter(customer -> !customer.isEmailVerified())
+                .ifPresent(emailVerificationService::sendVerificationEmail);
     }
 
     @Transactional

@@ -28,6 +28,9 @@ public class Customer {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private boolean emailVerified = false;
+
     private String city;
 
     private String deliveryAddress;

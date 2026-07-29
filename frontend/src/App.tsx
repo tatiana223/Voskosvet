@@ -9,6 +9,7 @@ import { AdminOrdersPage } from './pages/AdminOrdersPage';
 import { AdminReviewsPage } from './pages/AdminReviewsPage';
 import { CandlePage } from './pages/CandlePage';
 import { CartPage } from './pages/CartPage';
+import { PaymentResultPage } from './pages/PaymentResultPage';
 import { CatalogPage } from './pages/CatalogPage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { ReviewsPage } from './pages/ReviewsPage';
@@ -18,6 +19,7 @@ import { LoginPage } from './pages/LoginPage';
 import { OrderTrackingPage } from './pages/OrderTrackingPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { WelcomePage } from './pages/WelcomePage';
+import { VerifyEmailPage } from './pages/VerifyEmailPage';
 
 export function App() {
   return (
@@ -29,6 +31,7 @@ export function App() {
           <Route path="/catalog" element={<CatalogPage />} />
           <Route path="/catalog/:slug" element={<CandlePage />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/payment/result" element={<PaymentResultPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/delivery-payment" element={<DeliveryPaymentPage />} />
           <Route path="/reviews" element={<ReviewsPage />} />
@@ -36,6 +39,7 @@ export function App() {
           <Route path="/orders/track" element={<OrderTrackingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/account" element={<AccountPage />} />
           <Route path="/admin/candles" element={<AdminCandlesPage />} />
           <Route path="/admin" element={<AdminDashboardPage />} />

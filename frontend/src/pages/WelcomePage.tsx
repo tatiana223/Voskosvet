@@ -125,7 +125,7 @@ export function WelcomePage() {
           </div>
           <div>
             <Emblem name="flame" />
-            <span>Горят ровно.<br />Около 1 часа</span>
+            <span>Горят ровно<br />Около 1 часа</span>
           </div>
           <div>
             <Emblem name="leaf" />

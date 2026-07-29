@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createOrder } from '../api/ordersApi';
+import { getPaymentConfig, startOnlinePayment } from '../api/paymentsApi';
 import { getCurrentUser } from '../api/authApi';
 import type { FormEvent } from 'react';
 import type { ContactMethod, DeliveryMethod, PaymentMethod } from '../types/order';
@@ -51,9 +52,25 @@ export function CheckoutPage() {
   const [createdOrderId, setCreatedOrderId] = useState<number | null>(null);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [onlinePaymentEnabled, setOnlinePaymentEnabled] = useState(false);
 
   useEffect(() => {
     return subscribeToCart(() => setItems(getCartItems()));
+  }, []);
+
+  useEffect(() => {
+    getPaymentConfig()
+      .then(({ enabled }) => {
+        setOnlinePaymentEnabled(enabled);
+        if (!enabled) {
+          setForm((currentForm) => (
+            currentForm.paymentMethod === 'CARD_ONLINE'
+              ? { ...currentForm, paymentMethod: 'TRANSFER' }
+              : currentForm
+          ));
+        }
+      })
+      .catch(() => setOnlinePaymentEnabled(false));
   }, []);
 
   useEffect(() => {
@@ -124,6 +141,23 @@ export function CheckoutPage() {
       })),
     })
       .then((order) => {
+        if (form.paymentMethod === 'CARD_ONLINE') {
+          sessionStorage.setItem(`voskosvet-payment-phone-${order.id}`, form.customerPhone);
+          startOnlinePayment(order.id, form.customerPhone)
+            .then((payment) => {
+              if (!payment.confirmationUrl) {
+                throw new Error('ЮKassa не вернула ссылку на оплату');
+              }
+              clearCart();
+              window.location.assign(payment.confirmationUrl);
+            })
+            .catch(() => {
+              setCreatedOrderId(order.id);
+              setError(`Заказ №${order.id} создан, но перейти к оплате не получилось. Попробуйте позже.`);
+            })
+            .finally(() => setIsSubmitting(false));
+          return;
+        }
         clearCart();
         setForm((currentForm) => ({
           ...currentForm,
@@ -140,7 +174,9 @@ export function CheckoutPage() {
       .catch(() => {
         setError('Не получилось отправить заказ. Проверь, что backend запущен.');
       })
-      .finally(() => setIsSubmitting(false));
+      .finally(() => {
+        if (form.paymentMethod !== 'CARD_ONLINE') setIsSubmitting(false);
+      });
   }
 
   return (
@@ -312,7 +348,9 @@ export function CheckoutPage() {
                 onChange={(event) => updateField('paymentMethod', event.target.value as PaymentMethod)}
               >
                 <option value="TRANSFER">Перевод</option>
-                <option value="CARD_ONLINE">Картой онлайн</option>
+                <option value="CARD_ONLINE" disabled={!onlinePaymentEnabled}>
+                  {onlinePaymentEnabled ? 'Картой онлайн' : 'Картой онлайн — скоро'}
+                </option>
                 <option value="CASH">Наличными</option>
               </select>
             </label>

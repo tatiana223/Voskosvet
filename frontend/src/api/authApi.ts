@@ -1,10 +1,21 @@
 import { apiRequest } from './http';
-import type { AuthResponse, LoginRequest, RegisterRequest, UpdateProfileRequest } from '../types/auth';
+import type { AuthResponse, LoginRequest, MessageResponse, RegisterRequest, UpdateProfileRequest } from '../types/auth';
 
 export function register(request: RegisterRequest) {
-  return apiRequest<AuthResponse>('/api/auth/register', {
+  return apiRequest<MessageResponse>('/api/auth/register', {
     method: 'POST',
     body: JSON.stringify(request),
+  });
+}
+
+export function verifyEmail(token: string) {
+  return apiRequest<MessageResponse>(`/api/auth/verify-email?token=${encodeURIComponent(token)}`);
+}
+
+export function resendVerification(email: string) {
+  return apiRequest<MessageResponse>('/api/auth/resend-verification', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
   });
 }
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { login } from '../api/authApi';
+import { login, resendVerification } from '../api/authApi';
 import { setStoredAuth } from '../utils/auth';
 import type { FormEvent } from 'react';
 
@@ -10,10 +10,12 @@ export function LoginPage() {
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [verificationMessage, setVerificationMessage] = useState('');
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError('');
+    setVerificationMessage('');
     setIsSubmitting(true);
 
     login({ email, password })
@@ -23,6 +25,13 @@ export function LoginPage() {
       })
       .catch((error: Error) => setError(error.message || 'Не получилось войти. Проверь email и пароль.'))
       .finally(() => setIsSubmitting(false));
+  }
+
+  function handleResendVerification() {
+    setVerificationMessage('');
+    resendVerification(email)
+      .then((response) => setVerificationMessage(response.message))
+      .catch((error: Error) => setVerificationMessage(error.message));
   }
 
   return (
@@ -56,6 +65,12 @@ export function LoginPage() {
         </label>
 
         {error ? <p className="state-message state-message-error">{error}</p> : null}
+        {error.includes('Подтвердите email') ? (
+          <button className="secondary-link" type="button" onClick={handleResendVerification}>
+            Отправить письмо повторно
+          </button>
+        ) : null}
+        {verificationMessage ? <p className="state-message">{verificationMessage}</p> : null}
 
         <button className="primary-link" disabled={isSubmitting} type="submit">
           {isSubmitting ? 'Входим...' : 'Войти'}

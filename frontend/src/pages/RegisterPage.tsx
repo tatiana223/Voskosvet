@@ -1,28 +1,25 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { register } from '../api/authApi';
-import { setStoredAuth } from '../utils/auth';
 import type { FormEvent } from 'react';
 
 export function RegisterPage() {
-  const navigate = useNavigate();
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError('');
+    setSuccess('');
     setIsSubmitting(true);
 
     register({ fullName, phone, email, password })
-      .then((auth) => {
-        setStoredAuth(auth);
-        navigate('/account');
-      })
+      .then((response) => setSuccess(response.message))
       .catch((error: Error) => setError(error.message || 'Не получилось создать аккаунт.'))
       .finally(() => setIsSubmitting(false));
   }
@@ -77,9 +74,14 @@ export function RegisterPage() {
           />
         </label>
 
+        {success ? (
+          <p className="state-message">
+            {success}. Ссылка действует 24 часа. После подтверждения можно войти в аккаунт.
+          </p>
+        ) : null}
         {error ? <p className="state-message state-message-error">{error}</p> : null}
 
-        <button className="primary-link" disabled={isSubmitting} type="submit">
+        <button className="primary-link" disabled={isSubmitting || Boolean(success)} type="submit">
           {isSubmitting ? 'Создаем...' : 'Зарегистрироваться'}
         </button>
 

@@ -4,6 +4,7 @@ import com.exemple.springexample.model.DeliveryMethod;
 import com.exemple.springexample.model.ContactMethod;
 import com.exemple.springexample.model.OrderStatus;
 import com.exemple.springexample.model.PaymentMethod;
+import com.exemple.springexample.model.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -58,6 +59,15 @@ public class Order {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PaymentMethod paymentMethod;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PaymentStatus paymentStatus = PaymentStatus.NOT_REQUIRED;
+
+    @Column(unique = true, length = 100)
+    private String externalPaymentId;
+
+    private LocalDateTime paidAt;
 
     private String comment;
 

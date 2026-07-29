@@ -14,6 +14,7 @@ import com.exemple.springexample.exception.NotFoundException;
 import com.exemple.springexample.mapper.OrderMapper;
 import com.exemple.springexample.model.ContactMethod;
 import com.exemple.springexample.model.OrderStatus;
+import com.exemple.springexample.model.PaymentStatus;
 import com.exemple.springexample.repository.CandleRepository;
 import com.exemple.springexample.repository.CustomerRepository;
 import com.exemple.springexample.repository.OrderRepository;
@@ -61,6 +62,11 @@ public class OrderService {
                         : request.preferredContactMethod()
         );
         order.setPaymentMethod(request.paymentMethod());
+        order.setPaymentStatus(
+                request.paymentMethod() == com.exemple.springexample.model.PaymentMethod.CARD_ONLINE
+                        ? PaymentStatus.PENDING
+                        : PaymentStatus.NOT_REQUIRED
+        );
         order.setComment(request.comment());
 
         BigDecimal itemsPrice = BigDecimal.ZERO;

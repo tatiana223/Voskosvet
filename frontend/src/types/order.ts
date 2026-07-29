@@ -31,6 +31,7 @@ export type OrderStatus =
   | 'SHIPPED'
   | 'COMPLETED'
   | 'CANCELLED';
+export type PaymentStatus = 'NOT_REQUIRED' | 'PENDING' | 'SUCCEEDED' | 'CANCELED';
 
 export type OrderItemResponse = {
   id: number;
@@ -57,6 +58,8 @@ export type OrderResponse = {
   contactEmail?: string;
   preferredContactMethod?: ContactMethod;
   paymentMethod: PaymentMethod;
+  paymentStatus: PaymentStatus;
+  paidAt?: string;
   comment?: string;
   customer: {
     id: number;
