@@ -18,6 +18,7 @@ public class SiteContentService {
     private static final Set<String> ALLOWED_KEYS = Set.of(
             "home.heroTitle", "home.heroSubtitle", "home.heroButton",
             "home.heroImage", "home.point1", "home.point2", "home.point3",
+            "home.ribbon1", "home.ribbon2", "home.ribbon3", "home.ribbon4",
             "home.aboutEyebrow", "home.aboutTitle", "home.aboutText",
             "home.aboutImage1", "home.aboutCaption1",
             "home.aboutImage2", "home.aboutCaption2",

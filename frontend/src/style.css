@@ -199,6 +199,7 @@ main {
 }
 .benefit-ribbon div:last-child { border-right: 0; }
 .benefit-ribbon span { color: var(--brown); font-size: 16px; font-weight: 700; line-height: 1.25; }
+.benefit-ribbon .benefit-ribbon-text { white-space: pre-line; }
 
 @media (min-width: 901px) {
   .site-header,

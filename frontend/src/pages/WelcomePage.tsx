@@ -135,19 +135,19 @@ export function WelcomePage() {
         <section className="benefit-ribbon" aria-label="Преимущества">
           <div>
             <Emblem name="honey" />
-            <span>Естественный<br />медовый аромат</span>
+            <InlineTextEditor as="span" className="benefit-ribbon-text" value={content['home.ribbon1']} label="Первый пункт нижней панели" multiline onSave={(value) => saveField('home.ribbon1', value)} />
           </div>
           <div>
             <Emblem name="flame" />
-            <span>Горят ровно<br />Около 1 часа</span>
+            <InlineTextEditor as="span" className="benefit-ribbon-text" value={content['home.ribbon2']} label="Второй пункт нижней панели" multiline onSave={(value) => saveField('home.ribbon2', value)} />
           </div>
           <div>
             <Emblem name="leaf" />
-            <span>Без парафина<br />и примесей</span>
+            <InlineTextEditor as="span" className="benefit-ribbon-text" value={content['home.ribbon3']} label="Третий пункт нижней панели" multiline onSave={(value) => saveField('home.ribbon3', value)} />
           </div>
           <div>
             <Emblem name="gift" />
-            <span>Идеально<br />для подарка</span>
+            <InlineTextEditor as="span" className="benefit-ribbon-text" value={content['home.ribbon4']} label="Четвёртый пункт нижней панели" multiline onSave={(value) => saveField('home.ribbon4', value)} />
           </div>
         </section>
       </section>

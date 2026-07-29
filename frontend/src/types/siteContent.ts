@@ -6,6 +6,10 @@ export type SiteContent = {
   'home.point1': string;
   'home.point2': string;
   'home.point3': string;
+  'home.ribbon1': string;
+  'home.ribbon2': string;
+  'home.ribbon3': string;
+  'home.ribbon4': string;
   'home.aboutEyebrow': string;
   'home.aboutTitle': string;
   'home.aboutText': string;
@@ -43,6 +47,10 @@ export const defaultSiteContent: SiteContent = {
   'home.point1': '100% пчелиный воск',
   'home.point2': 'Не коптят и не текут',
   'home.point3': 'Упаковано с любовью',
+  'home.ribbon1': 'Естественный\nмедовый аромат',
+  'home.ribbon2': 'Горят ровно\nОколо 1 часа',
+  'home.ribbon3': 'Без парафина\nи примесей',
+  'home.ribbon4': 'Идеально\nдля подарка',
   'home.aboutEyebrow': 'О мастерской',
   'home.aboutTitle': 'Почему выбирают ВоскоСвет',
   'home.aboutText': 'Мы делаем свечи из натурального пчелиного воска, выбираем спокойную упаковку и тёплые материалы: дерево, лён, бумагу и медовые оттенки.',
