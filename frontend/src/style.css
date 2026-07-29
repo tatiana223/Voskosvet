@@ -2436,19 +2436,21 @@ body.media-lightbox-open {
   position: fixed;
   inset: 0;
   z-index: 1000;
-  display: grid;
-  place-items: center;
-  padding: 70px 86px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 76px 96px 86px;
   background: rgba(20, 13, 9, .9);
   backdrop-filter: blur(8px);
   cursor: zoom-out;
 }
 
 .media-lightbox-content {
-  display: grid;
-  width: min(1100px, 88vw);
-  height: min(780px, 82vh);
-  place-items: center;
+  display: flex;
+  width: min(900px, 76vw);
+  height: min(620px, 68vh);
+  align-items: center;
+  justify-content: center;
   cursor: default;
 }
 
@@ -2489,7 +2491,10 @@ body.media-lightbox-open {
   top: 50%;
   width: 52px;
   height: 52px;
-  font-size: 42px;
+  font-family: Arial, sans-serif;
+  font-size: 25px;
+  font-weight: 600;
+  line-height: 1;
   transform: translateY(-50%);
 }
 
@@ -2697,12 +2702,12 @@ body.media-lightbox-open {
   }
 
   .media-lightbox {
-    padding: 62px 12px 70px;
+    padding: 70px 14px 82px;
   }
 
   .media-lightbox-content {
-    width: 96vw;
-    height: 78vh;
+    width: 92vw;
+    height: 66vh;
   }
 
   .media-lightbox-arrow {

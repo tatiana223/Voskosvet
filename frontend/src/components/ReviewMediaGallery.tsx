@@ -89,7 +89,7 @@ export function ReviewMediaGallery({ media = [], onRemove, compact, coverUrl, on
                 setOpenedIndex((activeIndex - 1 + media.length) % media.length);
               }}
             >
-              ‹
+              ←
             </button>
           ) : null}
           <div className="media-lightbox-content" onClick={(event) => event.stopPropagation()}>
@@ -109,7 +109,7 @@ export function ReviewMediaGallery({ media = [], onRemove, compact, coverUrl, on
                 setOpenedIndex((activeIndex + 1) % media.length);
               }}
             >
-              ›
+              →
             </button>
           ) : null}
           <span className="media-lightbox-counter">{activeIndex + 1} / {media.length}</span>
