@@ -36,6 +36,7 @@ public class EmailVerificationService {
     @Transactional
     public void sendVerificationEmail(Customer customer) {
         tokenRepository.deleteByCustomerId(customer.getId());
+        tokenRepository.flush();
 
         String rawToken = UUID.randomUUID() + "." + UUID.randomUUID();
         EmailVerificationToken token = new EmailVerificationToken();
