@@ -74,8 +74,8 @@ export function CandleCard({ candle }: CandleCardProps) {
           </div>
         ) : (
           <div className="card-single-purchase">
-            <span>Поштучно</span>
-            <small>Можно выбрать любое количество</small>
+            <span>Что тут??</span>
+            <small>А тут???</small>
           </div>
         )}
         <div className="card-footer">
