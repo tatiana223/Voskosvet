@@ -121,15 +121,35 @@ export function CheckoutPage() {
       return;
     }
 
+    if (!form.customerFullName.trim()) {
+      setError('Укажите имя и фамилию получателя.');
+      return;
+    }
+
+    if (!form.customerPhone.trim()) {
+      setError('Укажите телефон для связи по заказу.');
+      return;
+    }
+
+    if (form.deliveryMethod !== 'PICKUP' && !form.city.trim()) {
+      setError('Укажите город доставки.');
+      return;
+    }
+
+    if (form.deliveryMethod !== 'PICKUP' && !form.deliveryAddress.trim()) {
+      setError('Укажите адрес доставки.');
+      return;
+    }
+
     setIsSubmitting(true);
 
     createOrder({
-      customerFullName: form.customerFullName,
-      customerPhone: form.customerPhone,
+      customerFullName: form.customerFullName.trim(),
+      customerPhone: form.customerPhone.trim(),
       customerEmail: form.customerEmail || undefined,
       deliveryMethod: form.deliveryMethod,
-      city: form.city || undefined,
-      deliveryAddress: form.deliveryAddress || undefined,
+      city: form.city.trim() || undefined,
+      deliveryAddress: form.deliveryAddress.trim() || undefined,
       deliveryComment: form.deliveryComment || undefined,
       preferredContactMethod: form.preferredContactMethod,
       paymentMethod: form.paymentMethod,
@@ -171,8 +191,12 @@ export function CheckoutPage() {
             : `Заказ №${order.id} отправлен. Сохраните номер заказа и телефон для отслеживания.`
         );
       })
-      .catch(() => {
-        setError('Не получилось отправить заказ. Проверь, что backend запущен.');
+      .catch((requestError) => {
+        setError(
+          requestError instanceof Error && !requestError.message.startsWith('API request failed')
+            ? requestError.message
+            : 'Сервис оформления заказа временно недоступен. Попробуйте ещё раз через несколько минут.',
+        );
       })
       .finally(() => {
         if (form.paymentMethod !== 'CARD_ONLINE') setIsSubmitting(false);
@@ -358,22 +382,22 @@ export function CheckoutPage() {
             <label>
               Адрес доставки
               <input
+                required={form.deliveryMethod !== 'PICKUP'}
                 value={form.deliveryAddress}
                 onChange={(event) => updateField('deliveryAddress', event.target.value)}
                 placeholder="Улица, дом, квартира"
               />
             </label>
 
-            {!auth ? (
-              <label>
-                Город
-                <input
-                  value={form.city}
-                  onChange={(event) => updateField('city', event.target.value)}
-                  placeholder="Москва"
-                />
-              </label>
-            ) : null}
+            <label>
+              Город
+              <input
+                required={form.deliveryMethod !== 'PICKUP'}
+                value={form.city}
+                onChange={(event) => updateField('city', event.target.value)}
+                placeholder="Москва"
+              />
+            </label>
           </div>
 
           {!auth ? (
