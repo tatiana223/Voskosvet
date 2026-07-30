@@ -21,7 +21,11 @@ export function HomePage() {
           setCandles(fallbackPage.items);
         });
       })
-      .catch(() => setError('Backend не отвечает. Запусти Java-приложение на http://localhost:8080.'))
+      .catch((requestError) => setError(
+        requestError instanceof Error
+          ? requestError.message
+          : 'Не удалось загрузить товары. Попробуйте обновить страницу.',
+      ))
       .finally(() => setIsLoading(false));
   }, []);
 

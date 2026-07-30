@@ -21,9 +21,7 @@ export type ReviewMedia = {
 };
 
 export async function getReviews() {
-  const response = await fetch(`${API_BASE_URL}/api/reviews`);
-  if (!response.ok) throw new Error('Не удалось загрузить отзывы');
-  return response.json() as Promise<Review[]>;
+  return apiRequest<Review[]>('/api/reviews');
 }
 
 export function createReview(data: { text: string; rating: number; media?: ReviewMedia[] }) {
@@ -37,11 +35,17 @@ export async function uploadReviewMedia(file: File) {
   const token = getStoredAuth()?.token;
   const body = new FormData();
   body.append('file', file);
-  const response = await fetch(`${API_BASE_URL}/api/review-media`, {
-    method: 'POST',
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-    body,
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(`${API_BASE_URL}/api/review-media`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body,
+    });
+  } catch {
+    throw new Error('Не удалось загрузить файл. Проверьте интернет и попробуйте ещё раз.');
+  }
   if (!response.ok) {
     let message = 'Не удалось загрузить файл';
     try {

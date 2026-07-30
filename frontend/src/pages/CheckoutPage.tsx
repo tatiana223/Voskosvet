@@ -193,7 +193,7 @@ export function CheckoutPage() {
       })
       .catch((requestError) => {
         setError(
-          requestError instanceof Error && !requestError.message.startsWith('API request failed')
+          requestError instanceof Error
             ? requestError.message
             : 'Сервис оформления заказа временно недоступен. Попробуйте ещё раз через несколько минут.',
         );

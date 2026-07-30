@@ -19,17 +19,31 @@ function getAuthToken() {
 export async function apiRequest<T>(path: string, options?: RequestInit): Promise<T> {
   const token = getAuthToken();
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...options?.headers,
-    },
-    ...options,
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...options?.headers,
+      },
+      ...options,
+    });
+  } catch {
+    throw new Error('Не удалось связаться с магазином. Проверьте интернет и попробуйте ещё раз.');
+  }
 
   if (!response.ok) {
-    let errorMessage = `API request failed: ${response.status}`;
+    let errorMessage = response.status === 401
+      ? 'Войдите в аккаунт и повторите действие.'
+      : response.status === 403
+        ? 'Доступ к этому действию закрыт. Возможно, аккаунт заблокирован.'
+        : response.status === 404
+          ? 'Запрошенные данные не найдены.'
+          : response.status >= 500
+            ? 'Сервис магазина временно недоступен. Попробуйте ещё раз через несколько минут.'
+            : 'Не удалось выполнить действие. Проверьте введённые данные.';
 
     try {
       const errorBody = await response.json();
@@ -46,7 +60,7 @@ export async function apiRequest<T>(path: string, options?: RequestInit): Promis
         }
       }
     } catch {
-      // If the backend did not send JSON, keep the HTTP status message.
+      // Если сервер вернул ответ без JSON, оставляем понятное сообщение по статусу.
     }
 
     throw new Error(errorMessage);

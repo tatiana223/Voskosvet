@@ -45,9 +45,13 @@ export function CatalogPage() {
       size: 12,
     })
       .then((page) => setCandles(page.items))
-      .catch(() => {
+      .catch((requestError) => {
         setCandles([]);
-        setError('Каталог не загрузился. Проверь, что backend запущен на http://localhost:8080.');
+        setError(
+          requestError instanceof Error
+            ? requestError.message
+            : 'Каталог временно не загрузился. Попробуйте обновить страницу.',
+        );
       })
       .finally(() => setIsLoading(false));
   }, [debouncedCandleSize, categoryId, minPrice, maxPrice, sort]);

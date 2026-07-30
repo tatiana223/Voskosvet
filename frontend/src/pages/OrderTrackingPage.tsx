@@ -28,7 +28,11 @@ export function OrderTrackingPage() {
 
     trackOrders(phone, surname)
       .then(setOrders)
-      .catch(() => setError('Заказы не найдены. Проверьте телефон и фамилию.'))
+      .catch((requestError) => setError(
+        requestError instanceof Error
+          ? requestError.message
+          : 'Не удалось выполнить поиск. Проверьте данные и попробуйте ещё раз.',
+      ))
       .finally(() => setIsLoading(false));
   }
 
