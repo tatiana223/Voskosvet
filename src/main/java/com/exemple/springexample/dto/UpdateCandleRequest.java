@@ -49,6 +49,8 @@ public record UpdateCandleRequest(
         @NotBlank(message = "Ссылка на изображение обязательна")
         String imageUrl,
 
+        List<String> imageUrls,
+
         @NotNull(message = "Доступность обязательна")
         Boolean available,
 

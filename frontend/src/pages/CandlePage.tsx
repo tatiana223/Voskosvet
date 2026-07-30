@@ -5,7 +5,7 @@ import type { Candle } from '../types/candle';
 import { addToCart, getCandleSavingPercent, getCandleUnitPrice, getDefaultPackageSize } from '../utils/cart';
 import { isFavorite, toggleFavorite } from '../utils/favorites';
 import { getStoredAuth, subscribeToAuth } from '../utils/auth';
-import { getCandleImage, useCandleImageFallback } from '../utils/images';
+import { getCandleGallery, getCandleImage, useCandleImageFallback } from '../utils/images';
 
 export function CandlePage() {
   const { slug } = useParams();
@@ -16,6 +16,7 @@ export function CandlePage() {
   const [isAdded, setIsAdded] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const [auth, setAuth] = useState(() => getStoredAuth());
+  const [imageIndex, setImageIndex] = useState(0);
 
   useEffect(() => {
     if (!slug) {
@@ -31,6 +32,7 @@ export function CandlePage() {
     if (candle) {
       setFavorite(isFavorite(candle.id));
       setPackageSize(getDefaultPackageSize(candle));
+      setImageIndex(0);
     }
   }, [candle]);
 
@@ -51,17 +53,37 @@ export function CandlePage() {
 
   const unitPrice = getCandleUnitPrice(candle, packageSize);
   const savingPercent = getCandleSavingPercent(candle, unitPrice);
+  const gallery = getCandleGallery(candle);
+
+  function selectPackage(quantity: number, imageUrl?: string) {
+    setPackageSize(quantity);
+    if (imageUrl) {
+      const nextIndex = gallery.indexOf(getCandleImage(imageUrl));
+      if (nextIndex >= 0) setImageIndex(nextIndex);
+    }
+  }
+
+  function showImage(step: number) {
+    setImageIndex((current) => (current + step + gallery.length) % gallery.length);
+  }
 
   return (
     <section className="product-page">
       <div className="product-image">
         <img
-          src={getCandleImage(candle.imageUrl)}
+          src={gallery[imageIndex]}
           alt={candle.name}
           onError={useCandleImageFallback}
         />
         {candle.featured ? <span className="product-featured-badge">Хит продаж</span> : null}
         <span className="product-image-note">Ручная работа</span>
+        {gallery.length > 1 ? (
+          <>
+            <button className="gallery-arrow gallery-arrow--prev" type="button" aria-label="Предыдущее фото" onClick={() => showImage(-1)}>‹</button>
+            <button className="gallery-arrow gallery-arrow--next" type="button" aria-label="Следующее фото" onClick={() => showImage(1)}>›</button>
+            <span className="gallery-counter product-gallery-counter">{imageIndex + 1}/{gallery.length}</span>
+          </>
+        ) : null}
       </div>
 
       <div className="product-info">
@@ -115,7 +137,7 @@ export function CandlePage() {
                       className={packageSize === tier.quantity ? 'quantity-tier-option quantity-tier-option--active' : 'quantity-tier-option'}
                       type="button"
                       key={tier.quantity}
-                      onClick={() => setPackageSize(tier.quantity)}
+                      onClick={() => selectPackage(tier.quantity, tier.imageUrl)}
                     >
                       <strong>{tier.quantity} шт. в коробке</strong>
                       <span>{tier.unitPrice.toLocaleString('ru-RU')} ₽/шт.</span>

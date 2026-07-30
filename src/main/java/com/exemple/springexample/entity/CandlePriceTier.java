@@ -21,5 +21,7 @@ public class CandlePriceTier {
 
     @Column(name = "unit_price", nullable = false)
     private BigDecimal unitPrice;
-}
 
+    @Column(name = "image_url")
+    private String imageUrl;
+}

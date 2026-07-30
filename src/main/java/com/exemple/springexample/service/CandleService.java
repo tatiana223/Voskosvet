@@ -102,6 +102,7 @@ public class CandleService {
         Candle candle = candleMapper.toEntity(request);
         candle.setFeatured(Boolean.TRUE.equals(request.featured()));
         candle.setCategory(category);
+        candle.setImageUrls(normalizeImageUrls(request.imageUrls(), request.imageUrl()));
         candle.setPriceTiers(toPriceTiers(request.priceTiers(), request.price()));
 
         Candle savedCandle = candleRepository.save(candle);
@@ -129,6 +130,8 @@ public class CandleService {
         candle.setWeightGrams(request.weightGrams());
         candle.setBurnTimeHours(request.burnTimeHours());
         candle.setImageUrl(request.imageUrl());
+        candle.getImageUrls().clear();
+        candle.getImageUrls().addAll(normalizeImageUrls(request.imageUrls(), request.imageUrl()));
         candle.setAvailable(request.available());
         candle.setFeatured(request.featured());
         candle.setCategory(category);
@@ -229,7 +232,29 @@ public class CandleService {
                 .sorted(java.util.Comparator.comparingInt(
                         com.exemple.springexample.dto.CandlePriceTierRequest::quantity
                 ))
-                .map(tier -> new CandlePriceTier(tier.quantity(), tier.unitPrice()))
+                .map(tier -> new CandlePriceTier(
+                        tier.quantity(),
+                        tier.unitPrice(),
+                        normalizeOptionalImageUrl(tier.imageUrl())
+                ))
                 .toList();
+    }
+
+    private List<String> normalizeImageUrls(List<String> imageUrls, String primaryImageUrl) {
+        java.util.LinkedHashSet<String> normalized = new java.util.LinkedHashSet<>();
+        normalized.add(primaryImageUrl.trim());
+        if (imageUrls != null) {
+            imageUrls.stream()
+                    .filter(java.util.Objects::nonNull)
+                    .map(String::trim)
+                    .filter(value -> !value.isBlank())
+                    .limit(11)
+                    .forEach(normalized::add);
+        }
+        return new java.util.ArrayList<>(normalized);
+    }
+
+    private String normalizeOptionalImageUrl(String imageUrl) {
+        return imageUrl == null || imageUrl.isBlank() ? null : imageUrl.trim();
     }
 }

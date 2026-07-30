@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 public record CandlePriceTierRequest(
         @NotNull @Min(2) Integer quantity,
-        @NotNull @Positive BigDecimal unitPrice
+        @NotNull @Positive BigDecimal unitPrice,
+        String imageUrl
 ) {
 }
-

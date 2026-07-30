@@ -18,12 +18,14 @@ export type CandleFormData = {
   weightGrams: number;
   burnTimeHours: number;
   imageUrl: string;
+  imageUrls: string[];
   available: boolean;
   featured: boolean;
   categoryId: number;
   priceTiers: Array<{
     quantity: number;
     unitPrice: number;
+    imageUrl?: string;
   }>;
 };
 

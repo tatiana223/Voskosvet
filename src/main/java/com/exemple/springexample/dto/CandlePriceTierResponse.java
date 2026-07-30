@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public record CandlePriceTierResponse(
         Integer quantity,
-        BigDecimal unitPrice
+        BigDecimal unitPrice,
+        String imageUrl
 ) {
 }
-

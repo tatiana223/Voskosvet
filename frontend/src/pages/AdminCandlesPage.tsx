@@ -32,6 +32,7 @@ const emptyForm: CandleFormData = {
   weightGrams: 1,
   burnTimeHours: 1,
   imageUrl: '/images/candle-detail.webp',
+  imageUrls: ['/images/candle-detail.webp'],
   available: true,
   featured: false,
   categoryId: 0,
@@ -103,6 +104,7 @@ export function AdminCandlesPage() {
       weightGrams: candle.weightGrams,
       burnTimeHours: candle.burnTimeHours,
       imageUrl: candle.imageUrl,
+      imageUrls: candle.imageUrls?.length ? candle.imageUrls : [candle.imageUrl],
       available: candle.available,
       featured: candle.featured,
       categoryId: candle.categoryId,
@@ -163,12 +165,41 @@ export function AdminCandlesPage() {
     setIsImageUploading(true);
     try {
       const uploaded = await uploadAdminImage(file);
-      updateField('imageUrl', uploaded.url);
+      setForm((current) => ({
+        ...current,
+        imageUrl: uploaded.url,
+        imageUrls: [
+          uploaded.url,
+          ...current.imageUrls.filter((url) => url !== current.imageUrl && url !== uploaded.url),
+        ],
+      }));
       setMessage('Фотография загружена.');
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : 'Не удалось загрузить фотографию');
     } finally {
       setIsImageUploading(false);
+    }
+  }
+
+  async function handleGalleryChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files || []);
+    if (!files.length) return;
+
+    setError('');
+    setIsImageUploading(true);
+    try {
+      const uploaded = await Promise.all(files.map(uploadAdminImage));
+      updateField('imageUrls', [...new Set([
+        form.imageUrl,
+        ...form.imageUrls,
+        ...uploaded.map((item) => item.url),
+      ])].slice(0, 12));
+      setMessage('Фотографии товара загружены.');
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'Не удалось загрузить фотографии');
+    } finally {
+      setIsImageUploading(false);
+      event.target.value = '';
     }
   }
 
@@ -234,6 +265,40 @@ export function AdminCandlesPage() {
             />
             <small>{isImageUploading ? 'Загружаем фотографию…' : 'Выберите JPG, PNG или WebP до 5 МБ'}</small>
           </label>
+          <label>Дополнительные фотографии товара
+            <input
+              type="file"
+              multiple
+              accept="image/png,image/jpeg,image/webp"
+              onChange={(event) => void handleGalleryChange(event)}
+            />
+            <small>Можно выбрать несколько файлов. В каталоге их можно будет листать стрелками.</small>
+          </label>
+
+          <div className="admin-candle-gallery">
+            {form.imageUrls.map((url, index) => (
+              <div key={url}>
+                <img src={getCandleImage(url)} alt={`Фото товара ${index + 1}`} onError={useCandleImageFallback} />
+                <span>{url === form.imageUrl ? 'Главное фото' : `Фото ${index + 1}`}</span>
+                {url !== form.imageUrl ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setForm((current) => ({
+                        ...current,
+                        imageUrls: current.imageUrls.filter((item) => item !== url),
+                        priceTiers: current.priceTiers.map((tier) => (
+                          tier.imageUrl === url ? { ...tier, imageUrl: undefined } : tier
+                        )),
+                      }));
+                    }}
+                  >
+                    Удалить
+                  </button>
+                ) : null}
+              </div>
+            ))}
+          </div>
 
           <fieldset className="admin-price-tiers">
             <legend>Цены при покупке нескольких свечей</legend>
@@ -262,6 +327,21 @@ export function AdminCandlesPage() {
                     )))}
                   />
                 </label>
+                <label>Фото этого количества
+                  <select
+                    value={tier.imageUrl || ''}
+                    onChange={(event) => updateField('priceTiers', form.priceTiers.map((item, itemIndex) => (
+                      itemIndex === index ? { ...item, imageUrl: event.target.value || undefined } : item
+                    )))}
+                  >
+                    <option value="">Оставить главное фото</option>
+                    {form.imageUrls.map((url, imageIndex) => (
+                      <option key={url} value={url}>
+                        {url === form.imageUrl ? 'Главное фото' : `Фото ${imageIndex + 1}`}
+                      </option>
+                    ))}
+                  </select>
+                </label>
                 <button type="button" onClick={() => updateField(
                   'priceTiers',
                   form.priceTiers.filter((_, itemIndex) => itemIndex !== index),
@@ -272,7 +352,7 @@ export function AdminCandlesPage() {
               type="button"
               onClick={() => updateField('priceTiers', [
                 ...form.priceTiers,
-                { quantity: 2, unitPrice: form.price || 1 },
+                { quantity: 2, unitPrice: form.price || 1, imageUrl: undefined },
               ])}
             >
               + Добавить вариант количества

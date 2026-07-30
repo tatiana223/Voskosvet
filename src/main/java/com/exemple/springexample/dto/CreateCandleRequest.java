@@ -49,6 +49,8 @@ public record CreateCandleRequest(
         @NotBlank(message = "Ссылка на изображение обязательна")
         String imageUrl,
 
+        List<String> imageUrls,
+
         Boolean featured,
 
         @NotNull(message = "Категория обязательна")

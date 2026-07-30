@@ -85,6 +85,13 @@ main {
   overflow: hidden;
   background: #fffaf3;
 }
+.hero:has(.inline-edit-panel) {
+  z-index: 25;
+  overflow: visible;
+}
+.benefit-ribbon:has(.inline-edit-panel) {
+  z-index: 30;
+}
 
 @media (min-width: 901px) {
   .landing-snap,
@@ -285,6 +292,7 @@ main {
 .products-grid .candle-card:nth-child(3) { animation-delay: 160ms; }
 .products-grid .candle-card:nth-child(4) { animation-delay: 240ms; }
 .candle-image { position: relative; display: block; height: clamp(200px, 19vw, 250px); overflow: hidden; background: #f3dfbd; }
+.candle-image-link { display: block; width: 100%; height: 100%; }
 .candle-image img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .25s ease; }
 .candle-card:hover img { transform: scale(1.04); }
 .featured-badge { position: absolute; top: 0; left: 0; padding: 8px 15px; border-radius: 15px 0 15px 0; background: #7b2f09; color: white; font-size: 13px; font-weight: 800; }
@@ -294,7 +302,7 @@ main {
 .card-package-picker {
   display: flex;
   gap: 6px;
-  margin: 0 -2px 12px;
+  margin: 0 -2px 2px;
   padding: 2px;
   overflow-x: auto;
   scrollbar-width: thin;
@@ -317,18 +325,6 @@ main {
   color: #7b4900;
   box-shadow: 0 0 0 1px #c67c00;
 }
-.card-single-purchase {
-  display: grid;
-  align-content: center;
-  min-height: 42px;
-  margin-bottom: 12px;
-  padding: 6px 10px;
-  border: 1px solid #eadfd5;
-  border-radius: 10px;
-  background: #fffaf4;
-}
-.card-single-purchase span { color: #5a3421; font-size: 12px; font-weight: 800; }
-.card-single-purchase small { color: #8a776b; font-size: 10px; }
 .card-footer { display: grid; gap: 10px; margin-top: auto; }
 .card-footer strong { font-size: 24px; color: #15100d; }
 .card-package-price {
@@ -339,6 +335,39 @@ main {
 }
 .card-package-price span { color: #75645a; font-size: 12px; font-weight: 700; }
 .card-package-price small { color: #9a5d00; font-size: 12px; font-weight: 800; }
+.gallery-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0 0 3px;
+  border: 1px solid rgba(74, 33, 20, .14);
+  border-radius: 50%;
+  background: rgba(255, 253, 248, .9);
+  color: var(--brown);
+  font-size: 28px;
+  line-height: 1;
+  box-shadow: 0 6px 18px rgba(45, 27, 16, .16);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+.gallery-arrow--prev { left: 10px; }
+.gallery-arrow--next { right: 10px; }
+.gallery-counter {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  z-index: 5;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(45, 27, 16, .72);
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+}
 .card-actions {
   display: grid;
   grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
@@ -2022,7 +2051,7 @@ button.primary-link { min-width: unset; }
 .admin-price-tiers { display: grid; gap: 12px; margin: 18px 0; padding: 16px; border: 1px solid #e6d8cc; border-radius: 16px; }
 .admin-price-tiers legend { padding: 0 7px; font-size: 18px; font-weight: 700; }
 .admin-price-tiers > p { margin: 0; color: #75645a; }
-.admin-price-tier-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; }
+.admin-price-tier-row { display: grid; grid-template-columns: .75fr 1fr 1.2fr auto; gap: 10px; align-items: end; }
 .admin-price-tier-row button { min-height: 48px; }
 .admin-form label { display: grid; gap: 7px; color: var(--brown); font-size: 13px; font-weight: 800; }
 .admin-image-preview { position: relative; width: min(100%, 420px); height: 230px; overflow: hidden; border-radius: 16px; background: var(--sand); }
@@ -2107,6 +2136,28 @@ button.primary-link { min-width: unset; }
   text-transform: none;
   letter-spacing: normal;
 }
+
+.benefit-ribbon .inline-edit-panel {
+  top: auto;
+  bottom: calc(100% + 14px);
+}
+
+.admin-candle-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+}
+.admin-candle-gallery > div {
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid rgba(74, 33, 20, .12);
+  border-radius: 12px;
+  background: #fffaf3;
+}
+.admin-candle-gallery img { width: 100%; height: 96px; border-radius: 8px; object-fit: cover; }
+.admin-candle-gallery span { color: var(--muted); font-size: 11px; font-weight: 800; }
+.admin-candle-gallery button { padding: 6px; border: 0; border-radius: 7px; color: #8e2f22; cursor: pointer; }
 
 .inline-edit-panel input,
 .inline-edit-panel textarea {

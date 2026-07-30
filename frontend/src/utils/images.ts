@@ -24,6 +24,32 @@ export function getCandleImage(imageUrl: string | undefined) {
   return getUploadedImage(seededImageReplacements[imageUrl] || imageUrl);
 }
 
+export function getCandleGallery(candle: {
+  imageUrl?: string;
+  imageUrls?: string[];
+  priceTiers?: Array<{ imageUrl?: string }>;
+}) {
+  const urls = [
+    candle.imageUrl,
+    ...(candle.imageUrls || []),
+    ...(candle.priceTiers || []).map((tier) => tier.imageUrl),
+  ].filter((url): url is string => Boolean(url));
+
+  return [...new Set(urls)].map(getCandleImage);
+}
+
+export function getCandleRawGallery(candle: {
+  imageUrl?: string;
+  imageUrls?: string[];
+  priceTiers?: Array<{ imageUrl?: string }>;
+}) {
+  return [...new Set([
+    candle.imageUrl,
+    ...(candle.imageUrls || []),
+    ...(candle.priceTiers || []).map((tier) => tier.imageUrl),
+  ].filter((url): url is string => Boolean(url)))];
+}
+
 export function useCandleImageFallback(event: { currentTarget: HTMLImageElement }) {
   event.currentTarget.onerror = null;
   event.currentTarget.src = '/images/hero-natural-candle.webp';

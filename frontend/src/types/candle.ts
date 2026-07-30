@@ -12,6 +12,7 @@ export type Candle = {
   weightGrams: number;
   burnTimeHours: number;
   imageUrl: string;
+  imageUrls: string[];
   available: boolean;
   featured: boolean;
   categoryId: number;
@@ -19,5 +20,6 @@ export type Candle = {
   priceTiers: Array<{
     quantity: number;
     unitPrice: number;
+    imageUrl?: string;
   }>;
 };

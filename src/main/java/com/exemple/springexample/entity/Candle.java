@@ -3,6 +3,8 @@ package com.exemple.springexample.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import java.time.LocalDateTime;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -48,6 +50,16 @@ public class Candle {
 
     private String imageUrl;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "candle_images",
+            joinColumns = @JoinColumn(name = "candle_id")
+    )
+    @Column(name = "image_url", nullable = false)
+    @OrderColumn(name = "sort_order")
+    @Fetch(FetchMode.SUBSELECT)
+    private List<String> imageUrls = new ArrayList<>();
+
     private Boolean available = true;
 
     @Column(nullable = false)
@@ -63,5 +75,6 @@ public class Candle {
             joinColumns = @JoinColumn(name = "candle_id")
     )
     @OrderBy("quantity ASC")
+    @Fetch(FetchMode.SUBSELECT)
     private List<CandlePriceTier> priceTiers = new ArrayList<>();
 }

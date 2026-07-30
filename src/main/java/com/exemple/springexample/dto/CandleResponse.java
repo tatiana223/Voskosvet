@@ -19,6 +19,7 @@ public record CandleResponse(
         Integer weightGrams,
         Integer burnTimeHours,
         String imageUrl,
+        List<String> imageUrls,
         Boolean available,
         Boolean featured,
         Long categoryId,
