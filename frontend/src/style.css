@@ -211,6 +211,58 @@ main {
   }
 }
 
+/* Ultrawide monitors need a wider composition than regular desktop screens. */
+@media (min-width: 1800px) and (min-aspect-ratio: 2 / 1) {
+  :root {
+    --content-max: 1800px;
+  }
+
+  .site-header,
+  .hero {
+    padding-right: max(96px, calc((100vw - 2400px) / 2));
+    padding-left: max(96px, calc((100vw - 2400px) / 2));
+  }
+
+  .site-header {
+    grid-template-columns: 290px minmax(0, 1fr) 190px;
+    gap: 32px;
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+
+  .brand { font-size: 38px; }
+  .brand small { font-size: 12px; }
+  .brand-mark { width: 52px; height: 52px; }
+  .nav { gap: clamp(24px, 2vw, 52px); font-size: 16px; }
+  .cart-link { font-size: 16px; }
+
+  .hero-copy {
+    width: min(42vw, 780px);
+    padding-top: 84px;
+  }
+
+  .hero h1 {
+    max-width: 760px;
+    font-size: clamp(68px, 3.4vw, 82px);
+  }
+
+  .hero-copy > p {
+    max-width: 520px;
+    font-size: 21px;
+  }
+
+  .hero-points { width: min(100%, 620px); }
+  .hero-points b { font-size: 16px; }
+
+  .benefit-ribbon {
+    right: max(96px, calc((100vw - 2400px) / 2));
+    left: max(96px, calc((100vw - 2400px) / 2));
+    padding: 20px 32px;
+  }
+
+  .benefit-ribbon span { font-size: 17px; }
+}
+
 .home-section {
   display: grid;
   align-content: center;
