@@ -20,7 +20,7 @@ import java.util.List;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final TelegramOrderNotificationService telegramNotificationService;
+    private final EmailNotificationService emailNotificationService;
 
     @Transactional(readOnly = true)
     public List<ReviewResponse> getAll() {
@@ -32,7 +32,7 @@ public class ReviewService {
     @Transactional
     public ReviewResponse createForCustomer(ReviewRequest request, Customer customer) {
         ReviewResponse response = create(request, customer, customer.getFullName(), false);
-        telegramNotificationService.sendNewReview(response);
+        emailNotificationService.sendNewReview(response);
         return response;
     }
 
@@ -42,7 +42,7 @@ public class ReviewService {
             throw new BadRequestException("Укажите имя автора отзыва");
         }
         ReviewResponse response = create(request, null, request.displayName().trim(), false);
-        telegramNotificationService.sendNewReview(response);
+        emailNotificationService.sendNewReview(response);
         return response;
     }
 
@@ -52,7 +52,7 @@ public class ReviewService {
             throw new BadRequestException("Укажите имя автора отзыва");
         }
         ReviewResponse response = create(request, null, request.displayName().trim(), true);
-        telegramNotificationService.sendNewReview(response);
+        emailNotificationService.sendNewReview(response);
         return response;
     }
 
