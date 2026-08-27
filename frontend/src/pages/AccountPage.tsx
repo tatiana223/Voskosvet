@@ -159,6 +159,7 @@ export function AccountPage() {
             <select value={profile.preferredContactMethod} onChange={(event) => updateProfileField('preferredContactMethod', event.target.value as UpdateProfileRequest['preferredContactMethod'])}>
               <option value="WHATSAPP">WhatsApp</option>
               <option value="TELEGRAM">Telegram</option>
+              <option value="MAX">MAX</option>
               <option value="PHONE">Звонок</option>
               <option value="EMAIL">Email</option>
             </select>

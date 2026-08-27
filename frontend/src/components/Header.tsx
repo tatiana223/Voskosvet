@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
-import { subscribeToAuth } from '../utils/auth';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { clearStoredAuth, getStoredAuth, subscribeToAuth } from '../utils/auth';
 import {
   getCartItems,
   getCartItemsCount,
@@ -8,6 +8,8 @@ import {
 } from '../utils/cart';
 
 export function Header() {
+  const navigate = useNavigate();
+  const [auth, setAuth] = useState(() => getStoredAuth());
   const [cartCount, setCartCount] = useState(() => getCartItemsCount());
   const [cartPulse, setCartPulse] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -33,6 +35,7 @@ export function Header() {
 
   useEffect(() => {
     return subscribeToAuth(() => {
+      setAuth(getStoredAuth());
       setCartCount(getCartItemsCount());
       setMobileMenuOpen(false);
     });
@@ -87,17 +90,48 @@ export function Header() {
           <NavLink to="/delivery-payment">Доставка и оплата</NavLink>
           <NavLink to="/orders/track">Отследить заказ</NavLink>
           <NavLink to="/reviews">Отзывы</NavLink>
+          {auth?.role === 'ADMIN' ? (
+            <div className="nav-admin-actions">
+              <Link to="/admin">Кабинет</Link>
+              <button
+                type="button"
+                onClick={() => {
+                  clearStoredAuth();
+                  navigate('/');
+                }}
+              >
+                Выйти
+              </button>
+            </div>
+          ) : null}
         </nav>
 
-        <Link
-          className={`cart-link${cartPulse ? ' cart-link--pulse' : ''}`}
-          to="/cart"
-          aria-label="Корзина"
-          onClick={() => setMobileMenuOpen(false)}
-        >
-          <span>Корзина</span>
-          <b>{cartCount}</b>
-        </Link>
+        <div className="header-actions">
+          {auth?.role === 'ADMIN' ? (
+            <>
+              <Link className="header-admin-link" to="/admin">Кабинет</Link>
+              <button
+                className="header-logout-button"
+                type="button"
+                onClick={() => {
+                  clearStoredAuth();
+                  navigate('/');
+                }}
+              >
+                Выйти
+              </button>
+            </>
+          ) : null}
+          <Link
+            className={`cart-link${cartPulse ? ' cart-link--pulse' : ''}`}
+            to="/cart"
+            aria-label="Корзина"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <span>Корзина</span>
+            <b>{cartCount}</b>
+          </Link>
+        </div>
       </header>
     </>
   );

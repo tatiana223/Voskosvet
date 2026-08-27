@@ -36,7 +36,7 @@ button, input, select, textarea { font: inherit; }
 .site-header {
   position: sticky; top: 0; z-index: 30;
   display: grid;
-  grid-template-columns: 250px 1fr 170px;
+  grid-template-columns: 250px 1fr auto;
   align-items: center;
   gap: 24px;
   padding: 16px clamp(18px, 5vw, 76px);
@@ -55,6 +55,21 @@ button, input, select, textarea { font: inherit; }
 .favorites-nav-link { display: inline-flex; align-items: center; gap: 6px; }
 .favorites-nav-link b { display: grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px; background: #a34532; color: white; font-size: 11px; }
 .cart-link { justify-self: end; display: inline-flex; align-items: center; gap: 10px; font-weight: 800; }
+.header-actions { justify-self: end; display: flex; align-items: center; gap: 10px; }
+.header-admin-link,
+.header-logout-button {
+  padding: 8px 12px;
+  border: 1px solid rgba(74, 33, 20, .14);
+  border-radius: 999px;
+  background: rgba(255, 253, 248, .82);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.header-admin-link:hover { border-color: rgba(216, 138, 0, .4); color: var(--honey-dark); }
+.header-logout-button:hover { border-color: rgba(150, 50, 35, .28); color: #963223; }
+.nav-admin-actions { display: none; }
 .cart-link b { display: grid; place-items: center; width: 25px; height: 25px; border-radius: 50%; background: var(--honey); color: white; font-size: 12px; }
 .cart-link--pulse { animation: cartPulse .65s cubic-bezier(.2, .8, .2, 1); }
 .cart-link--pulse b { box-shadow: 0 0 0 8px rgba(216, 138, 0, .16); }
@@ -1116,6 +1131,23 @@ button.primary-link { min-width: unset; }
   }
   .nav a:hover,
   .nav a.active { background: #f8ead3; }
+  .header-actions > .header-admin-link,
+  .header-actions > .header-logout-button { display: none; }
+  .nav-admin-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+  .nav-admin-actions a,
+  .nav-admin-actions button {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 14px;
+    border: 1px solid rgba(74, 33, 20, .12);
+    border-radius: 12px;
+    background: #fffaf3;
+    color: var(--brown);
+    font-size: 13px;
+    font-weight: 800;
+  }
   .cart-link { justify-self: end; }
   html,
   body,
@@ -3134,7 +3166,7 @@ body.media-lightbox-open {
   }
 
   .site-header {
-    grid-template-columns: 235px minmax(0, 1fr) 150px;
+    grid-template-columns: 235px minmax(0, 1fr) auto;
     gap: 24px;
     padding: 10px max(64px, calc((100vw - 2200px) / 2));
   }

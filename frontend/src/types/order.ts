@@ -1,6 +1,6 @@
 export type DeliveryMethod = 'PICKUP' | 'COURIER' | 'CDEK' | 'POST';
 export type PaymentMethod = 'CASH' | 'CARD_ONLINE' | 'TRANSFER';
-export type ContactMethod = 'PHONE' | 'WHATSAPP' | 'TELEGRAM' | 'EMAIL';
+export type ContactMethod = 'PHONE' | 'WHATSAPP' | 'TELEGRAM' | 'MAX' | 'EMAIL';
 
 export type CreateOrderItemRequest = {
   candleId: number;

@@ -292,6 +292,7 @@ export function CheckoutPage() {
                   >
                     <option value="WHATSAPP">WhatsApp</option>
                     <option value="TELEGRAM">Telegram</option>
+                    <option value="MAX">MAX</option>
                     <option value="PHONE">Звонок</option>
                     <option value="EMAIL">Email</option>
                   </select>

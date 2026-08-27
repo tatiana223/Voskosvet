@@ -112,6 +112,7 @@ public class TelegramOrderNotificationService {
             case "PHONE" -> "Телефон";
             case "WHATSAPP" -> "WhatsApp";
             case "TELEGRAM" -> "Telegram";
+            case "MAX" -> "MAX";
             case "EMAIL" -> "Email";
             default -> value;
         };

@@ -9,3 +9,15 @@ voskosvet.ru, www.voskosvet.ru {
 
 	encode zstd gzip
 }
+
+http://localhost, http://127.0.0.1 {
+	handle /api/* {
+		reverse_proxy backend:8080
+	}
+
+	handle {
+		reverse_proxy frontend:80
+	}
+
+	encode zstd gzip
+}

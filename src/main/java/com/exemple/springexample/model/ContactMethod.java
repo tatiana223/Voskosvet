@@ -4,5 +4,6 @@ public enum ContactMethod {
     PHONE,
     WHATSAPP,
     TELEGRAM,
+    MAX,
     EMAIL
 }

@@ -7,7 +7,7 @@ export type AuthResponse = {
   email: string;
   city?: string;
   deliveryAddress?: string;
-  preferredContactMethod?: 'PHONE' | 'WHATSAPP' | 'TELEGRAM' | 'EMAIL';
+  preferredContactMethod?: 'PHONE' | 'WHATSAPP' | 'TELEGRAM' | 'MAX' | 'EMAIL';
   defaultDeliveryMethod?: 'PICKUP' | 'COURIER' | 'CDEK' | 'POST';
   defaultPaymentMethod?: 'CASH' | 'CARD_ONLINE' | 'TRANSFER';
   role: Role;
@@ -20,7 +20,7 @@ export type UpdateProfileRequest = {
   email: string;
   city?: string;
   deliveryAddress?: string;
-  preferredContactMethod: 'PHONE' | 'WHATSAPP' | 'TELEGRAM' | 'EMAIL';
+  preferredContactMethod: 'PHONE' | 'WHATSAPP' | 'TELEGRAM' | 'MAX' | 'EMAIL';
   defaultDeliveryMethod: 'PICKUP' | 'COURIER' | 'CDEK' | 'POST';
   defaultPaymentMethod: 'CASH' | 'CARD_ONLINE' | 'TRANSFER';
 };
