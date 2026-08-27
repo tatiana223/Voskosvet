@@ -40,6 +40,7 @@ public class OrderService {
     private final OrderMapper orderMapper;
     private final CandleRepository candleRepository;
     private final CustomerRepository customerRepository;
+    private final TelegramOrderNotificationService telegramOrderNotificationService;
 
     public OrderResponse createOrder(CreateOrderRequest request) {
         return createOrder(request, null);
@@ -106,8 +107,9 @@ public class OrderService {
         order.setTotalPrice(itemsPrice.add(deliveryPrice));
 
         Order savedOrder = orderRepository.save(order);
-
-        return orderMapper.toOrderResponse(savedOrder);
+        OrderResponse response = orderMapper.toOrderResponse(savedOrder);
+        telegramOrderNotificationService.sendNewOrder(response);
+        return response;
     }
 
     private Customer resolveOrderCustomer(
