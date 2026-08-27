@@ -1,6 +1,7 @@
 package com.exemple.springexample.service;
 
 import com.exemple.springexample.dto.CustomerResponse;
+import com.exemple.springexample.dto.CreateManagerRequest;
 import com.exemple.springexample.dto.UpdateCustomerBlockRequest;
 import com.exemple.springexample.dto.UpdateCustomerRoleRequest;
 import com.exemple.springexample.entity.Customer;
@@ -10,6 +11,7 @@ import com.exemple.springexample.exception.NotFoundException;
 import com.exemple.springexample.mapper.OrderMapper;
 import com.exemple.springexample.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,6 +24,24 @@ public class AdminCustomerService {
 
     private final CustomerRepository customerRepository;
     private final OrderMapper orderMapper;
+    private final PasswordEncoder passwordEncoder;
+
+    public CustomerResponse createManager(CreateManagerRequest request) {
+        String login = request.login().trim().toLowerCase();
+        if (customerRepository.findByEmailIgnoreCase(login).isPresent()) {
+            throw new BadRequestException("Этот логин уже занят");
+        }
+
+        Customer manager = new Customer();
+        manager.setFullName(request.firstName().trim() + " " + request.lastName().trim());
+        manager.setPhone("Не указан");
+        manager.setEmail(login);
+        manager.setPassword(passwordEncoder.encode(request.password()));
+        manager.setRole(Role.MANAGER);
+        manager.setEmailVerified(true);
+
+        return orderMapper.toCustomerResponse(customerRepository.save(manager));
+    }
 
     public List<CustomerResponse> getCustomers() {
         return customerRepository.findByPasswordIsNotNullOrderByIdDesc()

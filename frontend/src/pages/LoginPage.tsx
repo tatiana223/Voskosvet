@@ -6,7 +6,7 @@ import type { FormEvent } from 'react';
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [loginValue, setLoginValue] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -16,12 +16,12 @@ export function LoginPage() {
     setError('');
     setIsSubmitting(true);
 
-    login({ email, password })
+    login({ email: loginValue, password })
       .then((auth) => {
         setStoredAuth(auth);
         navigate('/admin');
       })
-      .catch((error: Error) => setError(error.message || 'Не получилось войти. Проверь email и пароль.'))
+      .catch((error: Error) => setError(error.message || 'Не получилось войти. Проверь логин и пароль.'))
       .finally(() => setIsSubmitting(false));
   }
 
@@ -30,16 +30,17 @@ export function LoginPage() {
       <form className="auth-card" onSubmit={handleSubmit}>
         <p className="eyebrow">Администрирование</p>
         <h1>Вход в кабинет</h1>
-        <p>Доступ только для администратора магазина.</p>
+        <p>Доступ для администратора и созданных им менеджеров.</p>
 
         <label>
-          Email
+          Логин
           <input
             required
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            placeholder="mail@example.ru"
+            autoComplete="username"
+            type="text"
+            value={loginValue}
+            onChange={(event) => setLoginValue(event.target.value)}
+            placeholder="Введите логин"
           />
         </label>
 
@@ -48,6 +49,7 @@ export function LoginPage() {
           <input
             required
             minLength={6}
+            autoComplete="current-password"
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}

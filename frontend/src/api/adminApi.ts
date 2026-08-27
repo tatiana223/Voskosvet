@@ -261,6 +261,20 @@ export function getAdminCustomers() {
   return adminRequest<AdminCustomer[]>('/api/admin/customers');
 }
 
+export type CreateManagerRequest = {
+  firstName: string;
+  lastName: string;
+  login: string;
+  password: string;
+};
+
+export function createAdminManager(request: CreateManagerRequest) {
+  return adminRequest<AdminCustomer>('/api/admin/customers/managers', {
+    method: 'POST',
+    body: JSON.stringify(request),
+  });
+}
+
 export function updateAdminCustomerRole(id: number, role: AdminCustomer['role']) {
   return adminRequest<AdminCustomer>(`/api/admin/customers/${id}/role`, {
     method: 'PATCH',

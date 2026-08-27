@@ -90,7 +90,7 @@ export function Header() {
           <NavLink to="/delivery-payment">Доставка и оплата</NavLink>
           <NavLink to="/orders/track">Отследить заказ</NavLink>
           <NavLink to="/reviews">Отзывы</NavLink>
-          {auth?.role === 'ADMIN' ? (
+          {auth && (auth.role === 'ADMIN' || auth.role === 'MANAGER') ? (
             <div className="nav-admin-actions">
               <Link to="/admin">Кабинет</Link>
               <button
@@ -107,7 +107,7 @@ export function Header() {
         </nav>
 
         <div className="header-actions">
-          {auth?.role === 'ADMIN' ? (
+          {auth && (auth.role === 'ADMIN' || auth.role === 'MANAGER') ? (
             <>
               <Link className="header-admin-link" to="/admin">Кабинет</Link>
               <button

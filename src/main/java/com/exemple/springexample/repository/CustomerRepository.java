@@ -9,6 +9,8 @@ import java.util.List;
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Optional<Customer> findByEmail(String email);
 
+    Optional<Customer> findByEmailIgnoreCase(String email);
+
     boolean existsByEmail(String email);
 
     List<Customer> findByPasswordIsNotNullOrderByIdDesc();

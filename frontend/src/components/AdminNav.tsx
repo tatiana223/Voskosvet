@@ -11,7 +11,7 @@ export function AdminNav() {
       <NavLink to="/admin/candles">Свечи</NavLink>
       <NavLink to="/admin/categories">Категории</NavLink>
       {isAdmin ? <NavLink to="/admin/reviews">Отзывы</NavLink> : null}
-      {isAdmin ? <NavLink to="/admin/customers">Пользователи и роли</NavLink> : null}
+      {isAdmin ? <NavLink to="/admin/customers">Сотрудники</NavLink> : null}
       {isAdmin ? <NavLink to="/admin/content">Контент сайта</NavLink> : null}
     </nav>
   );

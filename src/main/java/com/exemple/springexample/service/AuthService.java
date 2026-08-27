@@ -22,20 +22,20 @@ public class AuthService {
     private final JwtService jwtService;
 
     public AuthResponse login(LoginRequest request) {
-        Customer customer = customerRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new BadRequestException("Неверный email или пароль"));
+        Customer customer = customerRepository.findByEmailIgnoreCase(request.getEmail().trim())
+                .orElseThrow(() -> new BadRequestException("Неверный логин или пароль"));
 
         if (customer.getPassword() == null ||
                 !passwordEncoder.matches(request.getPassword(), customer.getPassword())) {
-            throw new BadRequestException("Неверный email или пароль");
+            throw new BadRequestException("Неверный логин или пароль");
         }
 
         if (customer.isBlocked()) {
             throw new BadRequestException("Аккаунт заблокирован. Обратитесь к администратору");
         }
 
-        if (customer.getRole() != Role.ADMIN) {
-            throw new BadRequestException("Доступ разрешён только администратору");
+        if (customer.getRole() != Role.ADMIN && customer.getRole() != Role.MANAGER) {
+            throw new BadRequestException("Доступ разрешён только администратору и менеджеру");
         }
 
         if (!customer.isEmailVerified()) {

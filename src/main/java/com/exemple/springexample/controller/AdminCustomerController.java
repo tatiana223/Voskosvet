@@ -1,6 +1,7 @@
 package com.exemple.springexample.controller;
 
 import com.exemple.springexample.dto.CustomerResponse;
+import com.exemple.springexample.dto.CreateManagerRequest;
 import com.exemple.springexample.dto.UpdateCustomerBlockRequest;
 import com.exemple.springexample.dto.UpdateCustomerRoleRequest;
 import com.exemple.springexample.service.AdminCustomerService;
@@ -30,6 +31,11 @@ public class AdminCustomerController {
             @Valid @RequestBody UpdateCustomerRoleRequest request
     ) {
         return adminCustomerService.updateRole(id, request);
+    }
+
+    @PostMapping("/managers")
+    public CustomerResponse createManager(@Valid @RequestBody CreateManagerRequest request) {
+        return adminCustomerService.createManager(request);
     }
 
     @PatchMapping("/{id}/block")
