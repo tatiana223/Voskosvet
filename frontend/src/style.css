@@ -3102,10 +3102,10 @@ body.media-lightbox-open {
   }
 
   .benefit-ribbon {
-    right: auto;
+    right: max(var(--page-gutter), calc((100vw - var(--content-max)) / 2));
     bottom: 22px;
     left: max(var(--page-gutter), calc((100vw - var(--content-max)) / 2));
-    width: min(64vw, var(--hero-ribbon-max));
+    width: auto;
     padding: 12px 18px;
     border: 1px solid rgba(147, 102, 37, .12);
     border-radius: 15px;
@@ -3192,7 +3192,8 @@ body.media-lightbox-open {
   .benefit-ribbon {
     bottom: 16px;
     left: max(64px, calc((100vw - 2200px) / 2));
-    width: min(60vw, 1120px);
+    right: max(64px, calc((100vw - 2200px) / 2));
+    width: auto;
     padding: 8px 14px;
   }
 
