@@ -51,6 +51,19 @@ button, input, select, textarea { font: inherit; }
 .nav { display: flex; justify-content: center; gap: clamp(16px, 3vw, 44px); font-size: 15px; font-weight: 700; }
 .nav a { padding: 10px 0; }
 .nav a:hover, .nav a.active { color: var(--honey); }
+.nav .admin-login-link {
+  padding: 9px 14px;
+  border: 1px solid rgba(216, 138, 0, .38);
+  border-radius: 999px;
+  color: var(--honey-dark);
+  white-space: nowrap;
+}
+.nav .admin-login-link:hover,
+.nav .admin-login-link.active {
+  border-color: var(--honey);
+  background: #fff4df;
+  color: var(--honey-dark);
+}
 .mobile-menu-toggle { display: none; }
 .favorites-nav-link { display: inline-flex; align-items: center; gap: 6px; }
 .favorites-nav-link b { display: grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px; background: #a34532; color: white; font-size: 11px; }
