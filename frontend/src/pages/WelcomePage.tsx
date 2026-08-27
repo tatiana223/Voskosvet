@@ -233,6 +233,8 @@ export function WelcomePage() {
           </Link>
         </div>
 
+        <Link className="quiet-admin-link" to="/login">Для администратора</Link>
+
       </section>
 
     </div>

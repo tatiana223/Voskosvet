@@ -24,7 +24,7 @@ export async function getReviews() {
   return apiRequest<Review[]>('/api/reviews');
 }
 
-export function createReview(data: { text: string; rating: number; media?: ReviewMedia[] }) {
+export function createReview(data: { displayName: string; text: string; rating: number; media?: ReviewMedia[] }) {
   return apiRequest<Review>('/api/reviews', {
     method: 'POST',
     body: JSON.stringify(data),

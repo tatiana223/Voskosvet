@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { getStoredAuth, subscribeToAuth } from '../utils/auth';
+import { subscribeToAuth } from '../utils/auth';
 import {
   getCartItems,
   getCartItemsCount,
@@ -10,7 +10,6 @@ import {
 export function Header() {
   const [cartCount, setCartCount] = useState(() => getCartItemsCount());
   const [cartPulse, setCartPulse] = useState(false);
-  const [auth, setAuth] = useState(() => getStoredAuth());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -34,7 +33,6 @@ export function Header() {
 
   useEffect(() => {
     return subscribeToAuth(() => {
-      setAuth(getStoredAuth());
       setCartCount(getCartItemsCount());
       setMobileMenuOpen(false);
     });
@@ -89,12 +87,6 @@ export function Header() {
           <NavLink to="/delivery-payment">Доставка и оплата</NavLink>
           <NavLink to="/orders/track">Отследить заказ</NavLink>
           <NavLink to="/reviews">Отзывы</NavLink>
-          <NavLink
-            className="admin-login-link"
-            to={auth?.role === 'ADMIN' ? '/admin' : '/login'}
-          >
-            {auth?.role === 'ADMIN' ? 'Кабинет администратора' : 'Вход для администратора'}
-          </NavLink>
         </nav>
 
         <Link

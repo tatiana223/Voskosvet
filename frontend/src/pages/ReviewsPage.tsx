@@ -2,18 +2,16 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import {
   createReview,
-  deleteReview,
   getReviews,
   uploadReviewMedia,
   type Review,
   type ReviewMedia,
 } from '../api/reviewsApi';
-import { getStoredAuth } from '../utils/auth';
 import { ReviewMediaGallery } from '../components/ReviewMediaGallery';
 
 export function ReviewsPage() {
-  const auth = getStoredAuth();
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [displayName, setDisplayName] = useState('');
   const [text, setText] = useState('');
   const [rating, setRating] = useState(5);
   const [media, setMedia] = useState<ReviewMedia[]>([]);
@@ -32,18 +30,18 @@ export function ReviewsPage() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!auth) return;
-
     setIsSubmitting(true);
     setMessage('');
     try {
       const created = await createReview({
+        displayName: displayName.trim(),
         text: text.trim(),
         rating,
         media,
       });
       setReviews((current) => [created, ...current]);
       setText('');
+      setDisplayName('');
       setRating(5);
       setMedia([]);
       setMessage('Спасибо! Ваш отзыв опубликован.');
@@ -72,12 +70,6 @@ export function ReviewsPage() {
     }
   }
 
-  async function handleDeleteReview(reviewId: number) {
-    if (!auth || !window.confirm('Удалить этот отзыв?')) return;
-    await deleteReview(reviewId);
-    setReviews((current) => current.filter((review) => review.id !== reviewId));
-  }
-
   return (
     <section className="reviews-page">
       <div className="section-heading">
@@ -93,18 +85,14 @@ export function ReviewsPage() {
               <ReviewMediaGallery media={review.media} />
               <p>“{review.text}”</p>
               <strong>{review.name}</strong>
-              {auth && review.authorId === auth.id ? (
-                <button className="review-delete-button" type="button" onClick={() => void handleDeleteReview(review.id)}>Удалить отзыв</button>
-              ) : null}
             </article>
           ))}
         </div>
 
-        {auth ? (
-          <form className="review-form" onSubmit={handleSubmit}>
+        <form className="review-form" onSubmit={handleSubmit}>
             <p className="eyebrow">Ваше мнение</p>
             <h2>Оставить отзыв</h2>
-            <div className="review-author"><span>Отзыв будет опубликован от имени</span><strong>{auth.fullName}</strong></div>
+            <label>Ваше имя<input value={displayName} onChange={(event) => setDisplayName(event.target.value)} required minLength={2} maxLength={100} placeholder="Как вас представить" /></label>
             <label>Оценка<select value={rating} onChange={(event) => setRating(Number(event.target.value))}>
               <option value={5}>5 — отлично</option><option value={4}>4 — хорошо</option><option value={3}>3 — нормально</option><option value={2}>2 — есть замечания</option><option value={1}>1 — плохо</option>
             </select></label>
@@ -118,13 +106,7 @@ export function ReviewsPage() {
             {photoError ? <p className="review-photo-error">{photoError}</p> : null}
             <button className="primary-link" disabled={isSubmitting || isUploading} type="submit">{isSubmitting ? 'Публикуем…' : 'Опубликовать отзыв'}</button>
             {message ? <p className="review-success">{message}</p> : null}
-          </form>
-        ) : (
-          <div className="review-form review-login-required">
-            <p className="eyebrow">Отзывы</p><h2>Поделитесь впечатлением</h2>
-            <p>Отправьте отзыв администратору магазина — после проверки он появится на этой странице.</p>
-          </div>
-        )}
+        </form>
       </div>
     </section>
   );

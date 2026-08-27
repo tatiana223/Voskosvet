@@ -30,7 +30,15 @@ public class ReviewService {
 
     @Transactional
     public ReviewResponse createForCustomer(ReviewRequest request, Customer customer) {
-        return create(request, customer, customer.getFullName());
+        return create(request, customer, customer.getFullName(), false);
+    }
+
+    @Transactional
+    public ReviewResponse createForGuest(ReviewRequest request) {
+        if (request.displayName() == null || request.displayName().isBlank()) {
+            throw new BadRequestException("Укажите имя автора отзыва");
+        }
+        return create(request, null, request.displayName().trim(), false);
     }
 
     @Transactional
@@ -38,7 +46,7 @@ public class ReviewService {
         if (request.displayName() == null || request.displayName().isBlank()) {
             throw new BadRequestException("Укажите имя автора отзыва");
         }
-        return create(request, null, request.displayName().trim());
+        return create(request, null, request.displayName().trim(), true);
     }
 
     @Transactional
@@ -95,7 +103,7 @@ public class ReviewService {
         return toResponse(reviewRepository.save(review));
     }
 
-    private ReviewResponse create(ReviewRequest request, Customer author, String displayName) {
+    private ReviewResponse create(ReviewRequest request, Customer author, String displayName, boolean allowFeatured) {
         Review review = new Review();
         review.setDisplayName(displayName);
         review.setText(request.text().trim());
@@ -105,7 +113,7 @@ public class ReviewService {
         if (review.getImageUrl() == null) {
             review.setImageUrl(firstImage(request.media()));
         }
-        review.setFeatured(Boolean.TRUE.equals(request.featured()));
+        review.setFeatured(allowFeatured && Boolean.TRUE.equals(request.featured()));
         review.setAuthor(author);
         return toResponse(reviewRepository.save(review));
     }
