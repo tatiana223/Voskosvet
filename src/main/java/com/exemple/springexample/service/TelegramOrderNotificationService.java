@@ -2,6 +2,7 @@ package com.exemple.springexample.service;
 
 import com.exemple.springexample.dto.OrderItemResponse;
 import com.exemple.springexample.dto.OrderResponse;
+import com.exemple.springexample.dto.ReviewResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +32,34 @@ public class TelegramOrderNotificationService {
     @Value("${app.telegram.chat-id:}")
     private String chatId;
 
+    @Value("${app.public-url:http://localhost}")
+    private String publicUrl;
+
     @Async
     public void sendNewOrder(OrderResponse order) {
+        sendMessage(buildMessage(order), "order");
+    }
+
+    @Async
+    public void sendNewReview(ReviewResponse review) {
+        String stars = "⭐".repeat(Math.max(0, Math.min(5, review.rating())));
+        StringBuilder message = new StringBuilder()
+                .append("💬 Новый отзыв на сайте\n")
+                .append("Автор: ").append(review.name()).append('\n')
+                .append("Оценка: ").append(stars).append(" (").append(review.rating()).append("/5)\n\n")
+                .append(review.text());
+
+        if (review.media() != null && !review.media().isEmpty()) {
+            message.append("\n\nПрикреплено файлов: ").append(review.media().size());
+        }
+        if (publicUrl != null && !publicUrl.isBlank()) {
+            message.append("\n\nОтзывы: ").append(publicUrl.replaceAll("/+$", "")).append("/admin/reviews");
+        }
+
+        sendMessage(limitMessage(message.toString()), "review");
+    }
+
+    private void sendMessage(String text, String notificationType) {
         if (botToken == null || botToken.isBlank() || chatId == null || chatId.isBlank()) {
             return;
         }
@@ -40,7 +67,7 @@ public class TelegramOrderNotificationService {
         try {
             Map<String, Object> payload = new LinkedHashMap<>();
             payload.put("chat_id", chatId.trim());
-            payload.put("text", buildMessage(order));
+            payload.put("text", text);
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("https://api.telegram.org/bot" + botToken.trim() + "/sendMessage"))
@@ -57,10 +84,10 @@ public class TelegramOrderNotificationService {
             );
 
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
-                log.warn("Telegram notification failed with status {}", response.statusCode());
+                log.warn("Telegram {} notification failed with status {}", notificationType, response.statusCode());
             }
         } catch (Exception exception) {
-            log.warn("Could not send Telegram order notification: {}", exception.getMessage());
+            log.warn("Could not send Telegram {} notification: {}", notificationType, exception.getMessage());
         }
     }
 
@@ -87,8 +114,11 @@ public class TelegramOrderNotificationService {
         }
 
         appendIfPresent(message, "\nКомментарий", order.comment());
-        String result = message.toString();
-        return result.length() <= 4000 ? result : result.substring(0, 3997) + "...";
+        return limitMessage(message.toString());
+    }
+
+    private String limitMessage(String value) {
+        return value.length() <= 4000 ? value : value.substring(0, 3997) + "...";
     }
 
     private void appendIfPresent(StringBuilder message, String label, String value) {

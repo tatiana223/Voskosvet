@@ -30,9 +30,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (environment.matchesProfiles("dev")) {
-            createAdminAccount();
-        }
+        createAdminAccount();
 
         if (candleRepository.count() > 0) {
             return;
@@ -130,25 +128,30 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void createAdminAccount() {
-        String email = "admin@voskosvet.ru";
-
-        if (customerRepository.findByEmail(email).map(existingAdmin -> {
-            if (!existingAdmin.isEmailVerified()) {
-                existingAdmin.setEmailVerified(true);
-                customerRepository.save(existingAdmin);
-            }
-            return true;
-        }).orElse(false)) {
+        String login = environment.getProperty("app.admin.username", "").trim().toLowerCase();
+        String password = environment.getProperty("app.admin.password", "");
+        if (login.isBlank() || password.isBlank()) {
             return;
         }
 
-        Customer admin = new Customer();
-        admin.setFullName("Администратор ВоскоСвет");
-        admin.setPhone("+7 900 000-00-00");
-        admin.setEmail(email);
-        admin.setPassword(passwordEncoder.encode("admin123"));
+        Customer admin = customerRepository.findFirstByPrimaryAdminTrue()
+                .or(() -> customerRepository.findByEmailIgnoreCase(login))
+                .orElseGet(Customer::new);
+
+        if (admin.getFullName() == null || admin.getFullName().isBlank()) {
+            admin.setFullName("Администратор ВоскоСвет");
+        }
+        if (admin.getPhone() == null || admin.getPhone().isBlank()) {
+            admin.setPhone("Не указан");
+        }
+        admin.setEmail(login);
+        admin.setPassword(passwordEncoder.encode(password));
         admin.setRole(Role.ADMIN);
         admin.setEmailVerified(true);
+        admin.setPrimaryAdmin(true);
+        admin.setBlocked(false);
+        admin.setBlockedReason(null);
+        admin.setBlockedAt(null);
         customerRepository.save(admin);
     }
 
