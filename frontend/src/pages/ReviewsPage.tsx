@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
-import { Link } from 'react-router-dom';
 import {
   createReview,
   deleteReview,
@@ -122,10 +121,8 @@ export function ReviewsPage() {
           </form>
         ) : (
           <div className="review-form review-login-required">
-            <p className="eyebrow">Отзывы</p><h2>Войдите в аккаунт</h2>
-            <p>Оставлять отзывы могут только зарегистрированные пользователи.</p>
-            <Link className="primary-link" to="/login">Войти</Link>
-            <Link className="secondary-link" to="/register">Создать аккаунт</Link>
+            <p className="eyebrow">Отзывы</p><h2>Поделитесь впечатлением</h2>
+            <p>Отправьте отзыв администратору магазина — после проверки он появится на этой странице.</p>
           </div>
         )}
       </div>

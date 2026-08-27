@@ -1,6 +1,7 @@
 import { apiRequest } from './http';
 import type { AuthResponse, LoginRequest, MessageResponse, RegisterRequest, UpdateProfileRequest } from '../types/auth';
 
+/** Legacy client helpers retained for old source files; their routes are disabled by App and the server. */
 export function register(request: RegisterRequest) {
   return apiRequest<MessageResponse>('/api/auth/register', {
     method: 'POST',
@@ -10,13 +11,6 @@ export function register(request: RegisterRequest) {
 
 export function verifyEmail(token: string) {
   return apiRequest<MessageResponse>(`/api/auth/verify-email?token=${encodeURIComponent(token)}`);
-}
-
-export function resendVerification(email: string) {
-  return apiRequest<MessageResponse>('/api/auth/resend-verification', {
-    method: 'POST',
-    body: JSON.stringify({ email }),
-  });
 }
 
 export function login(request: LoginRequest) {

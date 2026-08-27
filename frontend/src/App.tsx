@@ -1,6 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Header } from './components/Header';
-import { AccountPage } from './pages/AccountPage';
 import { AdminCandlesPage } from './pages/AdminCandlesPage';
 import { AdminCategoriesPage } from './pages/AdminCategoriesPage';
 import { AdminCustomersPage } from './pages/AdminCustomersPage';
@@ -15,12 +14,9 @@ import { CatalogPage } from './pages/CatalogPage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { ReviewsPage } from './pages/ReviewsPage';
 import { DeliveryPaymentPage } from './pages/DeliveryPaymentPage';
-import { FavoritesPage } from './pages/FavoritesPage';
 import { LoginPage } from './pages/LoginPage';
 import { OrderTrackingPage } from './pages/OrderTrackingPage';
-import { RegisterPage } from './pages/RegisterPage';
 import { WelcomePage } from './pages/WelcomePage';
-import { VerifyEmailPage } from './pages/VerifyEmailPage';
 
 export function App() {
   return (
@@ -36,12 +32,12 @@ export function App() {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/delivery-payment" element={<DeliveryPaymentPage />} />
           <Route path="/reviews" element={<ReviewsPage />} />
-          <Route path="/favorites" element={<FavoritesPage />} />
           <Route path="/orders/track" element={<OrderTrackingPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/verify-email" element={<VerifyEmailPage />} />
-          <Route path="/account" element={<AccountPage />} />
+          <Route path="/register" element={<Navigate to="/" replace />} />
+          <Route path="/verify-email" element={<Navigate to="/" replace />} />
+          <Route path="/account" element={<Navigate to="/admin" replace />} />
+          <Route path="/favorites" element={<Navigate to="/catalog" replace />} />
           <Route path="/admin/candles" element={<AdminCandlesPage />} />
           <Route path="/admin" element={<AdminDashboardPage />} />
           <Route path="/admin/orders" element={<AdminOrdersPage />} />

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { createOrder } from '../api/ordersApi';
 import { getPaymentConfig, startOnlinePayment } from '../api/paymentsApi';
-import { getCurrentUser } from '../api/authApi';
 import type { FormEvent } from 'react';
 import type { ContactMethod, DeliveryMethod, PaymentMethod } from '../types/order';
 import {
@@ -15,7 +14,6 @@ import {
   updateCartItemQuantity,
   type CartItem,
 } from '../utils/cart';
-import { getStoredAuth } from '../utils/auth';
 import { getCandleImage, useCandleImageFallback } from '../utils/images';
 
 type CheckoutForm = {
@@ -45,7 +43,6 @@ const initialForm: CheckoutForm = {
 };
 
 export function CheckoutPage() {
-  const auth = getStoredAuth();
   const [items, setItems] = useState<CartItem[]>(() => getCartItems());
   const [form, setForm] = useState(initialForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -71,38 +68,6 @@ export function CheckoutPage() {
         }
       })
       .catch(() => setOnlinePaymentEnabled(false));
-  }, []);
-
-  useEffect(() => {
-    const auth = getStoredAuth();
-
-    if (!auth) {
-      return;
-    }
-
-    getCurrentUser()
-      .then((profile) => {
-        setForm((currentForm) => ({
-          ...currentForm,
-          customerFullName: profile.fullName || currentForm.customerFullName,
-          customerPhone: profile.phone || currentForm.customerPhone,
-          customerEmail: profile.email || currentForm.customerEmail,
-          city: profile.city || currentForm.city,
-          deliveryAddress: profile.deliveryAddress || currentForm.deliveryAddress,
-          preferredContactMethod:
-            profile.preferredContactMethod || currentForm.preferredContactMethod,
-          deliveryMethod: profile.defaultDeliveryMethod || currentForm.deliveryMethod,
-          paymentMethod: profile.defaultPaymentMethod || currentForm.paymentMethod,
-        }));
-      })
-      .catch(() => {
-        setForm((currentForm) => ({
-          ...currentForm,
-          customerFullName: currentForm.customerFullName || auth.fullName,
-          customerPhone: currentForm.customerPhone || auth.phone || '',
-          customerEmail: currentForm.customerEmail || auth.email,
-        }));
-      });
   }, []);
 
   const total = getCartTotal(items);
@@ -185,11 +150,7 @@ export function CheckoutPage() {
           comment: '',
         }));
         setCreatedOrderId(order.id);
-        setMessage(
-          auth
-            ? `Заказ №${order.id} отправлен. Он сохранён в вашем личном кабинете.`
-            : `Заказ №${order.id} отправлен. Сохраните номер заказа и телефон для отслеживания.`
-        );
+        setMessage(`Заказ №${order.id} отправлен. Сохраните номер заказа и телефон для отслеживания.`);
       })
       .catch((requestError) => {
         setError(
@@ -212,19 +173,6 @@ export function CheckoutPage() {
         </div>
         <Link to="/catalog">Вернуться в каталог</Link>
       </div>
-
-      {!auth ? (
-        <aside className="guest-benefits">
-          <div>
-            <strong>Можно заказать без регистрации</strong>
-            <span>Войдите, чтобы данные заполнялись автоматически, все заказы были в одном месте и в будущем можно было получать персональные скидки.</span>
-          </div>
-          <div className="auth-actions">
-            <Link className="secondary-link" to="/login">Войти</Link>
-            <Link className="secondary-link" to="/register">Создать аккаунт</Link>
-          </div>
-        </aside>
-      ) : null}
 
       <div className="checkout-layout checkout-layout--form">
         <div className="cart-panel">
@@ -288,7 +236,7 @@ export function CheckoutPage() {
         </div>
 
         <form className="checkout-form" onSubmit={handleSubmit}>
-          <h2>{auth ? 'Доставка и оплата' : 'Контакты и доставка'}</h2>
+          <h2>Контакты и доставка</h2>
 
           <div className="checkout-summary">
             <div>
@@ -303,8 +251,7 @@ export function CheckoutPage() {
           </div>
 
           <div className="form-grid">
-            {!auth ? (
-              <>
+            <>
                 <label>
                   Имя и фамилия
                   <input
@@ -349,8 +296,7 @@ export function CheckoutPage() {
                     <option value="EMAIL">Email</option>
                   </select>
                 </label>
-              </>
-            ) : null}
+            </>
 
             <label>
               Способ доставки
@@ -400,8 +346,7 @@ export function CheckoutPage() {
             </label>
           </div>
 
-          {!auth ? (
-            <>
+          <>
               <label>
                 Комментарий к доставке
                 <textarea
@@ -421,11 +366,10 @@ export function CheckoutPage() {
                   placeholder="Пожелания по упаковке или набору"
                 />
               </label>
-            </>
-          ) : null}
+          </>
 
           {message ? <p className="state-message">{message}</p> : null}
-          {createdOrderId && !auth ? (
+          {createdOrderId ? (
             <Link className="secondary-link checkout-tracking-link" to="/orders/track">
               Отследить заказ №{createdOrderId}
             </Link>

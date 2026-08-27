@@ -4,16 +4,13 @@ import { getStoredAuth, subscribeToAuth } from '../utils/auth';
 import {
   getCartItems,
   getCartItemsCount,
-  mergeGuestCartIntoAccount,
   subscribeToCart,
 } from '../utils/cart';
-import { getFavorites, subscribeToFavorites } from '../utils/favorites';
 
 export function Header() {
   const [cartCount, setCartCount] = useState(() => getCartItemsCount());
   const [cartPulse, setCartPulse] = useState(false);
   const [auth, setAuth] = useState(() => getStoredAuth());
-  const [favoritesCount, setFavoritesCount] = useState(() => getFavorites().length);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -37,16 +34,10 @@ export function Header() {
 
   useEffect(() => {
     return subscribeToAuth(() => {
-      mergeGuestCartIntoAccount();
       setAuth(getStoredAuth());
-      setFavoritesCount(getFavorites().length);
       setCartCount(getCartItemsCount());
       setMobileMenuOpen(false);
     });
-  }, []);
-
-  useEffect(() => {
-    return subscribeToFavorites(() => setFavoritesCount(getFavorites().length));
   }, []);
 
   useEffect(() => {
@@ -96,14 +87,9 @@ export function Header() {
           <NavLink to="/catalog">Каталог</NavLink>
           <a href="/#about">О нас</a>
           <NavLink to="/delivery-payment">Доставка и оплата</NavLink>
-          {!auth ? <NavLink to="/orders/track">Отследить заказ</NavLink> : null}
+          <NavLink to="/orders/track">Отследить заказ</NavLink>
           <NavLink to="/reviews">Отзывы</NavLink>
-          {auth ? (
-            <NavLink className="favorites-nav-link" to="/favorites">
-              Избранное{favoritesCount > 0 ? <b>{favoritesCount}</b> : null}
-            </NavLink>
-          ) : null}
-          {auth ? <NavLink to="/account">Кабинет</NavLink> : <NavLink to="/login">Войти</NavLink>}
+          {auth?.role === 'ADMIN' ? <NavLink to="/admin">Кабинет</NavLink> : null}
         </nav>
 
         <Link

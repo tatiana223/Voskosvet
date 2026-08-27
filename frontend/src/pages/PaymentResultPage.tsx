@@ -58,11 +58,10 @@ export function PaymentResultPage() {
         <h1>{error ? 'Проверка оплаты' : copy.title}</h1>
         <p>{error || copy.text}</p>
         <div className="payment-result-actions">
-          <Link className="primary-link" to="/account">Личный кабинет</Link>
+          <Link className="primary-link" to="/orders/track">Отследить заказ</Link>
           <Link className="secondary-link" to="/catalog">Вернуться в каталог</Link>
         </div>
       </div>
     </section>
   );
 }
-

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { login, resendVerification } from '../api/authApi';
+import { useNavigate } from 'react-router-dom';
+import { login } from '../api/authApi';
 import { setStoredAuth } from '../utils/auth';
 import type { FormEvent } from 'react';
 
@@ -10,36 +10,27 @@ export function LoginPage() {
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
-  const [verificationMessage, setVerificationMessage] = useState('');
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError('');
-    setVerificationMessage('');
     setIsSubmitting(true);
 
     login({ email, password })
       .then((auth) => {
         setStoredAuth(auth);
-        navigate('/account');
+        navigate('/admin');
       })
       .catch((error: Error) => setError(error.message || 'Не получилось войти. Проверь email и пароль.'))
       .finally(() => setIsSubmitting(false));
   }
 
-  function handleResendVerification() {
-    setVerificationMessage('');
-    resendVerification(email)
-      .then((response) => setVerificationMessage(response.message))
-      .catch((error: Error) => setVerificationMessage(error.message));
-  }
-
   return (
     <section className="auth-page">
       <form className="auth-card" onSubmit={handleSubmit}>
-        <p className="eyebrow">Личный кабинет</p>
-        <h1>Вход в ВоскоСвет</h1>
-        <p>Войдите, чтобы видеть свои заказы и быстрее оформлять новые покупки.</p>
+        <p className="eyebrow">Администрирование</p>
+        <h1>Вход в кабинет</h1>
+        <p>Доступ только для администратора магазина.</p>
 
         <label>
           Email
@@ -65,20 +56,10 @@ export function LoginPage() {
         </label>
 
         {error ? <p className="state-message state-message-error">{error}</p> : null}
-        {error.includes('Подтвердите email') ? (
-          <button className="secondary-link" type="button" onClick={handleResendVerification}>
-            Отправить письмо повторно
-          </button>
-        ) : null}
-        {verificationMessage ? <p className="state-message">{verificationMessage}</p> : null}
-
         <button className="primary-link" disabled={isSubmitting} type="submit">
           {isSubmitting ? 'Входим...' : 'Войти'}
         </button>
 
-        <span className="auth-switch">
-          Нет аккаунта? <Link to="/register">Зарегистрироваться</Link>
-        </span>
       </form>
     </section>
   );

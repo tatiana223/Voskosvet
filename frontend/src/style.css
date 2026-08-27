@@ -11,6 +11,8 @@
   --muted: #7a5b47;
   --content-max: 1440px;
   --page-gutter: clamp(18px, 4vw, 72px);
+  --hero-copy-max: 680px;
+  --hero-ribbon-max: 1160px;
   font-family: "Manrope", system-ui, sans-serif;
   color: var(--brown);
   background: var(--cream);
@@ -215,6 +217,8 @@ main {
 @media (min-width: 1800px) and (min-aspect-ratio: 2 / 1) {
   :root {
     --content-max: 1800px;
+    --hero-copy-max: 780px;
+    --hero-ribbon-max: 1480px;
   }
 
   .site-header,
@@ -2979,4 +2983,132 @@ body.media-lightbox-open {
     padding: 8px 10px;
     white-space: nowrap;
   }
+}
+
+/* Desktop hero inspired by the warm editorial reference layout. */
+@media (min-width: 1181px) {
+  .hero {
+    min-height: calc(100svh - 88px);
+    padding-bottom: 132px;
+    background:
+      radial-gradient(circle at 13% 32%, rgba(208, 166, 91, .08), transparent 22%),
+      #fffaf2;
+  }
+
+  .hero::before { display: none; }
+
+  .hero .hero-photo-custom.inline-editable-image {
+    inset: 0 0 0 46%;
+    background-position: center;
+    filter: saturate(1.06) contrast(1.04) brightness(.98);
+  }
+
+  .hero::after {
+    z-index: 1;
+    background:
+      linear-gradient(90deg,
+        #fffaf2 0%,
+        rgba(255, 250, 242, .99) 42%,
+        rgba(255, 250, 242, .9) 46%,
+        rgba(255, 250, 242, .28) 50%,
+        transparent 55%),
+      linear-gradient(180deg, rgba(65, 31, 13, .02), rgba(65, 31, 13, .08));
+  }
+
+  .hero-copy {
+    width: min(44vw, var(--hero-copy-max));
+    padding-top: 54px;
+  }
+
+  .hero h1 {
+    max-width: var(--hero-copy-max);
+    font-size: clamp(54px, 4.2vw, 76px);
+    line-height: .98;
+  }
+
+  .hero h1::before {
+    display: block;
+    width: 210px;
+    margin-bottom: 18px;
+    border-top: 1px solid rgba(184, 127, 27, .42);
+    color: #b77c18;
+    content: "✤";
+    font-family: Georgia, serif;
+    font-size: 15px;
+    line-height: 0;
+    text-align: center;
+  }
+
+  .hero-copy > p {
+    max-width: 470px;
+    margin: 20px 0 26px;
+    color: #61483a;
+    font-size: 17px;
+    font-weight: 500;
+  }
+
+  .hero-points {
+    gap: 0;
+    width: min(100%, 620px);
+    margin: 0 0 28px;
+    overflow: hidden;
+    border: 1px solid rgba(166, 123, 55, .22);
+    border-radius: 3px;
+    background: rgba(255, 253, 248, .58);
+  }
+
+  .hero-points span {
+    display: flex;
+    min-height: 76px;
+    align-items: center;
+    justify-items: initial;
+    gap: 10px;
+    padding: 12px 14px;
+    border-right: 1px solid rgba(166, 123, 55, .2);
+    text-align: left;
+  }
+
+  .hero-points span:last-child { border-right: 0; }
+  .hero-points .emblem { flex: 0 0 34px; width: 34px; height: 34px; border: 0; background: transparent; }
+  .hero-points .emblem svg { width: 27px; height: 27px; stroke-width: 1.5; }
+  .hero-points b { font-size: 12px; font-weight: 600; line-height: 1.35; }
+
+  .hero-copy .primary-link {
+    min-width: 215px;
+    padding: 15px 22px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #d59a2e, #b87813);
+    box-shadow: 0 12px 24px rgba(168, 105, 10, .22);
+  }
+
+  .hero-copy .primary-link::after {
+    margin-left: auto;
+    padding-left: 22px;
+    content: "→";
+    font-size: 20px;
+    font-weight: 400;
+  }
+
+  .benefit-ribbon {
+    right: auto;
+    bottom: 22px;
+    left: 50%;
+    width: min(64vw, var(--hero-ribbon-max));
+    padding: 12px 18px;
+    border: 1px solid rgba(147, 102, 37, .12);
+    border-radius: 15px;
+    background: rgba(255, 252, 246, .94);
+    box-shadow: 0 16px 38px rgba(74, 33, 20, .14);
+    transform: translateX(-50%);
+  }
+
+  .benefit-ribbon div {
+    min-height: 58px;
+    gap: 12px;
+    color: #bd8220;
+    font-size: 30px;
+  }
+
+  .benefit-ribbon .emblem { flex-basis: 40px; width: 40px; height: 40px; }
+  .benefit-ribbon span { font-size: 13px; font-weight: 600; }
 }

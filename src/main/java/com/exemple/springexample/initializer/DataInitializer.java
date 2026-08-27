@@ -132,7 +132,13 @@ public class DataInitializer implements CommandLineRunner {
     private void createAdminAccount() {
         String email = "admin@voskosvet.ru";
 
-        if (customerRepository.existsByEmail(email)) {
+        if (customerRepository.findByEmail(email).map(existingAdmin -> {
+            if (!existingAdmin.isEmailVerified()) {
+                existingAdmin.setEmailVerified(true);
+                customerRepository.save(existingAdmin);
+            }
+            return true;
+        }).orElse(false)) {
             return;
         }
 
@@ -142,6 +148,7 @@ public class DataInitializer implements CommandLineRunner {
         admin.setEmail(email);
         admin.setPassword(passwordEncoder.encode("admin123"));
         admin.setRole(Role.ADMIN);
+        admin.setEmailVerified(true);
         customerRepository.save(admin);
     }
 

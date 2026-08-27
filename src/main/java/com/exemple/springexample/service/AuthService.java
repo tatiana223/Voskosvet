@@ -2,7 +2,6 @@ package com.exemple.springexample.service;
 
 import com.exemple.springexample.dto.AuthResponse;
 import com.exemple.springexample.dto.LoginRequest;
-import com.exemple.springexample.dto.RegisterRequest;
 import com.exemple.springexample.dto.UpdateProfileRequest;
 import com.exemple.springexample.entity.Customer;
 import com.exemple.springexample.entity.Role;
@@ -21,25 +20,6 @@ public class AuthService {
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final EmailVerificationService emailVerificationService;
-
-    @Transactional
-    public void register(RegisterRequest request) {
-        if (customerRepository.existsByEmail(request.getEmail())) {
-            throw new BadRequestException("Пользователь с таким email уже существует");
-        }
-
-        Customer customer = new Customer();
-        customer.setFullName(request.getFullName());
-        customer.setPhone(request.getPhone());
-        customer.setEmail(request.getEmail());
-        customer.setPassword(passwordEncoder.encode(request.getPassword()));
-        customer.setRole(Role.USER);
-        customer.setEmailVerified(false);
-
-        Customer savedCustomer = customerRepository.save(customer);
-        emailVerificationService.sendVerificationEmail(savedCustomer);
-    }
 
     public AuthResponse login(LoginRequest request) {
         Customer customer = customerRepository.findByEmail(request.getEmail())
@@ -54,18 +34,15 @@ public class AuthService {
             throw new BadRequestException("Аккаунт заблокирован. Обратитесь к администратору");
         }
 
+        if (customer.getRole() != Role.ADMIN) {
+            throw new BadRequestException("Доступ разрешён только администратору");
+        }
+
         if (!customer.isEmailVerified()) {
             throw new BadRequestException("Подтвердите email по ссылке из письма");
         }
 
         return toAuthResponse(customer);
-    }
-
-    public void resendVerification(String email) {
-        customerRepository.findByEmail(email.trim())
-                .filter(customer -> !customer.isEmailVerified())
-                .filter(customer -> !customer.isBlocked())
-                .ifPresent(emailVerificationService::sendVerificationEmail);
     }
 
     @Transactional
