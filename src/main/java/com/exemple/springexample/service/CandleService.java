@@ -103,6 +103,7 @@ public class CandleService {
         candle.setFeatured(Boolean.TRUE.equals(request.featured()));
         candle.setCategory(category);
         candle.setImageUrls(normalizeImageUrls(request.imageUrls(), request.imageUrl()));
+        candle.setImageAlts(normalizeImageAlts(request.imageAlts(), candle.getImageUrls()));
         candle.setPriceTiers(toPriceTiers(request.priceTiers(), request.price()));
 
         Candle savedCandle = candleRepository.save(candle);
@@ -123,6 +124,11 @@ public class CandleService {
         candle.setName(request.name());
         candle.setDescription(request.description());
         candle.setShortDescription(request.shortDescription());
+        candle.setSeoTitle(normalizeOptionalText(request.seoTitle()));
+        candle.setSeoDescription(normalizeOptionalText(request.seoDescription()));
+        candle.setMaterial(normalizeOptionalText(request.material()));
+        candle.setWickType(normalizeOptionalText(request.wickType()));
+        candle.setUsageInstructions(normalizeOptionalText(request.usageInstructions()));
         candle.setPrice(request.price());
         candle.setScent(request.scent());
         candle.setColor(request.color());
@@ -132,6 +138,8 @@ public class CandleService {
         candle.setImageUrl(request.imageUrl());
         candle.getImageUrls().clear();
         candle.getImageUrls().addAll(normalizeImageUrls(request.imageUrls(), request.imageUrl()));
+        candle.getImageAlts().clear();
+        candle.getImageAlts().putAll(normalizeImageAlts(request.imageAlts(), candle.getImageUrls()));
         candle.setAvailable(request.available());
         candle.setFeatured(request.featured());
         candle.setCategory(category);
@@ -256,5 +264,22 @@ public class CandleService {
 
     private String normalizeOptionalImageUrl(String imageUrl) {
         return imageUrl == null || imageUrl.isBlank() ? null : imageUrl.trim();
+    }
+
+    private java.util.Map<String, String> normalizeImageAlts(
+            java.util.Map<String, String> imageAlts,
+            List<String> imageUrls
+    ) {
+        java.util.LinkedHashMap<String, String> normalized = new java.util.LinkedHashMap<>();
+        if (imageAlts == null) return normalized;
+        imageUrls.forEach(url -> {
+            String alt = imageAlts.get(url);
+            if (alt != null && !alt.isBlank()) normalized.put(url, alt.trim());
+        });
+        return normalized;
+    }
+
+    private String normalizeOptionalText(String value) {
+        return value == null || value.isBlank() ? null : value.trim();
     }
 }

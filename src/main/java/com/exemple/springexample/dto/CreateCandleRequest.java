@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import jakarta.validation.constraints.Size;
 
 public record CreateCandleRequest(
         @NotBlank(message = "Slug обязателен")
@@ -24,6 +26,21 @@ public record CreateCandleRequest(
 
         @NotBlank(message = "Короткое описание обязательно")
         String shortDescription,
+
+        @Size(max = 160, message = "SEO-заголовок должен быть не длиннее 160 символов")
+        String seoTitle,
+
+        @Size(max = 320, message = "SEO-описание должно быть не длиннее 320 символов")
+        String seoDescription,
+
+        @Size(max = 160, message = "Материал должен быть не длиннее 160 символов")
+        String material,
+
+        @Size(max = 160, message = "Тип фитиля должен быть не длиннее 160 символов")
+        String wickType,
+
+        @Size(max = 1000, message = "Рекомендации должны быть не длиннее 1000 символов")
+        String usageInstructions,
 
         @NotNull(message = "Цена обязательна")
         @Positive(message = "Цена должна быть больше 0")
@@ -50,6 +67,8 @@ public record CreateCandleRequest(
         String imageUrl,
 
         List<String> imageUrls,
+
+        Map<String, @Size(max = 300, message = "Alt-текст должен быть не длиннее 300 символов") String> imageAlts,
 
         Boolean featured,
 

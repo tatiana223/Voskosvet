@@ -94,7 +94,7 @@ async function fetchJson(path) {
 
 async function renderProduct(slug) {
   const candle = await fetchJson(`/api/candles/slug/${encodeURIComponent(slug)}`);
-  const description = candle.shortDescription || candle.description || `Свеча ${candle.name} ручной работы из натурального пчелиного воска.`;
+  const description = candle.seoDescription || candle.shortDescription || candle.description || `Свеча ${candle.name} ручной работы из натурального пчелиного воска.`;
   const images = [candle.imageUrl, ...(candle.imageUrls || [])].filter(Boolean).map(absoluteImage);
   const productPath = `/catalog/${encodeURIComponent(candle.slug)}`;
   const structuredData = {
@@ -105,7 +105,7 @@ async function renderProduct(slug) {
     image: images,
     sku: `candle-${candle.id}`,
     brand: { '@type': 'Brand', name: 'ВоскоСвет' },
-    material: 'Натуральный пчелиный воск',
+    material: candle.material || 'Натуральный пчелиный воск',
     color: candle.color,
     offers: {
       '@type': 'Offer',
@@ -121,11 +121,15 @@ async function renderProduct(slug) {
     ['Размер', candle.size],
     ['Вес', candle.weightGrams ? `${candle.weightGrams} г` : ''],
     ['Время горения', candle.burnTimeHours ? `${candle.burnTimeHours} ч` : ''],
+    ['Материал', candle.material],
+    ['Фитиль', candle.wickType],
   ].filter(([, value]) => value).map(([name, value]) => `<dt>${escapeHtml(name)}</dt><dd>${escapeHtml(value)}</dd>`).join('');
-  const content = `<main><article><p><a href="/catalog">Каталог свечей</a></p><h1>${escapeHtml(candle.name)}</h1><p>${escapeHtml(description)}</p><img src="${images[0] || absoluteImage()}" alt="${escapeHtml(`${candle.name} — свеча из натурального пчелиного воска`)}"><dl>${specs}</dl><p><strong>${escapeHtml(candle.price)} ₽</strong></p><p>${candle.available ? 'В наличии' : 'Нет в наличии'}</p></article></main>`;
+  const mainImageAlt = candle.imageAlts?.[candle.imageUrl] || `${candle.name} — свеча из натурального пчелиного воска`;
+  const usage = candle.usageInstructions ? `<h2>Рекомендации по использованию</h2><p>${escapeHtml(candle.usageInstructions)}</p>` : '';
+  const content = `<main><article><p><a href="/catalog">Каталог свечей</a></p><h1>${escapeHtml(candle.name)}</h1><p>${escapeHtml(description)}</p><img src="${images[0] || absoluteImage()}" alt="${escapeHtml(mainImageAlt)}"><dl>${specs}</dl>${usage}<p><strong>${escapeHtml(candle.price)} ₽</strong></p><p>${candle.available ? 'В наличии' : 'Нет в наличии'}</p></article></main>`;
 
   return renderHtml({
-    title: `${candle.name} — купить свечу из пчелиного воска | ВоскоСвет`,
+    title: candle.seoTitle || `${candle.name} — купить свечу из пчелиного воска | ВоскоСвет`,
     description,
     path: productPath,
     image: images[0],

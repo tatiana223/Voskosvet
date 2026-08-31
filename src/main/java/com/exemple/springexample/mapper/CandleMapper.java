@@ -19,5 +19,6 @@ public interface CandleMapper {
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "priceTiers", ignore = true)
     @Mapping(target = "imageUrls", ignore = true)
+    @Mapping(target = "imageAlts", ignore = true)
     Candle toEntity(CreateCandleRequest request);
 }

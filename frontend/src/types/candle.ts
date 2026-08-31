@@ -5,6 +5,11 @@ export type Candle = {
   name: string;
   description: string;
   shortDescription: string;
+  seoTitle: string | null;
+  seoDescription: string | null;
+  material: string | null;
+  wickType: string | null;
+  usageInstructions: string | null;
   price: number;
   scent: string;
   color: string;
@@ -13,6 +18,7 @@ export type Candle = {
   burnTimeHours: number;
   imageUrl: string;
   imageUrls: string[];
+  imageAlts: Record<string, string>;
   available: boolean;
   featured: boolean;
   categoryId: number;

@@ -11,6 +11,11 @@ export type CandleFormData = {
   name: string;
   description: string;
   shortDescription: string;
+  seoTitle: string;
+  seoDescription: string;
+  material: string;
+  wickType: string;
+  usageInstructions: string;
   price: number;
   scent: string;
   color: string;
@@ -19,6 +24,7 @@ export type CandleFormData = {
   burnTimeHours: number;
   imageUrl: string;
   imageUrls: string[];
+  imageAlts: Record<string, string>;
   available: boolean;
   featured: boolean;
   categoryId: number;

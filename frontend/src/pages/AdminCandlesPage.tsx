@@ -25,6 +25,11 @@ const emptyForm: CandleFormData = {
   name: '',
   description: '',
   shortDescription: '',
+  seoTitle: '',
+  seoDescription: '',
+  material: 'Натуральный пчелиный воск',
+  wickType: 'Хлопковый фитиль',
+  usageInstructions: '',
   price: 0,
   scent: 'Медовый',
   color: 'Медовый',
@@ -33,6 +38,7 @@ const emptyForm: CandleFormData = {
   burnTimeHours: 1,
   imageUrl: '/images/candle-detail.webp',
   imageUrls: ['/images/candle-detail.webp'],
+  imageAlts: {},
   available: true,
   featured: false,
   categoryId: 0,
@@ -97,6 +103,11 @@ export function AdminCandlesPage() {
       name: candle.name,
       description: candle.description,
       shortDescription: candle.shortDescription,
+      seoTitle: candle.seoTitle || '',
+      seoDescription: candle.seoDescription || '',
+      material: candle.material || 'Натуральный пчелиный воск',
+      wickType: candle.wickType || '',
+      usageInstructions: candle.usageInstructions || '',
       price: candle.price,
       scent: candle.scent,
       color: candle.color,
@@ -105,6 +116,7 @@ export function AdminCandlesPage() {
       burnTimeHours: candle.burnTimeHours,
       imageUrl: candle.imageUrl,
       imageUrls: candle.imageUrls?.length ? candle.imageUrls : [candle.imageUrl],
+      imageAlts: candle.imageAlts || {},
       available: candle.available,
       featured: candle.featured,
       categoryId: candle.categoryId,
@@ -257,6 +269,21 @@ export function AdminCandlesPage() {
 
           <label>Короткое описание<textarea required rows={2} value={form.shortDescription} onChange={(e) => updateField('shortDescription', e.target.value)} /></label>
           <label>Полное описание<textarea required rows={4} value={form.description} onChange={(e) => updateField('description', e.target.value)} /></label>
+          <fieldset className="admin-price-tiers">
+            <legend>SEO и информация о товаре</legend>
+            <label>SEO-заголовок
+              <input maxLength={160} value={form.seoTitle} onChange={(e) => updateField('seoTitle', e.target.value)} placeholder={`${form.name || 'Название свечи'} — купить | ВоскоСвет`} />
+              <small>Можно оставить пустым — тогда заголовок сформируется автоматически.</small>
+            </label>
+            <label>SEO-описание
+              <textarea maxLength={320} rows={3} value={form.seoDescription} onChange={(e) => updateField('seoDescription', e.target.value)} placeholder="Короткое описание для Яндекса и Google" />
+            </label>
+            <label>Материал<input maxLength={160} value={form.material} onChange={(e) => updateField('material', e.target.value)} /></label>
+            <label>Тип фитиля<input maxLength={160} value={form.wickType} onChange={(e) => updateField('wickType', e.target.value)} /></label>
+            <label>Рекомендации по использованию
+              <textarea maxLength={1000} rows={4} value={form.usageInstructions} onChange={(e) => updateField('usageInstructions', e.target.value)} placeholder="Перед зажиганием подрежьте фитиль до 5–7 мм…" />
+            </label>
+          </fieldset>
           <label>Фотография свечи
             <input
               type="file"
@@ -280,6 +307,14 @@ export function AdminCandlesPage() {
               <div key={url}>
                 <img src={getCandleImage(url)} alt={`Фото товара ${index + 1}`} onError={useCandleImageFallback} />
                 <span>{url === form.imageUrl ? 'Главное фото' : `Фото ${index + 1}`}</span>
+                <label>Описание фотографии
+                  <input
+                    maxLength={300}
+                    value={form.imageAlts[url] || ''}
+                    onChange={(event) => updateField('imageAlts', { ...form.imageAlts, [url]: event.target.value })}
+                    placeholder={`${form.name || 'Свеча'} из натурального пчелиного воска`}
+                  />
+                </label>
                 {url !== form.imageUrl ? (
                   <button
                     type="button"
@@ -287,6 +322,7 @@ export function AdminCandlesPage() {
                       setForm((current) => ({
                         ...current,
                         imageUrls: current.imageUrls.filter((item) => item !== url),
+                        imageAlts: Object.fromEntries(Object.entries(current.imageAlts).filter(([imageUrl]) => imageUrl !== url)),
                         priceTiers: current.priceTiers.map((tier) => (
                           tier.imageUrl === url ? { ...tier, imageUrl: undefined } : tier
                         )),

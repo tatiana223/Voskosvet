@@ -55,7 +55,7 @@ export function CandlePage() {
   const unitPrice = getCandleUnitPrice(candle, packageSize);
   const savingPercent = getCandleSavingPercent(candle, unitPrice);
   const gallery = getCandleGallery(candle);
-  const seoDescription = candle.shortDescription || candle.description;
+  const seoDescription = candle.seoDescription || candle.shortDescription || candle.description;
   const productUrl = `https://voskosvet.ru/catalog/${candle.slug}`;
   const toSeoImageUrl = (image: string | undefined) => {
     const resolved = new URL(image ?? '/images/hero-natural-candle.webp', window.location.origin);
@@ -72,7 +72,7 @@ export function CandlePage() {
     image: gallery.map(toSeoImageUrl),
     sku: `candle-${candle.id}`,
     brand: { '@type': 'Brand', name: 'ВоскоСвет' },
-    material: 'Натуральный пчелиный воск',
+    material: candle.material || 'Натуральный пчелиный воск',
     color: candle.color,
     offers: {
       '@type': 'Offer',
@@ -98,7 +98,7 @@ export function CandlePage() {
   return (
     <>
       <Seo
-        title={`${candle.name} — купить свечу из пчелиного воска | ВоскоСвет`}
+        title={candle.seoTitle || `${candle.name} — купить свечу из пчелиного воска | ВоскоСвет`}
         description={seoDescription}
         path={`/catalog/${candle.slug}`}
         image={productImage}
@@ -108,7 +108,7 @@ export function CandlePage() {
       <div className="product-image">
         <img
           src={gallery[imageIndex]}
-          alt={candle.name}
+          alt={candle.imageAlts?.[candle.imageUrls?.[imageIndex] || candle.imageUrl] || `${candle.name} — свеча из натурального пчелиного воска`}
           onError={useCandleImageFallback}
         />
         {candle.featured ? <span className="product-featured-badge">Хит продаж</span> : null}
@@ -159,7 +159,16 @@ export function CandlePage() {
             <dt>Горение</dt>
             <dd>{candle.burnTimeHours} ч</dd>
           </div>
+          {candle.material ? <div><dt>Материал</dt><dd>{candle.material}</dd></div> : null}
+          {candle.wickType ? <div><dt>Фитиль</dt><dd>{candle.wickType}</dd></div> : null}
         </dl>
+
+        {candle.usageInstructions ? (
+          <section className="product-usage">
+            <h2>Рекомендации по использованию</h2>
+            <p>{candle.usageInstructions}</p>
+          </section>
+        ) : null}
 
         <div className="product-purchase">
           {(candle.priceTiers || []).length > 0 ? (
