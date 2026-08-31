@@ -6,6 +6,7 @@ import { addToCart, getCandleSavingPercent, getCandleUnitPrice, getDefaultPackag
 import { isFavorite, toggleFavorite } from '../utils/favorites';
 import { getStoredAuth, subscribeToAuth } from '../utils/auth';
 import { getCandleGallery, getCandleImage, useCandleImageFallback } from '../utils/images';
+import { Seo } from '../components/Seo';
 
 export function CandlePage() {
   const { slug } = useParams();
@@ -54,6 +55,33 @@ export function CandlePage() {
   const unitPrice = getCandleUnitPrice(candle, packageSize);
   const savingPercent = getCandleSavingPercent(candle, unitPrice);
   const gallery = getCandleGallery(candle);
+  const seoDescription = candle.shortDescription || candle.description;
+  const productUrl = `https://voskosvet.ru/catalog/${candle.slug}`;
+  const toSeoImageUrl = (image: string | undefined) => {
+    const resolved = new URL(image ?? '/images/hero-natural-candle.webp', window.location.origin);
+    return resolved.origin === window.location.origin || resolved.hostname === 'localhost'
+      ? new URL(`${resolved.pathname}${resolved.search}`, 'https://voskosvet.ru').toString()
+      : resolved.toString();
+  };
+  const productImage = toSeoImageUrl(gallery[0]);
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: candle.name,
+    description: seoDescription,
+    image: gallery.map(toSeoImageUrl),
+    sku: `candle-${candle.id}`,
+    brand: { '@type': 'Brand', name: 'ВоскоСвет' },
+    material: 'Натуральный пчелиный воск',
+    color: candle.color,
+    offers: {
+      '@type': 'Offer',
+      url: productUrl,
+      priceCurrency: 'RUB',
+      price: candle.price,
+      availability: candle.available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+    },
+  };
 
   function selectPackage(quantity: number, imageUrl?: string) {
     setPackageSize(quantity);
@@ -68,7 +96,15 @@ export function CandlePage() {
   }
 
   return (
-    <section className="product-page">
+    <>
+      <Seo
+        title={`${candle.name} — купить свечу из пчелиного воска | ВоскоСвет`}
+        description={seoDescription}
+        path={`/catalog/${candle.slug}`}
+        image={productImage}
+        structuredData={structuredData}
+      />
+      <section className="product-page">
       <div className="product-image">
         <img
           src={gallery[imageIndex]}
@@ -216,6 +252,7 @@ export function CandlePage() {
           <span>Доставка по России</span>
         </div>
       </div>
-    </section>
+      </section>
+    </>
   );
 }

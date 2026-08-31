@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.List;
 
 public interface CandleRepository extends JpaRepository<Candle, Long> {
 
@@ -45,4 +46,6 @@ public interface CandleRepository extends JpaRepository<Candle, Long> {
     boolean existsBySlugAndIdNot(String slug, Long id);
 
     boolean existsByCategoryId(Long categoryId);
+
+    List<Candle> findAllByAvailableTrueOrderByCreatedAtDesc();
 }

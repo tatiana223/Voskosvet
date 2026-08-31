@@ -49,6 +49,7 @@ public class SecurityConfig {
                         ).permitAll()
 
                         .requestMatchers("/api/candles", "/api/candles/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/seo/sitemap.xml").permitAll()
                         .requestMatchers("/api/categories", "/api/categories/**").permitAll()
                         .requestMatchers("/api/candle-sizes", "/api/candle-sizes/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/content").permitAll()

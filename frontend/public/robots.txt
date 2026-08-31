@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /cart
+Disallow: /checkout
+Disallow: /login
+Disallow: /account
+Disallow: /payment/
+Disallow: /orders/
+
+Sitemap: https://voskosvet.ru/sitemap.xml

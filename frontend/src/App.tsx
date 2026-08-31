@@ -17,10 +17,12 @@ import { DeliveryPaymentPage } from './pages/DeliveryPaymentPage';
 import { LoginPage } from './pages/LoginPage';
 import { OrderTrackingPage } from './pages/OrderTrackingPage';
 import { WelcomePage } from './pages/WelcomePage';
+import { RouteSeo } from './components/Seo';
 
 export function App() {
   return (
     <>
+      <RouteSeo />
       <Header />
       <main>
         <Routes>
