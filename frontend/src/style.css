@@ -1125,7 +1125,7 @@ button.primary-link { min-width: unset; }
   font-weight: 800;
 }
 
-@media (max-width: 1320px) {
+@media (max-width: 1080px) {
   .site-header {
     grid-template-columns: minmax(0, 1fr) auto auto;
     justify-items: stretch;
@@ -1162,7 +1162,8 @@ button.primary-link { min-width: unset; }
     position: absolute;
     top: calc(100% + 8px);
     right: 16px;
-    left: 16px;
+    left: auto;
+    width: min(340px, calc(100vw - 32px));
     display: grid;
     gap: 4px;
     padding: 12px;
@@ -1173,7 +1174,7 @@ button.primary-link { min-width: unset; }
     opacity: 0;
     visibility: hidden;
     transform: translateY(-12px) scale(.98);
-    transform-origin: 50% 0;
+    transform-origin: 100% 0;
     transition: opacity .25s ease, visibility .25s ease, transform .25s ease;
     pointer-events: none;
   }
