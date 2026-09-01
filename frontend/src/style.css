@@ -141,12 +141,22 @@ main {
   flex: 1 1 auto;
   min-width: 0;
   font-size: clamp(11px, .9vw, 15px);
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 .hero-points b > span:first-child {
   display: block;
   overflow: visible;
   line-height: 1.3;
+}
+
+@media (min-width: 1250px) {
+  .hero-points {
+    grid-template-columns: repeat(3, minmax(350px, 1fr));
+    width: min(88vw, 1260px) !important;
+  }
+  .hero-points > span {
+    min-width: 350px;
+  }
 }
 
 @media (max-width: 900px) {
