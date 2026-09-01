@@ -25,7 +25,6 @@ public class SeoController {
         appendUrl(xml, "/catalog", "0.9");
         appendUrl(xml, "/delivery-payment", "0.6");
         appendUrl(xml, "/reviews", "0.6");
-        appendUrl(xml, "/about", "0.7");
         appendUrl(xml, "/craft", "0.8");
         appendUrl(xml, "/contacts", "0.6");
 

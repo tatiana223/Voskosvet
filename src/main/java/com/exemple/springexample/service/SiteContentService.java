@@ -30,8 +30,6 @@ public class SiteContentService {
             "delivery.options",
             "delivery.paymentEyebrow", "delivery.paymentTitle", "delivery.paymentText",
             "delivery.returnsTitle", "delivery.returnsText", "delivery.returnsConditions",
-            "about.eyebrow", "about.title", "about.intro", "about.storyTitle", "about.storyText",
-            "about.valuesTitle", "about.value1", "about.value2", "about.value3",
             "craft.eyebrow", "craft.title", "craft.intro", "craft.steps",
             "craft.benefitsTitle", "craft.benefitsText", "craft.burningTitle", "craft.burningText",
             "craft.faq1Question", "craft.faq1Answer", "craft.faq2Question", "craft.faq2Answer",

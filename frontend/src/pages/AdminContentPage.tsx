@@ -44,14 +44,6 @@ const deliveryFields: Field[] = [
   { key: 'delivery.returnsConditions', label: 'Условия возврата', multiline: true },
 ];
 
-const aboutFields: Field[] = [
-  { key: 'about.eyebrow', label: 'Надпись над заголовком' }, { key: 'about.title', label: 'Заголовок' },
-  { key: 'about.intro', label: 'Вступление', multiline: true }, { key: 'about.storyTitle', label: 'Заголовок истории' },
-  { key: 'about.storyText', label: 'История бренда', multiline: true }, { key: 'about.valuesTitle', label: 'Заголовок ценностей' },
-  { key: 'about.value1', label: 'Ценность 1', multiline: true }, { key: 'about.value2', label: 'Ценность 2', multiline: true },
-  { key: 'about.value3', label: 'Ценность 3', multiline: true },
-];
-
 const craftFields: Field[] = [
   { key: 'craft.eyebrow', label: 'Надпись над заголовком' }, { key: 'craft.title', label: 'Заголовок страницы' },
   { key: 'craft.intro', label: 'Вступление', multiline: true }, { key: 'craft.benefitsTitle', label: 'Заголовок о воске' },
@@ -192,9 +184,6 @@ export function AdminContentPage() {
 
           <h2>Доставка и оплата</h2>
           <div className="admin-form-grid">{renderFields(deliveryFields)}</div>
-
-          <h2>Страница «О бренде»</h2>
-          <div className="admin-form-grid">{renderFields(aboutFields)}</div>
 
           <h2>«Путь свечи», знания и FAQ</h2>
           <div className="admin-form-grid">{renderFields(craftFields)}</div>

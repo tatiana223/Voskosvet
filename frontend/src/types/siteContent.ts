@@ -40,15 +40,6 @@ export type SiteContent = {
   'delivery.returnsTitle': string;
   'delivery.returnsText': string;
   'delivery.returnsConditions': string;
-  'about.eyebrow': string;
-  'about.title': string;
-  'about.intro': string;
-  'about.storyTitle': string;
-  'about.storyText': string;
-  'about.valuesTitle': string;
-  'about.value1': string;
-  'about.value2': string;
-  'about.value3': string;
   'craft.eyebrow': string;
   'craft.title': string;
   'craft.intro': string;
@@ -116,15 +107,6 @@ export const defaultSiteContent: SiteContent = {
   'delivery.returnsTitle': 'Возврат и обмен',
   'delivery.returnsText': 'Если товар пришёл повреждённым или не соответствует заказу, свяжитесь с нами и приложите фотографии упаковки и товара.',
   'delivery.returnsConditions': 'Сохраняйте упаковку до решения вопроса. Условия возврата товара надлежащего качества определяются с учётом его состояния и требований законодательства.',
-  'about.eyebrow': 'О мастерской',
-  'about.title': 'ВоскоСвет — тепло ручной работы',
-  'about.intro': 'Мы создаём свечи из натурального пчелиного воска небольшими партиями и внимательно относимся к каждой детали.',
-  'about.storyTitle': 'От воска до тихого света',
-  'about.storyText': 'Для нас свеча — это не просто предмет. Это природный материал, ручной труд и особое настроение дома. Мы сохраняем естественный медовый оттенок воска и выбираем спокойную, бережную упаковку.',
-  'about.valuesTitle': 'Что для нас важно',
-  'about.value1': 'Натуральный пчелиный воск без парафина и лишних примесей.',
-  'about.value2': 'Ручная работа и проверка каждой свечи перед упаковкой.',
-  'about.value3': 'Честное описание, аккуратная доставка и внимание к покупателю.',
   'craft.eyebrow': 'Видеоархив мастерской',
   'craft.title': 'Путь свечи: от воска до огня',
   'craft.intro': 'Пройдите весь путь создания свечи вместе с нами — шаг за шагом, от выбора воска до бережной упаковки.',
