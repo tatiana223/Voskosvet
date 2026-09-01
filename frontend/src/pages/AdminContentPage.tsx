@@ -9,6 +9,7 @@ import {
 } from '../api/adminApi';
 import { getUploadedImage } from '../utils/images';
 import { defaultSiteContent, type SiteContent } from '../types/siteContent';
+import { getCraftSteps, serializeCraftSteps } from '../utils/craftSteps';
 
 type ContentKey = keyof SiteContent;
 type Field = { key: ContentKey; label: string; multiline?: boolean };
@@ -38,6 +39,36 @@ const deliveryFields: Field[] = [
   { key: 'delivery.paymentEyebrow', label: 'Надпись над оплатой' },
   { key: 'delivery.paymentTitle', label: 'Заголовок оплаты' },
   { key: 'delivery.paymentText', label: 'Описание оплаты', multiline: true },
+  { key: 'delivery.returnsTitle', label: 'Заголовок возврата и обмена' },
+  { key: 'delivery.returnsText', label: 'Что делать при проблеме', multiline: true },
+  { key: 'delivery.returnsConditions', label: 'Условия возврата', multiline: true },
+];
+
+const aboutFields: Field[] = [
+  { key: 'about.eyebrow', label: 'Надпись над заголовком' }, { key: 'about.title', label: 'Заголовок' },
+  { key: 'about.intro', label: 'Вступление', multiline: true }, { key: 'about.storyTitle', label: 'Заголовок истории' },
+  { key: 'about.storyText', label: 'История бренда', multiline: true }, { key: 'about.valuesTitle', label: 'Заголовок ценностей' },
+  { key: 'about.value1', label: 'Ценность 1', multiline: true }, { key: 'about.value2', label: 'Ценность 2', multiline: true },
+  { key: 'about.value3', label: 'Ценность 3', multiline: true },
+];
+
+const craftFields: Field[] = [
+  { key: 'craft.eyebrow', label: 'Надпись над заголовком' }, { key: 'craft.title', label: 'Заголовок страницы' },
+  { key: 'craft.intro', label: 'Вступление', multiline: true }, { key: 'craft.benefitsTitle', label: 'Заголовок о воске' },
+  { key: 'craft.benefitsText', label: 'Преимущества воска', multiline: true }, { key: 'craft.burningTitle', label: 'Заголовок об использовании' },
+  { key: 'craft.burningText', label: 'Как правильно жечь свечу', multiline: true },
+  ...[1, 2, 3].flatMap((number) => ([
+    { key: `craft.faq${number}Question` as ContentKey, label: `Вопрос ${number}` },
+    { key: `craft.faq${number}Answer` as ContentKey, label: `Ответ ${number}`, multiline: true },
+  ])),
+];
+
+const contactFields: Field[] = [
+  { key: 'contacts.eyebrow', label: 'Надпись над заголовком' }, { key: 'contacts.title', label: 'Заголовок' },
+  { key: 'contacts.intro', label: 'Вступление', multiline: true }, { key: 'contacts.phone', label: 'Телефон' },
+  { key: 'contacts.email', label: 'Электронная почта' }, { key: 'contacts.address', label: 'Адрес' },
+  { key: 'contacts.legalName', label: 'Юридическое наименование / ФИО ИП' }, { key: 'contacts.inn', label: 'ИНН' },
+  { key: 'contacts.ogrn', label: 'ОГРН / ОГРНИП' },
 ];
 
 const imageFields: Array<{ key: ContentKey; label: string }> = [
@@ -81,6 +112,21 @@ export function AdminContentPage() {
       updateField(key, uploaded.url);
     } catch (requestError) {
       setError(requestError instanceof Error ? requestError.message : 'Не удалось загрузить изображение');
+    } finally {
+      setUploadingKey(null);
+    }
+  }
+
+  async function uploadCraftMedia(index: number, field: 'videoUrl' | 'posterUrl', file: File | undefined) {
+    if (!file) return;
+    setUploadingKey('craft.steps');
+    setError('');
+    try {
+      const uploaded = await uploadAdminImage(file);
+      const steps = getCraftSteps(content['craft.steps']).map((step, stepIndex) => stepIndex === index ? { ...step, [field]: uploaded.url } : step);
+      updateField('craft.steps', serializeCraftSteps(steps));
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'Не удалось загрузить медиафайл');
     } finally {
       setUploadingKey(null);
     }
@@ -146,6 +192,25 @@ export function AdminContentPage() {
 
           <h2>Доставка и оплата</h2>
           <div className="admin-form-grid">{renderFields(deliveryFields)}</div>
+
+          <h2>Страница «О бренде»</h2>
+          <div className="admin-form-grid">{renderFields(aboutFields)}</div>
+
+          <h2>«Путь свечи», знания и FAQ</h2>
+          <div className="admin-form-grid">{renderFields(craftFields)}</div>
+          <div className="admin-craft-steps">
+            {getCraftSteps(content['craft.steps']).map((step, index) => <fieldset key={step.id}>
+              <legend>Этап {index + 1}</legend>
+              <label>Название<input value={step.title} onChange={(event) => updateField('craft.steps', serializeCraftSteps(getCraftSteps(content['craft.steps']).map((item, itemIndex) => itemIndex === index ? { ...item, title: event.target.value } : item)))} /></label>
+              <label>Описание<textarea rows={3} value={step.text} onChange={(event) => updateField('craft.steps', serializeCraftSteps(getCraftSteps(content['craft.steps']).map((item, itemIndex) => itemIndex === index ? { ...item, text: event.target.value } : item)))} /></label>
+              <label>Видео MP4/WebM до 30 МБ<input type="file" accept="video/mp4,video/webm" onChange={(event) => void uploadCraftMedia(index, 'videoUrl', event.target.files?.[0])} /></label>
+              <label>Обложка видео<input type="file" accept="image/png,image/jpeg,image/webp" onChange={(event) => void uploadCraftMedia(index, 'posterUrl', event.target.files?.[0])} /></label>
+              {step.videoUrl ? <video controls preload="metadata" src={getUploadedImage(step.videoUrl)} /> : <small>Видео ещё не загружено.</small>}
+            </fieldset>)}
+          </div>
+
+          <h2>Контакты и реквизиты</h2>
+          <div className="admin-form-grid">{renderFields(contactFields)}</div>
           <div className="admin-form-actions">
             <button className="primary-link" disabled={isSaving || Boolean(uploadingKey)} type="submit">
               {isSaving ? 'Сохраняем...' : 'Опубликовать изменения'}

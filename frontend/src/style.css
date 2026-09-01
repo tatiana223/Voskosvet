@@ -51,6 +51,11 @@ button, input, select, textarea { font: inherit; }
 .nav { display: flex; justify-content: center; gap: clamp(16px, 3vw, 44px); font-size: 15px; font-weight: 700; }
 .nav a { padding: 10px 0; }
 .nav a:hover, .nav a.active { color: var(--honey); }
+.learn-menu { position: relative; }
+.learn-menu summary { padding: 10px 0; cursor: pointer; list-style: none; }
+.learn-menu summary::after { content: "⌄"; margin-left: 7px; color: var(--honey); }
+.learn-menu > div { position: absolute; top: 42px; left: 50%; display: grid; width: 230px; padding: 10px 18px; border: 1px solid rgba(74,33,20,.1); border-radius: 18px; background: #fffdf8; box-shadow: 0 18px 45px rgba(74,33,20,.14); transform: translateX(-50%); }
+.learn-menu > div a { padding: 10px 0; }
 .mobile-menu-toggle { display: none; }
 .favorites-nav-link { display: inline-flex; align-items: center; gap: 6px; }
 .favorites-nav-link b { display: grid; place-items: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px; background: #a34532; color: white; font-size: 11px; }
@@ -78,6 +83,65 @@ button, input, select, textarea { font: inherit; }
 main {
   min-height: calc(100svh - 80px);
   overflow: visible;
+}
+
+/* История бренда, путь свечи и контакты */
+.story-page, .craft-page, .contacts-page { max-width: var(--content-max); margin: 0 auto; padding: clamp(42px, 7vw, 100px) var(--page-gutter); }
+.story-hero { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: clamp(32px, 6vw, 90px); min-height: 68vh; }
+.story-hero h1, .craft-hero h1, .contacts-page h1 { margin: 10px 0 22px; max-width: 900px; font: 700 clamp(48px, 7vw, 96px)/.9 "Cormorant Garamond", serif; }
+.story-hero p, .craft-hero > p:last-of-type, .contacts-page header > p:last-child { max-width: 720px; color: var(--muted); font-size: clamp(17px, 2vw, 22px); line-height: 1.75; }
+.story-hero img { width: 100%; height: min(68vh, 700px); object-fit: cover; border-radius: 44% 44% 18px 18px; box-shadow: 0 30px 70px rgba(74,33,20,.18); }
+.story-block { max-width: 850px; margin: 100px auto; text-align: center; }
+.story-block h2, .story-values h2, .craft-knowledge h2, .craft-faq h2, .returns-info h2 { font: 700 clamp(36px, 5vw, 64px)/1 "Cormorant Garamond", serif; }
+.story-block > p:last-child { color: var(--muted); font-size: 19px; line-height: 1.8; }
+.story-values > div { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.story-values article { padding: 34px; border: 1px solid rgba(74,33,20,.1); border-radius: 24px; background: rgba(255,255,255,.55); }
+.story-values article span { color: var(--honey); font: 700 42px "Cormorant Garamond", serif; }
+.story-values article p { color: var(--muted); line-height: 1.7; }
+.story-cta { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 90px; padding: 34px; border-radius: 26px; background: var(--brown); color: white; }
+.story-cta p { margin: 0; font: 700 clamp(26px, 4vw, 44px) "Cormorant Garamond", serif; }
+
+.craft-hero { display: grid; align-content: center; min-height: 78vh; text-align: center; justify-items: center; }
+.craft-hero a { margin-top: 36px; color: var(--honey-dark); font-weight: 800; }
+.craft-hero a span { display: block; margin-top: 8px; font-size: 26px; animation: craftBounce 1.8s infinite; }
+.craft-journey { counter-reset: craft; }
+.craft-step { display: grid; grid-template-columns: .8fr 1.2fr; align-items: center; gap: clamp(35px, 7vw, 100px); min-height: 92vh; padding: 9vh 0; border-top: 1px solid rgba(74,33,20,.1); }
+.craft-step:nth-child(even) .craft-step-copy { order: 2; }
+.craft-step-copy > span { display: block; color: rgba(216,138,0,.25); font: 700 clamp(90px, 15vw, 210px)/.65 "Cormorant Garamond", serif; }
+.craft-step-copy h2 { margin: 8px 0 20px; font: 700 clamp(42px, 6vw, 72px)/.95 "Cormorant Garamond", serif; }
+.craft-step-copy > p:last-child { color: var(--muted); font-size: 18px; line-height: 1.8; }
+.craft-step-media { position: sticky; top: 112px; }
+.craft-step-media img, .craft-step-media video { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 28px; background: #2d1710; box-shadow: 0 30px 70px rgba(74,33,20,.2); }
+.craft-step-media small { display: block; margin-top: 12px; color: var(--muted); text-align: center; }
+.craft-knowledge { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 90px 0; }
+.craft-knowledge article { padding: clamp(30px, 5vw, 60px); border-radius: 30px; background: #f4e2c8; }
+.craft-knowledge article:nth-child(2) { background: var(--brown); color: white; }
+.craft-knowledge p:last-child { line-height: 1.8; }
+.craft-faq { max-width: 900px; margin: 100px auto; }
+.craft-faq details { padding: 24px 0; border-bottom: 1px solid rgba(74,33,20,.16); }
+.craft-faq summary { cursor: pointer; font-weight: 800; font-size: 18px; }
+.craft-faq details p { color: var(--muted); line-height: 1.7; }
+.contacts-page { min-height: 75vh; }
+.contacts-page dl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 55px; }
+.contacts-page dl div { padding: 24px; border-radius: 18px; background: white; box-shadow: 0 12px 30px rgba(74,33,20,.06); }
+.contacts-page dt { color: var(--muted); font-size: 13px; text-transform: uppercase; letter-spacing: .08em; }
+.contacts-page dd { margin: 8px 0 0; font-weight: 800; }
+.returns-info { margin-top: 28px; padding: clamp(28px, 5vw, 60px); border-radius: 28px; background: #f4e2c8; }
+.returns-info p { max-width: 900px; line-height: 1.75; }
+.returns-info a { display: inline-block; margin-top: 14px; color: var(--honey-dark); font-weight: 800; }
+.admin-craft-steps { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.admin-craft-steps fieldset { display: grid; gap: 12px; padding: 20px; border: 1px solid rgba(74,33,20,.14); border-radius: 18px; }
+.admin-craft-steps video { width: 100%; max-height: 260px; border-radius: 12px; background: #24130d; }
+@keyframes craftBounce { 50% { transform: translateY(8px); } }
+
+@media (max-width: 900px) {
+  .learn-menu > div { position: static; width: auto; padding: 4px 16px; box-shadow: none; transform: none; }
+  .story-hero, .craft-step, .craft-knowledge { grid-template-columns: 1fr; }
+  .craft-step:nth-child(even) .craft-step-copy { order: initial; }
+  .craft-step { min-height: auto; padding: 70px 0; }
+  .craft-step-media { position: static; }
+  .story-values > div, .contacts-page dl, .admin-craft-steps { grid-template-columns: 1fr; }
+  .story-cta { align-items: flex-start; flex-direction: column; }
 }
 
 .landing-snap {

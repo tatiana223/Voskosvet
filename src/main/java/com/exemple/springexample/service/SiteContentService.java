@@ -28,7 +28,16 @@ public class SiteContentService {
             "delivery.option2Title", "delivery.option2Text", "delivery.option2Term", "delivery.option2Note",
             "delivery.option3Title", "delivery.option3Text", "delivery.option3Term", "delivery.option3Note",
             "delivery.options",
-            "delivery.paymentEyebrow", "delivery.paymentTitle", "delivery.paymentText"
+            "delivery.paymentEyebrow", "delivery.paymentTitle", "delivery.paymentText",
+            "delivery.returnsTitle", "delivery.returnsText", "delivery.returnsConditions",
+            "about.eyebrow", "about.title", "about.intro", "about.storyTitle", "about.storyText",
+            "about.valuesTitle", "about.value1", "about.value2", "about.value3",
+            "craft.eyebrow", "craft.title", "craft.intro", "craft.steps",
+            "craft.benefitsTitle", "craft.benefitsText", "craft.burningTitle", "craft.burningText",
+            "craft.faq1Question", "craft.faq1Answer", "craft.faq2Question", "craft.faq2Answer",
+            "craft.faq3Question", "craft.faq3Answer",
+            "contacts.eyebrow", "contacts.title", "contacts.intro", "contacts.phone",
+            "contacts.email", "contacts.address", "contacts.legalName", "contacts.inn", "contacts.ogrn"
     );
 
     private final SiteContentRepository repository;

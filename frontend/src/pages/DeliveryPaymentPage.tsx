@@ -91,6 +91,14 @@ export function DeliveryPaymentPage() {
         <InlineTextEditor as="h2" value={content['delivery.paymentTitle']} label="Заголовок оплаты" onSave={(value) => saveField('delivery.paymentTitle', value)} />
         <InlineTextEditor as="p" value={content['delivery.paymentText']} label="Описание оплаты" multiline onSave={(value) => saveField('delivery.paymentText', value)} />
       </div>
+
+      <section className="returns-info">
+        <p className="eyebrow">Покупателям</p>
+        <InlineTextEditor as="h2" value={content['delivery.returnsTitle']} label="Заголовок возврата" onSave={(value) => saveField('delivery.returnsTitle', value)} />
+        <InlineTextEditor as="p" value={content['delivery.returnsText']} label="Описание возврата" multiline onSave={(value) => saveField('delivery.returnsText', value)} />
+        <InlineTextEditor as="p" value={content['delivery.returnsConditions']} label="Условия возврата" multiline onSave={(value) => saveField('delivery.returnsConditions', value)} />
+        <Link to="/contacts">Связаться с нами</Link>
+      </section>
     </section>
   );
 }
