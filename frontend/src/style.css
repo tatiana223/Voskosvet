@@ -231,7 +231,7 @@ main {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
-  width: min(100%, 520px);
+  width: min(72vw, 900px);
   margin: 12px 0 28px;
 }
 .hero-points > span {
@@ -348,7 +348,7 @@ main {
     font-size: 21px;
   }
 
-  .hero-points { width: min(100%, 620px); }
+  .hero-points { width: min(72vw, 900px); }
   .hero-points b { font-size: 16px; }
 
   .benefit-ribbon {
@@ -3183,7 +3183,7 @@ body.media-lightbox-open {
 
   .hero-points {
     gap: 10px;
-    width: min(100%, 620px);
+    width: min(100%, 780px);
     margin: 0 0 28px;
     overflow: visible;
     border: 0;
@@ -3308,7 +3308,7 @@ body.media-lightbox-open {
 
   .hero h1::before { width: 180px; margin-bottom: 15px; }
   .hero-copy > p { max-width: 430px; margin: 15px 0 20px; font-size: 15px; }
-  .hero-points { width: min(100%, 560px); margin-bottom: 20px; }
+  .hero-points { width: min(72vw, 900px); margin-bottom: 20px; }
   .hero-points > span { min-height: 58px; padding: 8px 10px; }
   .hero-points .emblem { flex-basis: 30px; width: 30px; height: 30px; }
   .hero-points .emblem svg { width: 23px; height: 23px; }
