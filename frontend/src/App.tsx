@@ -19,7 +19,6 @@ import { OrderTrackingPage } from './pages/OrderTrackingPage';
 import { WelcomePage } from './pages/WelcomePage';
 import { RouteSeo } from './components/Seo';
 import { ContactsPage } from './pages/ContactsPage';
-import { CraftPage } from './pages/CraftPage';
 
 export function App() {
   return (
@@ -36,7 +35,6 @@ export function App() {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/delivery-payment" element={<DeliveryPaymentPage />} />
           <Route path="/reviews" element={<ReviewsPage />} />
-          <Route path="/craft" element={<CraftPage />} />
           <Route path="/contacts" element={<ContactsPage />} />
           <Route path="/orders/track" element={<OrderTrackingPage />} />
           <Route path="/login" element={<LoginPage />} />

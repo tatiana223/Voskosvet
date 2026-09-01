@@ -90,13 +90,7 @@ export function Header() {
           <NavLink to="/delivery-payment">Доставка и оплата</NavLink>
           <NavLink to="/orders/track">Отследить заказ</NavLink>
           <NavLink to="/reviews">Отзывы</NavLink>
-          <details className="learn-menu">
-            <summary>Узнать больше</summary>
-            <div>
-              <NavLink to="/craft">Путь свечи и видео</NavLink>
-              <NavLink to="/contacts">Контакты и реквизиты</NavLink>
-            </div>
-          </details>
+          <NavLink to="/contacts">Контакты</NavLink>
           {auth && (auth.role === 'ADMIN' || auth.role === 'MANAGER') ? (
             <div className="nav-admin-actions">
               <Link to="/admin">Кабинет</Link>
