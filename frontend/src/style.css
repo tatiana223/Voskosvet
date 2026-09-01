@@ -149,15 +149,6 @@ main {
   line-height: 1.3;
 }
 
-@media (min-width: 1250px) {
-  .hero-points {
-    grid-template-columns: repeat(3, minmax(350px, 1fr));
-    width: min(88vw, 1260px) !important;
-  }
-  .hero-points > span {
-    min-width: 350px;
-  }
-}
 
 @media (max-width: 900px) {
   .story-hero, .craft-step, .craft-knowledge { grid-template-columns: 1fr; }
