@@ -137,13 +137,15 @@ main {
   box-shadow: none !important;
   backdrop-filter: none !important;
 }
-.hero-points b { min-width: 0; }
+.hero-points b {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: clamp(11px, .9vw, 15px);
+  text-wrap: balance;
+}
 .hero-points b > span:first-child {
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  display: block;
+  overflow: visible;
   line-height: 1.3;
 }
 
