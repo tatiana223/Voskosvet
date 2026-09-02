@@ -431,9 +431,9 @@ main {
 .products-grid .candle-card:nth-child(2) { animation-delay: 80ms; }
 .products-grid .candle-card:nth-child(3) { animation-delay: 160ms; }
 .products-grid .candle-card:nth-child(4) { animation-delay: 240ms; }
-.candle-image { position: relative; display: block; overflow: hidden; background: #fffaf3; }
-.candle-image-link { display: block; width: 100%; }
-.candle-image img { display: block; width: 100%; height: auto; transition: transform .25s ease; }
+.candle-image { position: relative; display: block; aspect-ratio: 3 / 2; overflow: hidden; background: #f6eadb; }
+.candle-image-link { display: block; width: 100%; height: 100%; }
+.candle-image img { display: block; width: 100%; height: 100%; object-fit: contain; transition: transform .25s ease; }
 .candle-card:hover img { transform: scale(1.04); }
 .featured-badge { position: absolute; top: 0; left: 0; padding: 8px 15px; border-radius: 15px 0 15px 0; background: #7b2f09; color: white; font-size: 13px; font-weight: 800; }
 .candle-card-body { display: flex; flex: 1; flex-direction: column; padding: 17px 14px 14px; }
