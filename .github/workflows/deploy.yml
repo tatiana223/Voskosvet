@@ -21,22 +21,41 @@ jobs:
         env:
           DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
         run: |
+          DEPLOY_PORT="${DEPLOY_PORT:-22}"
           install -m 700 -d ~/.ssh
           printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+          ssh-keyscan -T 10 -p "$DEPLOY_PORT" -t ed25519 -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
 
       - name: Deploy
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
         run: |
-          ssh -i ~/.ssh/deploy_key \
-            -o IdentitiesOnly=yes \
-            "$DEPLOY_USER@$DEPLOY_HOST" \
-            'cd /opt/voskosvet &&
-             docker compose exec -T db pg_dump -U candle_user candle_shop > /opt/voskosvet/backups/latest.sql &&
-             git pull --ff-only &&
-             docker compose up -d --build &&
-             docker compose ps'
+          DEPLOY_PORT="${DEPLOY_PORT:-22}"
+          for attempt in 1 2 3; do
+            if ssh -i ~/.ssh/deploy_key \
+              -p "$DEPLOY_PORT" \
+              -o IdentitiesOnly=yes \
+              -o ConnectTimeout=20 \
+              -o ServerAliveInterval=15 \
+              -o ServerAliveCountMax=4 \
+              "$DEPLOY_USER@$DEPLOY_HOST" \
+              'cd /opt/voskosvet &&
+               docker compose exec -T db pg_dump -U candle_user candle_shop > /opt/voskosvet/backups/latest.sql &&
+               git pull --ff-only &&
+               docker compose up -d --build &&
+               docker compose ps'; then
+              exit 0
+            fi
+
+            if [ "$attempt" -lt 3 ]; then
+              echo "SSH connection failed (attempt $attempt/3), retrying in 15 seconds..."
+              sleep 15
+            fi
+          done
+
+          exit 1
