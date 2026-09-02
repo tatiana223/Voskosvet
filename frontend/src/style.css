@@ -431,9 +431,9 @@ main {
 .products-grid .candle-card:nth-child(2) { animation-delay: 80ms; }
 .products-grid .candle-card:nth-child(3) { animation-delay: 160ms; }
 .products-grid .candle-card:nth-child(4) { animation-delay: 240ms; }
-.candle-image { position: relative; display: block; height: clamp(220px, 22vw, 290px); overflow: hidden; background: #fffaf3; }
-.candle-image-link { display: block; width: 100%; height: 100%; }
-.candle-image img { width: 100%; height: 100%; padding: 10px; box-sizing: border-box; object-fit: contain; display: block; transition: transform .25s ease; }
+.candle-image { position: relative; display: block; overflow: hidden; background: #fffaf3; }
+.candle-image-link { display: block; width: 100%; }
+.candle-image img { display: block; width: 100%; height: auto; transition: transform .25s ease; }
 .candle-card:hover img { transform: scale(1.04); }
 .featured-badge { position: absolute; top: 0; left: 0; padding: 8px 15px; border-radius: 15px 0 15px 0; background: #7b2f09; color: white; font-size: 13px; font-weight: 800; }
 .candle-card-body { display: flex; flex: 1; flex-direction: column; padding: 17px 14px 14px; }
@@ -3343,7 +3343,7 @@ body.media-lightbox-open {
   .review-section h2,
   .why-section h2 { font-size: 36px; }
   .grid { gap: 18px; }
-  .candle-image { height: 210px; }
+  .candle-image { height: auto; }
   .candle-card-body { padding: 13px 12px 11px; }
   .candle-card h3 { font-size: 15px; }
   .candle-card p { margin-bottom: 8px; font-size: 12px; }
